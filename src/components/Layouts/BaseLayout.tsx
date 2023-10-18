@@ -10,7 +10,7 @@ const BaseLayout = () => {
      
       <div className="flex flex-col min-h-screen justify-between">
         <Navbar />
-        <div className="flex-grow max-w-screen overflow-hidden pt-20  ">
+        <div className=" flex-grow max-w-screen overflow-hidden ">
           {outlet}
         </div>
         <Footer />

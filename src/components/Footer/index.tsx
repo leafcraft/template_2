@@ -1,89 +1,134 @@
 import React from "react";
-//import LOGO from "../../assets/subtl_Logo.png";
 import Icons from "../Icons";
 
-const Footer = () => {
-  const Content = [
-    {
-      Title: "Product",
-      contents: [
-        { name: "Features", section: "hallucinations" },
-        { name: "Benefits", section: "benefits" },
-        { name: "Try Now", section: "Trynow" },
-      ],
-    },
-    {
-      Title: "Explore",
-      contents: [
-        { name: "Events", section: "" },
-        { name: "Blogs", section: "blog" },
-      ],
-    },
-    {
-      Title: "Company ",
-      contents: [
-        { name: "About us", section: "team" },
-        { name: "Contact us", section: "Trynow" },
-      ],
-    },
-  ];
+interface ContentItem {
+  name: string;
+  section: string;
+}
 
+interface ContentGroup {
+  contents: ContentItem[];
+}
+
+const Content: ContentGroup[] = [
+  {
+    contents: [
+      { name: "About Us", section: "hallucinations" },
+      { name: "Contact Us", section: "benefits" },
+      { name: "FAQS", section: "Trynow" },
+      { name: "Blog", section: "blog" },
+    ],
+  },
+  {
+    contents: [
+      { name: "Media", section: "" },
+      { name: "Cancellation Policy", section: "blog" },
+      { name: "Privacy Policy", section: "" },
+    ],
+  },
+  {
+    contents: [
+      { name: "Return Policy", section: "team" },
+      { name: "T&C", section: "Trynow" },
+      { name: "Cookie Policy", section: "Trynow" },
+    ],
+  },
+];
+
+const Footer: React.FC = () => {
   return (
-    <>
-      <div className="bg-black grid ">
-        <div className=" flex md:flex-row flex-col justify-between text-white items-center lg:px-20 px-10 py-10 border-b border-white ">
-          <img src='{LOGO}' alt="" />
-
-          <div className=" gap-10 flex  ">
-            {Content.map((props: any) => (
-              <div className="flex flex-col mt-px max-md:mt-12">
-                <div className="text-white text-opacity-70 text-xl">
-                  {props.Title}
-                </div>
-
-                {props.contents.map((map: any) => (
-                  <div
-                    className="text-white tracking-normal cursor-pointer text-lg mt-8"
-                    onClick={(e) => {
-                      let contactus = document.getElementById(map.section);
-                      e.preventDefault(); // Stop Page Reloading
-                      if (contactus) {
-                        const elementTop =
-                          contactus.getBoundingClientRect().top +
-                          window.scrollY;
-                        const scrollTo = elementTop - 80;
-
-                        window.scrollTo({
-                          top: scrollTo,
-                          behavior: "smooth",
-                        });
-                      }
-                    }}
-                  >
-                    {map.name}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
+    <footer className="text-white body-font bg-bg-footer md:p-5 flex flex-col justify-center items-center">
+      <div className="container px-5 gap-8 py-16  flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
+        <div className="w-64 flex flex-col gap-4 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left md:mt-0 mt-10 cursor-pointer">
+          <a>Logo</a>
+          <p className="mt-2 text-sm text-gray-500">
+            Air plant banjo lyft occupy retro adaptogen indego
+          </p>
+          <span className="inline-flex  sm:mt-0 mt-2 justify-center sm:justify-start">
+          <a className="text-gray-500">
+            <svg
+              fill="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+            >
+              <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+            </svg>
+          </a>
+          <a className="ml-3 text-gray-500">
+            <svg
+              fill="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+            >
+              <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
+            </svg>
+          </a>
+          <a className="ml-3 text-gray-500">
+            <svg
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+            >
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+              <path
+                d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"
+              ></path>
+            </svg>
+          </a>
+          <a className="ml-3 text-gray-500">
+            <svg
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="0"
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="none"
+                d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"
+              ></path>
+              <circle cx="4" cy="4" r="2" stroke="none"></circle>
+            </svg>
+          </a>
+        </span>
+        
         </div>
-        <div className="text-white flex md:flex-row flex-col justify-between w-full p-10 items-center ">
-          <div className=" flex md:gap-10 gap-2 md:flex-row flex-col max-md:text-center ">
-            <div>© 2023 Subtl.ai. All right reserved.</div>
-            <div>Privacy Policy</div>
-            <div>Terms of Service</div>
-          </div>
-          <div className=" flex gap-4 items-center justify-center ">
-            <Icons variant="Youtube" Link="https://www.youtube.com" />
-            <Icons variant="Twitter" Link="https://www.twitter.com" />
-            <Icons
-              variant="LinkedIn"
-              Link="https://www.linkedin.com/company/subtl-ai/"
-            />
-          </div>
+        <div className="flex-grow flex flex-wrap -mb-10 md:text-left text-center order-first">
+          {Content.map((props: ContentGroup, index) => (
+            <div className="lg:w-1/4 md:w-2/6 w-full " key={index}>
+              <nav className="list-none mb-10 flex flex-col gap-2">
+                {props.contents.map((map: ContentItem, subIndex) => (
+                  <li key={subIndex}>
+                    <a className="text-white hover:text-brown cursor-pointer">
+                      {map.name}
+                    </a>
+                  </li>
+                ))}
+              </nav>
+            </div>
+          ))}
         </div>
       </div>
-    </>
+
+      <div className="container mx-auto py-4 px-5 flex justify-evenly flex-wrap flex-col sm:flex-row">
+        <p className="text-gray-500 text-sm text-center sm:text-left">
+          Copyright © 2019 Stylease. All Rights Reserved
+        </p>
+        <p className="text-sm text-center sm:text-left">Powered By Ekommerce360</p>
+      </div>
+    </footer>
   );
 };
 

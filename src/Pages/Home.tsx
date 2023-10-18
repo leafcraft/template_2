@@ -11,12 +11,17 @@ import WHO from "../components/WHoisthis";
 import Costing from "../components/Costing";
 import Team from "../components/Team";
 import Differentiate from "../components/Differentiate";
+import Banner from "../components/Banner";
+import Secondcomponent from "../components/secondComponent";
+import ThiredComponent from "../components/ThiredComponent";
 
 const Home = () => {
   return (
     <>
      <div>
-      hello leafcraft
+     <Banner />
+     <Secondcomponent />
+     <ThiredComponent />
      </div>
     </>
   );
