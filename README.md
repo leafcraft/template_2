@@ -1,1 +1,2 @@
-# clothing_template
+# React-Vite-Tailwindcss
+
