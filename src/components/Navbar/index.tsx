@@ -13,7 +13,7 @@ const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
 
   return (
-    <div className="bg-black flex justify-between text-white items-center lg:px-20 px-6 z-30 fixed w-screen max-lg:h-20">
+    <div className="bg-transparent flex justify-between text-white items-center lg:px-20 px-6 z-30 fixed w-screen max-lg:h-20">
       <header className="text-gray-600 body-font contents">
   <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-start">
     <a className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">

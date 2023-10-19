@@ -1,6 +1,6 @@
 import ThiredCommonComponent from "./Atoms/ThiredCommonComponent";
 
-export default function ThiredComponent() {
+export default function Fifthcomponent() {
   const dynamicComponentProps = {
     smallHeader: 'Small Header Text',
     title: 'Main Title Text',
