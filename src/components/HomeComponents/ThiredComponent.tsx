@@ -1,8 +1,8 @@
-import ThiredCommonComponent from "./Atoms/ThiredCommonComponent";
-import poster from "../assets/poster-component3.png";
-import product1 from "../assets/product1-component3.png";
-import product2 from "../assets/product2-component3.png";
-import Product3 from "../assets/product3-component3.png";
+import ThiredCommonComponent from "../Atoms/ThiredCommonComponent";
+import poster from "../../assets/poster-component3.png";
+import product1 from "../../assets/product1-component3.png";
+import product2 from "../../assets/product2-component3.png";
+import Product3 from "../../assets/product3-component3.png";
 
 export default function ThiredComponent() {
   const dynamicComponentProps = {
@@ -15,17 +15,17 @@ export default function ThiredComponent() {
       {
         src: product1,
         alt: 'Image 1',
-        description: 'Description for Image 1',
+        description: 'Silver Rectangular Patterned Blazer Rs. 2,800.00',
       },
       {
         src: product2,
         alt: 'Image 2',
-        description: 'Description for Image 2',
+        description: 'Product title Rs. 99.00',
       },
       {
         src: Product3,
         alt: 'Image 3',
-        description: 'Description for Image 3',
+        description: 'Blue Bandi With Kurta Set Rs. 2,800.00',
       },
     ],
     posterImage: poster ,

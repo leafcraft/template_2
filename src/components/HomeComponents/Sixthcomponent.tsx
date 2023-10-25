@@ -1,10 +1,10 @@
 import React from 'react';
-import image from '../assets/bg-component6.png'
-import ThiredCommonComponent from './Atoms/ThiredCommonComponent';
-import poster from "../assets/poster-component3.png";
-import product1 from "../assets/product1-component3.png";
-import product2 from "../assets/product2-component3.png";
-import Product3 from "../assets/product3-component3.png";
+import image from '../../assets/bg-component6.png'
+import ThiredCommonComponent from '../Atoms/ThiredCommonComponent';
+import poster from "../../assets/poster-component3.png";
+import product1 from "../../assets/product1-component3.png";
+import product2 from "../../assets/product2-component3.png";
+import Product3 from "../../assets/product3-component3.png";
 
 const Sixthcomponent = () => {
   const dynamicComponentProps = {

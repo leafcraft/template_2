@@ -1,12 +1,12 @@
 
-import Banner from "../components/Firstcomponent";
-import Secondcomponent from "../components/SecondComponent";
-import ThiredComponent from "../components/ThiredComponent";
-import FouthComponent from "../components/FourthComponent";
-import Fifthcomponent from "../components/Fifthcomponent";
-import Sixthcomponent from "../components/Sixthcomponent";
-import Seventhcomponent from "../components/Seventhcomponent";
-import EighthComponent from "../components/Eighthcomponent";
+import Banner from "../components/HomeComponents/Firstcomponent";
+import Secondcomponent from "../components/HomeComponents/SecondComponent";
+import ThiredComponent from "../components/HomeComponents/ThiredComponent";
+import FouthComponent from "../components/HomeComponents/FourthComponent";
+import Fifthcomponent from "../components/HomeComponents/Fifthcomponent";
+import Sixthcomponent from "../components/HomeComponents/Sixthcomponent";
+import Seventhcomponent from "../components/HomeComponents/Seventhcomponent";
+import EighthComponent from "../components/HomeComponents/Eighthcomponent";
 
 const Home = () => {
   return (

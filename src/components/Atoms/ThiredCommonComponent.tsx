@@ -15,7 +15,7 @@ const ThiredCommonComponent = ({
     <div className=" flex items-center  flex-col md:flex-row">
       <div className=" order-last md:order-first ">
      
-        <div className="text-black mb-4 text-center">
+        <div className="text-black mb-4 text-center p-7">
           <h2 className=" text-black-text mb-3 font-normal font-Robot text-sm md:text-lg leading-5 tracking-wide">{smallHeader}</h2>
           <h1 className=" text-black-text mb-3 font-normal font-Robot text-xl md:text-5xl leading-tight">{title}</h1>
           <p className="text-black-text font-normal font-Robot text-xs md:text-base leading-7">{subtitle}</p>
@@ -28,11 +28,11 @@ const ThiredCommonComponent = ({
             {buttonText}
           </a>
         </div>
-        <div className="grid grid-cols-3 gap-4 p-10">
+        <div className="grid grid-cols-3 gap-4 px-10 pb-14">
           {images.map((image:any, index:any) => (
             <div key={index} className="w-full h-full ">
-              <img src={image.src} alt={image.alt}  className="w-full h-full object-cover" />
-              <p className=" mt-2 text-base text-black-text font-Robot font-normal leading-6">{image.description}</p>
+              <div className="w-full h-full p-6"><img src={image.src} alt={image.alt}  className="w-full h-full object-cover" /></div> 
+              <p className="mt-2 text-base text-black-text font-Robot font-normal leading-6 ">{image.description}</p>
             </div>
           ))}
         </div>

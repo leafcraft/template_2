@@ -1,5 +1,5 @@
 import React from 'react';
-import qoutes from '../assets/svg-component8.png'
+import qoutes from '../../assets/svg-component8.png'
 
 // JSON data for the sections
 const sections = [

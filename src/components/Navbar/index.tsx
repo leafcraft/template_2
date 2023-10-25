@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 //import LOGO from "../../assets/subtl_Logo.png";
 import Button from "../Button";
 import Typography from "../Atoms/Typography";
+import { Link } from "react-router-dom";
 
 const Data = [
   { name: "Product", section: "product" },
@@ -34,12 +35,20 @@ const Navbar = () => {
     <div className={`flex justify-between  items-center lg:px-20 px-6 z-30 absolute w-screen max-lg:h-20 text-white`}>
       <header className="text-gray-600 body-font contents">
   <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-start justify-center">
-    <nav className="hidden md:flex  flex-wrap items-center text-base justify-center">
-      <Typography variant="Navbar1">WOMENS WEAR</Typography>
-       <Typography variant="Navbar1">MENS WEAR</Typography>
-       <Typography variant="Navbar1">RENT FOR A CAUSE</Typography>
-       <Typography variant="Navbar1">BLOG</Typography>
-    </nav>
+  <nav className="hidden md:flex  flex-wrap items-center text-base justify-center">
+        <Link to="#">
+          <Typography variant="Navbar1">WOMENS WEAR</Typography>
+        </Link>
+        <Link to="#">
+          <Typography variant="Navbar1">MENS WEAR</Typography>
+        </Link>
+        <Link to="/products">
+          <Typography variant="Navbar1">RENT FOR A CAUSE</Typography>
+        </Link>
+        <Link to="#">
+          <Typography variant="Navbar1">BLOG</Typography>
+        </Link>
+      </nav>
 
   </div>
 </header>

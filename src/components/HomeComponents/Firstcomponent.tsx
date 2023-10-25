@@ -1,7 +1,7 @@
 import React from 'react';
-import BGIMAGE from '../assets/bg-component1.svg';
-import forHim from '../assets/forHim.svg';
-import forHer from '../assets/forHer.svg';
+import BGIMAGE from '../../assets/bg-component1.svg';
+import forHim from '../../assets/forHim.svg';
+import forHer from '../../assets/forHer.svg';
 
 const Banner = () => {
   return (

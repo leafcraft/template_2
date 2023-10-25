@@ -1,8 +1,8 @@
-import ThiredCommonComponent from "./Atoms/ThiredCommonComponent";
-import poster from "../assets/poster-component3.png";
-import product1 from "../assets/product1-component3.png";
-import product2 from "../assets/product2-component3.png";
-import Product3 from "../assets/product3-component3.png";
+import ThiredCommonComponent from "../Atoms/ThiredCommonComponent";
+import poster from "../../assets/poster-component3.png";
+import product1 from "../../assets/product1-component3.png";
+import product2 from "../../assets/product2-component3.png";
+import Product3 from "../../assets/product3-component3.png";
 
 export default function Fifthcomponent() {
   const dynamicComponentProps = {
