@@ -12,8 +12,8 @@ const ThiredCommonComponent = ({
     <div className='flex w-full flex-col '>
     <section className="flex flex-grow px-2 justify-center text-gray-600 body-font overflow-hidden">
 
-    <div className=" flex items-center  flex-col md:flex-row">
-      <div className=" order-last md:order-first ">
+    <div className="grid items-center md:grid-cols-2 grid-cols-1">
+      <div className=" order-last md:order-first  ">
      
         <div className="text-black mb-4 text-center p-7">
           <h2 className=" text-black-text mb-3 font-normal font-Robot text-sm md:text-lg leading-5 tracking-wide">{smallHeader}</h2>
@@ -36,7 +36,7 @@ const ThiredCommonComponent = ({
             </div>
           ))}
         </div>
-        </div>
+      </div>
 
       {/* poster image */}
       <div className="object-cover object-center rounded overflow-hidden ">
