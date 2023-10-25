@@ -1,4 +1,5 @@
 import React from 'react';
+import qoutes from '../assets/svg-component8.png'
 
 // JSON data for the sections
 const sections = [
@@ -19,11 +20,15 @@ const sections = [
 const EighthComponent = () => {
   return (
     <section className="text-gray-600 body-font">
-      <div className="container px-5 py-24 mx-auto">
-        <h1 className=" text-center mb-3 font-normal font-Robot text-black text-4xl leading-9 ">Join The Revolution</h1>
+      <div className="container px-5 py-24 mx-auto flex flex-col gap-6">
+        <h1 className=" text-center mb-3 font-normal font-Robot text-black text-2xl md:text-4xl leading-9 ">Join The Revolution</h1>
+      
         <div className="flex flex-wrap -mx-4 -my-8">
+
           {sections.map((section, index) => (
-            <div key={index} className="py-8 px-4 md:w-1/2 lg:w-1/3">
+            
+            <div key={index} className="py-8 px-4 md:w-1/2 lg:w-1/3 relative ">
+                <img src={qoutes}  className='w-38 h-24 absolute left-5 top-0' />
               <div className="h-full flex items-start">
                 <div className="flex-grow pl-6">
                   <p className="font-normal font-Robot text-base text-center  leading-6 mb-2">{section.description}</p>
