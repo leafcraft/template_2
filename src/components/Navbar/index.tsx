@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 //import LOGO from "../../assets/subtl_Logo.png";
 import Button from "../Button";
+import Typography from "../Atoms/Typography";
 
 const Data = [
   { name: "Product", section: "product" },
@@ -11,26 +12,35 @@ const Data = [
 ];
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <div className="bg-transparent flex justify-between text-white items-center lg:px-20 px-6 z-30 fixed w-screen max-lg:h-20">
+    <div className={`flex justify-between  items-center lg:px-20 px-6 z-30 absolute w-screen max-lg:h-20 text-white`}>
       <header className="text-gray-600 body-font contents">
-  <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-start">
-    <a className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-      <img src='' alt="logo" />
-      <span className="ml-3 text-xl">Logo text</span>
-    </a>
-    <nav className="md:ml-auto hidden md:flex  flex-wrap items-center text-base justify-center">
-      <a className="mr-5 hover:text-gray-900">First Link</a>
-      <a className="mr-5 hover:text-gray-900">Second Link</a>
-      <a className="mr-5 hover:text-gray-900">Third Link</a>
-      <a className="mr-5 hover:text-gray-900">Fourth Link</a>
+  <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-start justify-center">
+    <nav className="hidden md:flex  flex-wrap items-center text-base justify-center">
+      <Typography variant="Navbar1">WOMENS WEAR</Typography>
+       <Typography variant="Navbar1">MENS WEAR</Typography>
+       <Typography variant="Navbar1">RENT FOR A CAUSE</Typography>
+       <Typography variant="Navbar1">BLOG</Typography>
     </nav>
-    <button className=" hidden md:inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">Button
-      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-4 h-4 ml-1" viewBox="0 0 24 24">
-        <path d="M5 12h14M12 5l7 7-7 7"></path>
-      </svg>
-    </button>
+
   </div>
 </header>
 

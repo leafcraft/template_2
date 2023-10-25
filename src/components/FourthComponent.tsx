@@ -10,10 +10,10 @@ const imageSources = [
 
 const FourthComponent = () => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+    <div className="container mx-auto px-5 py-2 lg:px-32 lg:pt-24 -m-1 flex flex-wrap md:-m-2">
       {imageSources.map((src, index) => (
-        <div key={index} className="relative group">
-          <img className="h-auto w-full rounded-lg" src={src} alt={`Image ${index + 1}`} />
+        <div key={index} className="relative group p-1 md:p-2 flex w-1/2 flex-wrap">
+          <img className="block h-full w-full rounded-lg object-cover object-center" src={src} alt={`Image ${index + 1}`} />
           <div className="absolute bottom-0 left-0 bg-black text-white p-2 group-hover:opacity-75">
             Text on Image {index + 1}
           </div>

@@ -1,5 +1,5 @@
 
-import Banner from "../components/Banner";
+import Banner from "../components/Firstcomponent";
 import Secondcomponent from "../components/SecondComponent";
 import ThiredComponent from "../components/ThiredComponent";
 import FouthComponent from "../components/FourthComponent";

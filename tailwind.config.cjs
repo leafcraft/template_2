@@ -5,12 +5,30 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      'sm': '640px',
+      // => @media (min-width: 640px) { ... }
+
+      'md': '768px',
+      // => @media (min-width: 768px) { ... }
+
+      'lg': '1024px',
+      // => @media (min-width: 1024px) { ... }
+
+      'xl': '1280px',
+      // => @media (min-width: 1280px) { ... }
+
+      '2xl': '1536px',
+      // => @media (min-width: 1536px) { ... }
+    },
+
     extend: {
       
       fontFamily:{
         Work: ["Work Sans", "sans-serif"] ,
         factum: ["Faktum Test", "sans-serif"],
         poppins: ["Poppins", "sans-serif"],
+        Robot:["Roboto"," sans-serif"],
         inter:['Inter', 'sans-serif'],
         WhyteRegular:["WhyteInktrap-Regular" , "sans-serif"],
         WhyteMedI:["WhyteInktrap-MediumItalic" , "sans-serif"],
@@ -37,7 +55,9 @@ module.exports = {
         'navcls': '#F5F5F5',
         'gray': '#525B7A',
         'neutral':'#E0E3EB',
-        'bg-footer':'#2B2D3C'
+        'bg-footer':'#2B2D3C',
+        'black-text':'#2E3234',
+        'black':'#222222',
       },
       boxShadow:{
         '2xl': '0px 20px 24px -4px rgba(17, 24, 39, 0.1), 0px 8px 8px -4px rgba(17, 24, 39, 0.04);',

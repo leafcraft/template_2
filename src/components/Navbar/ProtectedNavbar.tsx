@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import Typography from '../Atoms/Typography';
+import logo from '../../assets/logo.png'
+import { useNavigate } from 'react-router';
+import Icons from '../Icons';
 
 const ProtectedNavbar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Check if the screen width is below a certain threshold (e.g., 768px) to determine if it's a mobile screen
@@ -23,29 +28,19 @@ const ProtectedNavbar = () => {
   }, []);
 
   return (
-    <header className="bg-gray-100 text-gray-600 body-font">
-      <div className="container mx-auto flex flex-wrap p-5 flex-row justify-between md:flex-row items-center">
+    <header className="bg-gray-100 text-gray-600 body-font flex flex-col items-center justify-center">
+      <div className='bg-black text-white font-Robot font-normal text-sm w-full h-8 flex justify-center items-center cursor-pointer leading-6' onClick={()=>{navigate('/')}}>Did you know you can make money from your personal wardrobe? Earn with us!</div>
+      <div className="container px-12 flex flex-wrap p-5 flex-row justify-between md:flex-row items-center">
         <a className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="w-10 h-10 text-indigo-500 p-2 bg-indigo-500 rounded-full"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-          </svg>
+        <img src={logo} alt='logo' className='w-20 h-auto' />
         </a>
         <nav className={`md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center ${isMobile && !showMenu ? 'hidden' : 'md:flex'}`}>
-          <a className="mr-5 hover:text-gray-900">First Link</a>
-          <a className="mr-5 hover:text-gray-900">Second Link</a>
           {!isMobile && (
             <>
-              <a className="mr-5 hover:text-gray-900">Third Link</a>
-              <a className="mr-5 hover:text-gray-900">Fourth Link</a>
+             <Typography variant="Navbar1">WOMENS WEAR</Typography>
+       <Typography variant="Navbar1">MENS WEAR</Typography>
+       <Typography variant="Navbar1">RENT FOR A CAUSE</Typography>
+       <Typography variant="Navbar1">BLOG</Typography>
             </>
           )}
         </nav>
@@ -53,6 +48,7 @@ const ProtectedNavbar = () => {
           <button className="bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mr-4">
             Search
           </button>
+          {/* <Icons variant={Search} /> */}
           <button className="bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
             Cart
           </button>
