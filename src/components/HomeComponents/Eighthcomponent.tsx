@@ -20,7 +20,7 @@ const sections = [
 const EighthComponent = () => {
   return (
     <section className="text-gray-600 body-font">
-      <div className="container px-5 py-24 mx-auto flex flex-col gap-6">
+      <div id='blog' className="container px-5 py-24 mx-auto flex flex-col gap-6">
         <h1 className=" text-center mb-3 font-normal font-Robot text-black text-2xl md:text-4xl leading-9 ">Join The Revolution</h1>
       
         <div className="flex flex-wrap -mx-4 -my-8">

@@ -3,13 +3,12 @@ import BGIMAGE from '../../assets/Products-banner.png';
 
 const Banner = () => {
     return (
-        <div>
-            {" "}
-            <div className="relative">
+        <div className='flex flex-col h-full w-full'>
+            <div className="relative w-full ">
                 <img
                     src={BGIMAGE}
                     alt="Banner Image"
-                    className="w-full h-auto object-cover"
+                    className="w-full h-auto object-cover "
                 />
                 <div className="absolute inset-0  lg:bottom-0 md:bottom[-63px] bottom-0 flex flex-col justify-center items-center text-white bg-opacity-0 bg-black">
 

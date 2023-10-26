@@ -31,21 +31,31 @@ const Navbar = () => {
     };
   }, []);
 
+  function scrollToComponent(sectionId:any) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }
+
   return (
     <div className={`flex justify-between  items-center lg:px-20 px-6 z-30 absolute w-screen max-lg:h-20 text-white`}>
       <header className="text-gray-600 body-font contents">
   <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-start justify-center">
   <nav className="hidden md:flex  flex-wrap items-center text-base justify-center">
-        <Link to="#">
-          <Typography variant="Navbar1">WOMENS WEAR</Typography>
+        <Link to="#" onClick={() => scrollToComponent('women_wear')}>
+          <Typography variant="Navbar1"  >WOMENS WEAR</Typography>
         </Link>
-        <Link to="#">
+        <Link to="#" onClick={() => scrollToComponent('mens_wear')}>
           <Typography variant="Navbar1">MENS WEAR</Typography>
         </Link>
-        <Link to="/products">
+        <Link to="/products" onClick={() => scrollToComponent('products')}>
           <Typography variant="Navbar1">RENT FOR A CAUSE</Typography>
         </Link>
-        <Link to="#">
+        <Link to="#" onClick={() => scrollToComponent('blog')}>
           <Typography variant="Navbar1">BLOG</Typography>
         </Link>
       </nav>

@@ -31,5 +31,5 @@ export default function ThiredComponent() {
     posterImage: poster ,
   };
 
-  return <ThiredCommonComponent {...dynamicComponentProps} />;
+  return <div id="women_wear"><ThiredCommonComponent {...dynamicComponentProps} /></div>;
 };

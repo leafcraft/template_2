@@ -10,7 +10,7 @@ interface ProductProps {
 const ProductCard: React.FC<ProductProps> = ({ imageUrl, category, title, price }) => {
   return (
     <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-      <a className="block relative h-48 rounded overflow-hidden">
+      <a className="block relative h-80 rounded overflow-hidden">
         <img alt="ecommerce" className="object-cover object-center w-full h-full block" src={imageUrl} />
       </a>
       <div className="mt-4">
