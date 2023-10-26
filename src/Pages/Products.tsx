@@ -130,7 +130,7 @@ const ProductList: React.FC = () => {
   return (
     <section className="text-gray-600 body-font ">
     <Banner />
-    <div className="container px-5 py-8 mx-auto">
+    <div id='women_wear' className=" px-5 py-8 mx-auto">
       <div className="flex flex-wrap ">
         {products.map((product) => (
           <div key={product.id} className="lg:w-1/4 md:w-1/3 p-7 w-full cursor-pointer" onClick={()=>console.log('pass the props')}>

@@ -3,6 +3,7 @@ import Typography from '../Atoms/Typography';
 import logo from '../../assets/logo.png'
 import { useNavigate } from 'react-router';
 import Icons from '../Icons';
+import { Link } from 'react-router-dom';
 
 const ProtectedNavbar = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -26,6 +27,16 @@ const ProtectedNavbar = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+  
+  function scrollToComponent(sectionId:any) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }
 
   return (
     <header className="bg-gray-100 text-gray-600 body-font flex flex-col items-center justify-center">
@@ -37,10 +48,18 @@ const ProtectedNavbar = () => {
         <nav className={`md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center ${isMobile && !showMenu ? 'hidden' : 'md:flex'}`}>
           {!isMobile && (
             <>
-             <Typography variant="Navbar1">WOMENS WEAR</Typography>
-       <Typography variant="Navbar1">MENS WEAR</Typography>
-       <Typography variant="Navbar1">RENT FOR A CAUSE</Typography>
-       <Typography variant="Navbar1">BLOG</Typography>
+             <Link to="/" onClick={() => scrollToComponent('women_wear')}>
+          <Typography variant="Navbar1"  >WOMENS WEAR</Typography>
+        </Link>
+        <Link to="/" onClick={() => scrollToComponent('mens_wear')}>
+          <Typography variant="Navbar1">MENS WEAR</Typography>
+        </Link>
+        <Link to="/products" onClick={() => scrollToComponent('products')}>
+          <Typography variant="Navbar1">RENT FOR A CAUSE</Typography>
+        </Link>
+        <Link to="/" onClick={() => scrollToComponent('blog')}>
+          <Typography variant="Navbar1">BLOG</Typography>
+        </Link>
             </>
           )}
         </nav>

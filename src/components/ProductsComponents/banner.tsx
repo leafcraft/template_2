@@ -22,7 +22,7 @@ const Banner = () => {
                 
             </div>
             <div className="flex flex-col justify-center items-center py-10">
-                    <div className="container flex items-center justify-between gap-4 px-10">
+                    <div className="container flex flex-grow items-center justify-between gap-4 px-10">
                         {/* Left side: Path location, Filters, and Sort By */}
                         <div className="flex flex-col gap-4">
                             {/* Path location */}

@@ -9,7 +9,7 @@ const CartLayout = () => {
     <>
       <div className="flex flex-col min-h-screen justify-between">
         <ProtectedNavbar />
-        <div className=" flex-grow max-w-screen overflow-hidden ">
+        <div className=" flex-grow overflow-hidden ">
           {outlet}
         </div>
         <Footer />

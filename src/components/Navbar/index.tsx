@@ -42,7 +42,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className={`flex justify-between  items-center lg:px-20 px-6 z-30 absolute w-screen max-lg:h-20 text-white`}>
+    <div className={`flex justify-between  items-center lg:px-20 px-6 z-30 absolute w-full max-lg:h-20 text-white`}>
       <header className="text-gray-600 body-font contents">
   <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-start justify-center">
   <nav className="hidden md:flex  flex-wrap items-center text-base justify-center">
