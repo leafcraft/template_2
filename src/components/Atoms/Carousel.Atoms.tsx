@@ -1,13 +1,59 @@
-import React, { useState } from 'react';
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import React, { useRef, useState } from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Icons from '../Icons';
+
+const CustomPaging = ({ images, currentSlide, goTo, index }) => (
+  <div
+    className={`custom-paging ${currentSlide === index ? 'active' : ''}`}
+    onClick={() => goTo(index)}
+  >
+    <img src={images[index].src} alt={images[index].alt} />
+  </div>
+);
 
 const CarouselZoom = ({ images }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
 
-  const handleSlideChange = (index) => {
-    setCurrentSlide(index);
+  function SampleNextArrow(props) {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        className={className}
+        style={{ ...style, display: "block", background: "red" }}
+        onClick={onClick}
+      />
+    );
+  }
+  
+  function SamplePrevArrow(props) {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        className={className}
+        style={{ ...style, display: "block", background: "green" }}
+        onClick={onClick}
+      ><Icons variant='Search' /></div>
+    );
+  }
+  
+
+  const settings = {
+    customPaging: (i, goTo) => {
+      return (
+        <CustomPaging images={images} currentSlide={currentSlide} goTo={goTo} index={i} />
+      );
+    },
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />
   };
 
   const openZoom = () => {
@@ -18,27 +64,34 @@ const CarouselZoom = ({ images }) => {
     setIsZoomed(false);
   };
 
+
+
   return (
     <div className="w-full max-w-screen-md mx-auto">
-      <Carousel
-        showThumbs={false}
-        selectedItem={currentSlide}
-        onChange={handleSlideChange}
-      >
-        {images.map((image, index) => (
-          <div key={index}>
-            <img
-              src={image.src}
-              alt={image.alt}
-              onDoubleClick={openZoom}
-              className="cursor-pointer"
-            />
-          </div>
-        ))}
-      </Carousel>
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+        <div className="md:col-span-1">
+        
+
+        </div>
+        <div className="md:col-span-5">
+          <Slider {...settings}>
+            {images.map((_image:any, index:any) => (
+              <div key={index}>
+                <img
+                  src={images[index].src}
+                  alt={images[index].alt}
+                  onDoubleClick={openZoom}
+                  className="cursor-pointer"
+                />
+              </div>
+            ))}
+          </Slider>
+        </div>
+      </div>
       <div className="text-center mt-4">
         <p>
           Image {currentSlide + 1} of {images.length}
+          
         </p>
       </div>
       {isZoomed && (

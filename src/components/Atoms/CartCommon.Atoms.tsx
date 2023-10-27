@@ -4,17 +4,23 @@ import ProductCard from './Productcard.Atoms';
 
 const CartPage = ({ images, products }) => {
   return (
-    <section className="text-gray-600 body-font overflow-hidden">
-      <div className="container px-5 py-24 mx-auto">
-        <div className="lg:w-4/5 mx-auto flex flex-row flex-wrap">
-          <div className="lg:w-1/2 w-full">
+    <section className=" overflow-hidden">
+      <div className=" px-5 py-24 ">
+        <div className=" grid grid-cols-2  place-content-center gap-24">
+          <div className=" ">
+            <p>Home
+              ›
+              All products
+              ›
+              Blue Velvet Fully Embroidered Lehenga Set</p>
             <CustomCarousel images={images} />
           </div>
-          <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-            <h2 className="text-sm title-font text-gray-500 tracking-widest">BRAND NAME</h2>
-            <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">The Catcher in the Rye</h1>
-            
+          <div className=" pr-10">
+            <h2 className="text-sm title-font text-gray-500 tracking-widest">Stylease Exclusive</h2>
+            <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">Blue Velvet Fully Embroidered Leheng Set</h1>
+
             <div className="flex items-center mb-4">
+              <span className="title-font font-medium text-2xl text-gray-900">Rent</span>
               <span className="title-font font-medium text-2xl text-gray-900">$58.00</span>
             </div>
 
@@ -41,7 +47,15 @@ const CartPage = ({ images, products }) => {
                 className="w-full bg-gray-100 border-2 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
               />
             </div>
-            
+
+            <div className="mb-4">
+              <label className="text-gray-500">return Date</label>
+              <input
+                type="date"
+                className="w-full bg-gray-100 border-2 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
+              />
+            </div>
+
             <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Add to Cart</button>
 
             <div className="mt-4">

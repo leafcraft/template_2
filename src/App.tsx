@@ -8,6 +8,7 @@ import Test from "./Pages/Test";
 import ProtectedNavbar from "./components/Navbar/ProtectedNavbar";
 import CartLayout from "./components/Layouts/CartLayout";
 import ProductList from "./Pages/Products";
+import Product from "./Pages/Product";
 
 function App() {
   return (
@@ -20,9 +21,9 @@ function App() {
             {/* <Route path="/test" element={<Test />} /> */}
           </Route>
           <Route element={<CartLayout />}>
-          <Route path="/product/:id" element={<Test />} />
+          <Route path="/product/:id" element={<Product />} />
           
-          <Route path="/cart" element={<Test />} />
+          <Route path="/testing" element={<Test />} />
           </Route>
         </Routes>
       </BrowserRouter>
