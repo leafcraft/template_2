@@ -1,6 +1,6 @@
 import React from "react";
 import BGIMAGE from '../assets/bg-component1.svg'
-import Cartpage from "./Cartpage";
+import Cartpage from "../components/ProductsComponents/Cartpage";
 
 const Test = () => {
   return (

@@ -9,7 +9,7 @@ const Typography = (props: {
       case "Navbar1":
         return (
           <p
-            className={`mr-5 hover:text-gray-900 font-Robot text-sm font-normal leading-6 ${
+            className={`mr-5 hover:text-gray-900 font-Robot text-[10px] lg:text-sm  font-normal leading-4 lg:leading-6 ${
               props?.className ? props?.className : ""
             }`}
           >

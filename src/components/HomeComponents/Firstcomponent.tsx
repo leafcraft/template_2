@@ -15,14 +15,14 @@ const Banner = () => {
         />
         <div className="absolute inset-0  lg:bottom-0 md:bottom[-63px] bottom-0 flex flex-col justify-center items-center text-white bg-opacity-0 bg-black">
           <div className="text-3xl text-center">
-            <h1 className="text-lg md:text-5xl lg:text-6xl font-normal font-Robot leading-tight">
+            <h1 className="animate-fade-down animate-once animate-duration-[1800ms] animate-delay-150 animate-ease-in text-lg md:text-5xl lg:text-6xl font-normal font-Robot leading-tight">
               STYLE IS A CHOICE.
             </h1>
             <div className="text-lg gap-1 md:gap-4 flex flex-col">
-              <div className=" md:p-4 col-start-2 col-span-3 font-normal font-Robot text-sm md:text-xl leading-7">
+              <div className="animate-fade-down animate-once animate-duration-[1800ms] animate-delay-150 animate-ease-in md:p-4 col-start-2 col-span-3 font-normal font-Robot text-sm md:text-xl leading-7">
                 Make Yours.
               </div>
-              <div className='flex justify-around'>
+              <div className='hidden md:flex justify-around'>
                 <button className="text-bg-footer bg-white rounded-3xl p-0.5 md:p-1.5  col-end-6 col-span-3  font-Robot font-normal text-[0.50rem] md:text-sm leading-6">
                   Rent Womens Wear
                 </button>
@@ -32,7 +32,7 @@ const Banner = () => {
               </div>
             </div>
           </div>
-          <div className=" flex flex-col text-left gap-1 md:gap-5 absolute bottom-0 left-0 p-4 lg:p-20 md:w-2/3 ">
+          <div className="hidden md:flex flex-col text-left gap-1 md:gap-5 absolute bottom-0 left-0 p-4 lg:p-20 md:w-2/3 ">
             <h2 className="text-md md:text-2xl lg:text-4xl xl:text-5xl font-normal font-Robot leading-tigh">
               THE FUTURE OF YOUR WARDROBE
             </h2>

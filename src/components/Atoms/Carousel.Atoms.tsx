@@ -22,9 +22,9 @@ const CarouselZoom = ({ images }) => {
     return (
       <div
         className={className}
-        style={{ ...style, display: "block", background: "red" }}
+       
         onClick={onClick}
-      />
+      ><Icons variant='rightArrow' /></div>
     );
   }
   
@@ -33,9 +33,9 @@ const CarouselZoom = ({ images }) => {
     return (
       <div
         className={className}
-        style={{ ...style, display: "block", background: "green" }}
+       
         onClick={onClick}
-      ><Icons variant='Search' /></div>
+      ><Icons variant='leftArrow' /></div>
     );
   }
   
@@ -96,11 +96,12 @@ const CarouselZoom = ({ images }) => {
       </div>
       {isZoomed && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex items-center justify-center">
-          <div className="relative">
+          <div className="relative ">
+          
             <img
               src={images[currentSlide].src}
               alt={images[currentSlide].alt}
-              className="max-h-screen"
+              className="max-h-screen "
             />
             <button
               onClick={closeZoom}

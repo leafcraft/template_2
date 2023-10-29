@@ -5,10 +5,10 @@ import img4 from '../../assets/img4-component4.png'
 import img5 from '../../assets/img5-component4.png'
 
 const imageSources = [
-  { image: img1, text: "Image 1" },
-  { image: img2, text: "Image 2" },
-  { image: img4, text: "Image 4" },
-  { image: img5, text: "Image 5" },
+  { image: img1, text: "The Cocktail Collection" },
+  { image: img2, text: "Top Rated" },
+  { image: img4, text: "Stylease Exclusive" },
+  { image: img5, text: "The Party Edit" },
 ];
 
 const FourthComponent = () => {
@@ -27,17 +27,21 @@ const FourthComponent = () => {
             src={src.image}
             alt={`Image ${index + 1}`}
           />
-          <div className="absolute bottom-0 left-0 bg-black text-white p-2 group-hover:opacity-75">
+          <div className="absolute bottom-1 left-1 text-lg font-normal font-Robot text-white p-2 group-hover:opacity-75">
            {src.text}{index + 1}
           </div>
         </div>
       ))}
     </div>
-    <img
+    <div><img
       className=" h-full w-full object-cover object-center"
       src={img3}
       alt="Image 3"
     />
+    <div className="hidden absolute top-0 left-4 text-lg font-normal font-Robot text-white p-2 group-hover:opacity-75">
+         Mens Wear
+          </div></div>
+    
   </div>
 
   );

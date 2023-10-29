@@ -9,15 +9,24 @@ import ProtectedNavbar from "./components/Navbar/ProtectedNavbar";
 import CartLayout from "./components/Layouts/CartLayout";
 import ProductList from "./Pages/Products";
 import Product from "./Pages/Product";
+import Login from "./Pages/Login";
+import ProtectedLayout from "./components/Layouts/ProtectedLayout";
+import ShoppingCart from "./Pages/ShoppingCart";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+        <Route element={<ProtectedLayout />}>
+            <Route path='/login' element={<Login />} />
+            {/* <Route path="/test" element={<Test />} /> */}
+          </Route>
         <Route element={<BaseLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductList />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/shoppingcart' element={<ShoppingCart/>} />
             {/* <Route path="/test" element={<Test />} /> */}
           </Route>
           <Route element={<CartLayout />}>

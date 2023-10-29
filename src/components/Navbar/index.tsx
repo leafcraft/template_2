@@ -45,8 +45,8 @@ const Navbar = () => {
     <div className={`flex justify-between  items-center lg:px-20 px-6 z-30 absolute w-full max-lg:h-20 text-white`}>
       <header className="text-gray-600 body-font contents">
   <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-start justify-center">
-  <nav className="hidden md:flex  flex-wrap items-center text-base justify-center">
-        <Link to="#" onClick={() => scrollToComponent('women_wear')}>
+  <nav className="hidden md:flex xl:flex-wrap items-center text-base justify-between">
+    <div className="flex"> <Link to="#" onClick={() => scrollToComponent('women_wear')}>
           <Typography variant="Navbar1"  >WOMENS WEAR</Typography>
         </Link>
         <Link to="#" onClick={() => scrollToComponent('mens_wear')}>
@@ -55,9 +55,17 @@ const Navbar = () => {
         <Link to="/products" onClick={() => scrollToComponent('products')}>
           <Typography variant="Navbar1">RENT FOR A CAUSE</Typography>
         </Link>
+       
         <Link to="#" onClick={() => scrollToComponent('blog')}>
           <Typography variant="Navbar1">BLOG</Typography>
+        </Link></div>
+        <div className="flex ml-auto">
+       
+        <Link to="/login" onClick={() => scrollToComponent('blog')}>
+          <Typography variant="Navbar1" className="bg-black p-3 rounded-md">Sign Up</Typography>
         </Link>
+        </div>
+       
       </nav>
 
   </div>

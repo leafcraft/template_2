@@ -40,7 +40,7 @@ const ProtectedNavbar = () => {
 
   return (
     <header className="bg-gray-100 text-gray-600 body-font flex flex-col items-center justify-center">
-      <div className='bg-black text-white font-Robot font-normal text-sm w-full h-8 flex justify-center items-center cursor-pointer leading-6' onClick={()=>{navigate('/')}}>Did you know you can make money from your personal wardrobe? Earn with us!</div>
+      <div className='bg-black text-white font-Robot font-normal  text-[0.50rem] md:text-sm w-full h-8 flex justify-center items-center cursor-pointer leading-6' onClick={()=>{navigate('/')}}>Did you know you can make money from your personal wardrobe? Earn with us!</div>
       <div className="container px-12 flex flex-wrap p-5 flex-row justify-between md:flex-row items-center">
         <a className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
         <img src={logo} alt='logo' className='w-20 h-auto' />

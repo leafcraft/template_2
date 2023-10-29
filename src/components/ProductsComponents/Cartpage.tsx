@@ -29,13 +29,13 @@ const images = [
 
 const products = [
   {
-    imageUrl: 'https://dummyimage.com/420x260',
+    imageUrl: img8,
     category: 'CATEGORY',
     title: 'The Catalyzer',
     price: '$16.00',
   },
   {
-    imageUrl: 'https://dummyimage.com/421x261',
+    imageUrl: img7,
     category: 'CATEGORY',
     title: 'Shooting Stars',
     price: '$21.15',
