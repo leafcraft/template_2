@@ -12,6 +12,7 @@ import Product from "./Pages/Product";
 import Login from "./Pages/Login";
 import ProtectedLayout from "./components/Layouts/ProtectedLayout";
 import ShoppingCart from "./Pages/ShoppingCart";
+import Profile from "./Pages/Profile";
 
 function App() {
   return (
@@ -20,17 +21,23 @@ function App() {
         <Routes>
         <Route element={<ProtectedLayout />}>
             <Route path='/login' element={<Login />} />
+           
             {/* <Route path="/test" element={<Test />} /> */}
           </Route>
         <Route element={<BaseLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductList />} />
             <Route path='/login' element={<Login />} />
-            <Route path='/shoppingcart' element={<ShoppingCart/>} />
+           
+           
+           
             {/* <Route path="/test" element={<Test />} /> */}
           </Route>
           <Route element={<CartLayout />}>
           <Route path="/product/:id" element={<Product />} />
+          <Route path='/shoppingcart' element={<ShoppingCart/>} />
+          <Route path='/profile' element={<Profile />} />
+         
           
           <Route path="/testing" element={<Test />} />
           </Route>

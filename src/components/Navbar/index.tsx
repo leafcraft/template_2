@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-//import LOGO from "../../assets/subtl_Logo.png";
 import Button from "../Button";
 import Typography from "../Atoms/Typography";
 import { Link } from "react-router-dom";

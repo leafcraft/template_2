@@ -1,118 +1,288 @@
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
+interface CartItem {
+  id: number;
+  img: string;
+  name: string;
+  size: string;
+  price: number;
+  count: number;
+}
 
-const ShoppingCart = () => {
+const ShoppingCart: React.FC = () => {
+
+  const [displayCart, setDisplayCart] = useState("cart-1");
+  const [cartItems, setCartItems] = useState<CartItem[]>([
+    {
+      id: 1,
+      img: "https://via.placeholder.com/150",
+      name: "Red dress",
+      size: "M",
+      price: 259.0,
+      count: 1,
+    },
+    {
+      id: 2,
+      img: "https://via.placeholder.com/150",
+      name: "Green kurthi",
+      size: "S",
+      price: 259.0,
+      count: 1,
+    },
+    // Add more items as needed
+  ]);
+
+  const navigate = useNavigate();
+
+  const increaseCount = (id: number) => {
+    const updatedCart = cartItems.map((item) =>
+      item.id === id ? { ...item, count: item.count + 1 } : item
+    );
+    setCartItems(updatedCart);
+  };
+
+  const decreaseCount = (id: number) => {
+    const updatedCart = cartItems.map((item) =>
+      item.id === id && item.count > 1 ? { ...item, count: item.count - 1 } : item
+    );
+    setCartItems(updatedCart);
+  };
+
+  const removeItem = (id: number) => {
+    const updatedCart = cartItems.filter((item) => item.id !== id);
+    setCartItems(updatedCart);
+  };
+
+  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.count, 0);
+  const shipping = 4.99;
+  const total = subtotal + shipping;
+
+  // cart-1
+
+  const calculateSubtotal = () => {
+    const subtotal = cartItems.reduce((total, item) => total + item.price * item.count, 0);
+    return subtotal;
+  };
+
+  const deliveryCharge = 4.99; // Define your delivery charge here
+  const totalAmount = calculateSubtotal() + deliveryCharge;
+
   return (
-    <section className="h-screen bg-gray-100 py-12 sm:py-16 lg:py-20">
-  <div className="mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="flex items-center justify-center">
-      <h1 className="text-2xl font-semibold text-gray-900">Your Cart</h1>
-    </div>
+    // cart-1
+    <>
+      <div className="h-screen flex">
+        <div className="w-1/12 bg-bg-footer text-white p-4">
+          <h2 className="text-lg text-center font-semibold mb-4">Menu</h2>
+          <ul className="space-y-4">
+            <li
+              className={`cursor-pointer hover:bg-white rounded-lg hover:text-black text-center ${displayCart === "cart-1" ? "text-blue-500 font-semibold" : ""}`}
+              onClick={() => setDisplayCart("cart-1")}
+            >
+             Cart 1
+            </li>
+            <li
+              className={`cursor-pointer hover:bg-white rounded-lg hover:text-black text-center ${displayCart === "cart-2" ? "text-blue-500 font-semibold" : ""}`}
+              onClick={() => setDisplayCart("cart-2")}
+            >
+               Cart 2
+            </li>
+          </ul>
+        </div>
+        <div className="w-4/5 overflow-y-auto p-4">
+          {displayCart === "cart-1" && (
+            <>
+              {/* Cart-1 component */}
+            
+      <section className="flex justify-center bg-gray-100 py-12 sm:py-16 lg:py-24">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center">
+            <h1 className="text-2xl font-semibold text-gray-900">Your Cart</h1>
+          </div>
 
-    <div className="mx-auto mt-8 max-w-2xl md:mt-12">
-      <div className="bg-white shadow">
-        <div className="px-4 py-6 sm:px-8 sm:py-10">
-          <div className="flow-root">
-            <ul className="-my-8">
-              <li className="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
-                <div className="shrink-0">
-                  <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="data:image/jpeg;base64,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" alt="" />
-                </div>
-
-                <div className="relative flex flex-1 flex-col justify-between">
-                  <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
-                    <div className="pr-8 sm:pr-5">
-                      <p className="text-base font-semibold text-gray-900">Nike Air Max 2019</p>
-                      <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">36EU - 4US</p>
-                    </div>
-
-                    <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                      <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">$259.00</p>
-
-                      <div className="sm:order-1">
-                        <div className="mx-auto flex h-8 items-stretch text-gray-600">
-                          <button className="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">-</button>
-                          <div className="flex w-full items-center justify-center bg-gray-100 px-4 text-xs uppercase transition">1</div>
-                          <button className="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">+</button>
+          <div className="mt-8 w-full md:mt-12">
+            <div className="bg-slate-200 rounded-lg shadow w-full">
+              <div className="px-4 py-6 sm:px-8 sm:py-10 w-full">
+                <div className="flow-root">
+                  <ul className="grid grid-cols-1 w-full items-center">
+                    {cartItems.map((item) => (
+                      <li
+                        key={item.id}
+                        className="grid grid-col-1 md:grid-cols-4 gap-5 content-center w-full space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0"
+                      >
+                        {/* Content for each cart item */}
+                        <div className=" w-24 md:w-1/2 justify-self-center h-32 sm:h-24 bg-white rounded-lg">
+                          <img src={item.img} alt="item" className="w-full h-full object-contain" />
                         </div>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
-                    <button type="button" className="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900">
-                      <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" className=""></path>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </li>
-              <li className="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
-                <div className="shrink-0">
-                  <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="data:image/jpeg;base64,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" alt="" />
-                </div>
-
-                <div className="relative flex flex-1 flex-col justify-between">
-                  <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
-                    <div className="pr-8 sm:pr-5">
-                      <p className="text-base font-semibold text-gray-900">Nike Air Max 2019</p>
-                      <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">36EU - 4US</p>
-                    </div>
-
-                    <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                      <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">$259.00</p>
-
-                      <div className="sm:order-1">
-                        <div className="mx-auto flex h-8 items-stretch text-gray-600">
-                          <button className="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">-</button>
-                          <div className="flex w-full items-center justify-center bg-gray-100 px-4 text-xs uppercase transition">1</div>
-                          <button className="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">+</button>
+                        {/* Rest of the item details (name, size, price, etc.) */}
+                        <div>
+                          <p className="text-base font-semibold text-gray-900">{item.name}</p>
+                          <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">{item.size}</p>
+                          <p className="text-base font-semibold text-gray-900 text-left">
+                            Rs/-{item.price.toFixed(2)}
+                          </p>
+                          {/* Add other item details as needed */}
                         </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
-                    <button type="button" className="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900">
-                      <svg className="block h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" className=""></path>
-                      </svg>
-                    </button>
-                  </div>
+                        {/* quantity of item */}
+                        <div className="col-start-4 grid grid-cols-1 gap-4 md:grid-cols-2 place-items-end place-content-start">
+                          <div className=" bg-slate-900 rounded-md flex h-8 items-stretch text-gray-600">
+                            <button
+                              className="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black text-white"
+                              onClick={() => decreaseCount(item.id)}
+                            >
+                              -
+                            </button>
+                            <div className="flex w-full text-white items-center justify-center bg-gray-100 px-4 text-xs uppercase transition">
+                              {item.count}
+                            </div>
+                            <button
+                              className="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black text-white"
+                              onClick={() => increaseCount(item.id)}
+                            >
+                              +
+                            </button>
+                          </div>
+                          {/* Display item details */}
+                          <button
+                            type="button"
+                            className="flex rounded p-2 text-center  text-gray-500 bg-white transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900"
+                            onClick={() => removeItem(item.id)}
+                          >
+                            {/* SVG icon */}
+                            <svg
+                              className="block h-5 w-5"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </li>
-            </ul>
-          </div>
 
-          <div className="mt-6 border-t border-b py-2">
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-400">Subtotal</p>
-              <p className="text-lg font-semibold text-gray-900">$399.00</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-400">Shipping</p>
-              <p className="text-lg font-semibold text-gray-900">$8.00</p>
-            </div>
-          </div>
-          <div className="mt-6 flex items-center justify-between">
-            <p className="text-sm font-medium text-gray-900">Total</p>
-            <p className="text-2xl font-semibold text-gray-900"><span className="text-xs font-normal text-gray-400">USD</span> 408.00</p>
-          </div>
+                {/* Rest of the component remains unchanged */}
 
-          <div className="mt-6 text-center">
-            <button type="button" className="group inline-flex w-full items-center justify-center rounded-md bg-gray-900 px-6 py-4 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
+                <div className="mt-6 text-center w-full">
+                  <div className=" border-t-2 p-4  mt-4">
+                    <div className="flex justify-between">
+                      <p className="text-gray-700">Subtotal</p>
+                      <p className="text-gray-700">{calculateSubtotal()} ₹</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="text-gray-700">Delivery Charges</p>
+                      <p className="text-gray-700">{deliveryCharge} ₹</p>
+                    </div>
+                    <hr className="my-4" />
+                    <div className="flex justify-between">
+                      <p className="text-lg font-bold">Total</p>
+                      <p className="text-lg font-bold">{totalAmount} ₹</p>
+                    </div>
+                    <button onClick={() => navigate("/")} className="bg-black shadow-md w-full mt-5 rounded-md text-white font-normal font-Robot p-4">
               Checkout
-              <svg xmlns="http://www.w3.org/2000/svg" className="group-hover:ml-8 ml-4 h-6 w-6 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
+            </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+            </>
+          )}
+          {displayCart === "cart-2" && (
+            <>
+              {/* Cart-2 component */}
+              
+      <div className="h-screen bg-slate-500 pt-20">
+        <h1 className="mb-10 text-center text-2xl font-bold">Cart Items</h1>
+        <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
+          <div className="rounded-lg md:w-2/3">
+            {cartItems.map((item) => (
+              <div key={item.id} className="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start">
+                <img src={item.img} alt="product-image" className="w-full rounded-lg sm:w-40" />
+                <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
+                  <div className="mt-5 sm:mt-0">
+                    <h2 className="text-lg font-bold text-gray-900">{item.name}</h2>
+                    <p className="mt-1 text-xs text-gray-700">{item.size}</p>
+                  </div>
+                  <div className="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
+                    <div className="flex items-center border-gray-100">
+                      <span
+                        className="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-blue-50"
+                        onClick={() => decreaseCount(item.id)}
+                      >
+                        {' '}
+                        -{' '}
+                      </span>
+                      <input
+                        className="h-8 w-8 border bg-white text-center text-xs outline-none"
+                        type="number"
+                        value={item.count}
+                        min="1"
+                        readOnly />
+                      <span
+                        className="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50"
+                        onClick={() => increaseCount(item.id)}
+                      >
+                        {' '}
+                        +{' '}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <p className="text-sm">{item.price * item.count} ₭</p>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="h-5 w-5 cursor-pointer duration-150 hover:text-red-500"
+                        onClick={() => removeItem(item.id)}
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Sub total */}
+          <div className="mt-6 h-full w-full rounded-lg border bg-white p-6 shadow-md md:mt-0 md:w-1/3">
+            <div className="mb-2 flex justify-between">
+              <p className="text-gray-700">Subtotal</p>
+              <p className="text-gray-700">{subtotal} ₭</p>
+            </div>
+            <div className="flex justify-between">
+              <p className="text-gray-700">Shipping</p>
+              <p className="text-gray-700">{shipping} ₭</p>
+            </div>
+            <hr className="my-4" />
+            <div className="flex justify-between">
+              <p className="text-lg font-bold">Total</p>
+              <div>
+                <p className="mb-1 text-lg font-bold">{total} ₭</p>
+                <p className="text-sm text-gray-700">including VAT</p>
+              </div>
+            </div>
+            <button onClick={() => navigate("/")} className="bg-black shadow-md w-full mt-3 rounded-md text-white font-normal font-Robot p-4">
+              Checkout
             </button>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
+            </>
+          )}
+        </div>
+      </div>
+     
+     </>
   );
 };
 

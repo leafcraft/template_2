@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../Navbar";
 import Footer from "../Footer";
 import { useOutlet } from "react-router-dom";
 
@@ -9,7 +8,7 @@ const ProtectedLayout = () => {
     <>
      
       <div className="flex flex-col min-h-screen justify-between">
-        
+
         <div className=" flex-grow max-w-screen overflow-hidden ">
           {outlet}
         </div>

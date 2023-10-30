@@ -9,7 +9,7 @@ const BaseLayout = () => {
     <>
      
       <div className="flex flex-col min-h-screen justify-between">
-        <Navbar />
+      <Navbar />
         <div className=" flex-grow max-w-screen overflow-hidden ">
           {outlet}
         </div>
