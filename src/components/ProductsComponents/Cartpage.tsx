@@ -40,6 +40,18 @@ const products = [
     title: 'Shooting Stars',
     price: '$21.15',
   },
+  {
+    imageUrl: img8,
+    category: 'CATEGORY',
+    title: 'The Catalyzer',
+    price: '$16.00',
+  },
+  {
+    imageUrl: img7,
+    category: 'CATEGORY',
+    title: 'Shooting Stars',
+    price: '$21.15',
+  },
   // Add more product data as needed
 ];
 

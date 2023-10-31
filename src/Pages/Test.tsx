@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import BGIMAGE from '../assets/bg-component1.svg'
 import Cartpage from "../components/ProductsComponents/Cartpage";
 

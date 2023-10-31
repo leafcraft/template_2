@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -16,44 +16,49 @@ const CustomPaging = ({ images, currentSlide, goTo, index }) => (
 const CarouselZoom = ({ images }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [selectedThumbnail, setSelectedThumbnail] = useState(0);
 
   function SampleNextArrow(props) {
-    const { className, style, onClick } = props;
+    const { className, onClick } = props;
     return (
-      <div
-        className={className}
-       
-        onClick={onClick}
-      ><Icons variant='rightArrow' /></div>
+      <div className={className} onClick={onClick}>
+        <Icons variant='rightArrow' />
+      </div>
     );
   }
   
   function SamplePrevArrow(props) {
-    const { className, style, onClick } = props;
+    const { className, onClick } = props;
     return (
-      <div
-        className={className}
-       
-        onClick={onClick}
-      ><Icons variant='leftArrow' /></div>
+      <div className={className} onClick={onClick}>
+        <Icons variant='leftArrow' />
+      </div>
     );
   }
-  
 
-  const settings = {
-    customPaging: (i, goTo) => {
-      return (
-        <CustomPaging images={images} currentSlide={currentSlide} goTo={goTo} index={i} />
-      );
-    },
+  const mainSettings = {
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    
     nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />
+    prevArrow: <SamplePrevArrow />,
+    initialSlide: currentSlide
+  };
+
+  const thumbnailSettings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    asNavFor: '.slider',
+    focusOnSelect: true,
+    afterChange: (index:any) => {
+      setSelectedThumbnail(index);
+      setCurrentSlide(index); // Set the current slide to the selected thumbnail
+    }
   };
 
   const openZoom = () => {
@@ -64,22 +69,17 @@ const CarouselZoom = ({ images }) => {
     setIsZoomed(false);
   };
 
-
-
   return (
     <div className="w-full max-w-screen-md mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-        <div className="md:col-span-1">
-        
-
-        </div>
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+       
         <div className="md:col-span-5">
-          <Slider {...settings}>
+          <Slider {...mainSettings} className="slider">
             {images.map((_image:any, index:any) => (
               <div key={index}>
                 <img
-                  src={images[index].src}
-                  alt={images[index].alt}
+                  src={images[selectedThumbnail].src}
+                  alt={images[selectedThumbnail].alt}
                   onDoubleClick={openZoom}
                   className="cursor-pointer"
                 />
@@ -87,21 +87,24 @@ const CarouselZoom = ({ images }) => {
             ))}
           </Slider>
         </div>
+        {/* <div >
+          <Slider {...thumbnailSettings}>
+            {images.map((_image: any, index: any) => (
+              <div key={index}>
+                <img src={images[index].src} alt={images[index].alt} />
+              </div>
+            ))}
+          </Slider>
+        </div> */}
       </div>
-      <div className="text-center mt-4">
-        <p>
-          Image {currentSlide + 1} of {images.length}
-          
-        </p>
-      </div>
+     
       {isZoomed && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex items-center justify-center">
-          <div className="relative ">
-          
+          <div className="relative">
             <img
               src={images[currentSlide].src}
               alt={images[currentSlide].alt}
-              className="max-h-screen "
+              className="max-h-screen"
             />
             <button
               onClick={closeZoom}

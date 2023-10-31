@@ -39,10 +39,19 @@
   background: radial-gradient(#5b68df, #000000);
 }
 
+.radioSelect input[type="radio"]:checked + .select-label {
+  /* Style changes for the label when the adjacent radio input is checked */
+  background-color: #000;
+  color: #fff;
+  z-index: 10;
+}
+
 .hero {
   background-image: radial-gradient(
     farthest-corner at 40px 40px,
     #000000 0%,
     #097756 100%
   );
+
+
 }
