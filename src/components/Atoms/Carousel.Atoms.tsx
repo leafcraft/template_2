@@ -1,122 +1,74 @@
-import React, { useState } from 'react';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import Icons from '../Icons';
+import React, { useState, useRef } from "react";
+import "../../../node_modules/react-image-gallery/styles/css/image-gallery.css";
+import ImageGallery, { ReactImageGalleryItem } from "react-image-gallery";
+import img7 from '../../assets/products/img7.png';
+import img8 from '../../assets/products/img8.png';
+import Icons from "../../components/Icons";
 
-const CustomPaging = ({ images, currentSlide, goTo, index }) => (
-  <div
-    className={`custom-paging ${currentSlide === index ? 'active' : ''}`}
-    onClick={() => goTo(index)}
-  >
-    <img src={images[index].src} alt={images[index].alt} />
-  </div>
-);
+type TestProps = {
+  // Define props if any
+};
 
-const CarouselZoom = ({ images }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isZoomed, setIsZoomed] = useState(false);
-  const [selectedThumbnail, setSelectedThumbnail] = useState(0);
+const Carousel: React.FC<TestProps> = () => {
+  const [images] = useState<ReactImageGalleryItem[]>([
+    {
+      original: img7,
+      thumbnail: img7,
+    },
+    {
+      original: img8,
+      thumbnail: img8,
+    },
+    {
+      original: img7,
+      thumbnail: img7,
+    }
+  ]);
 
-  function SampleNextArrow(props) {
-    const { className, onClick } = props;
-    return (
-      <div className={className} onClick={onClick}>
-        <Icons variant='rightArrow' />
-      </div>
-    );
-  }
-  
-  function SamplePrevArrow(props) {
-    const { className, onClick } = props;
-    return (
-      <div className={className} onClick={onClick}>
-        <Icons variant='leftArrow' />
-      </div>
-    );
-  }
 
-  const mainSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
-    initialSlide: currentSlide
+
+  const imageGalleryRef = useRef<ImageGallery>(null);
+
+  const handleSlide = (index: number) => {
+    console.log("Slide to index:", index);
   };
 
-  const thumbnailSettings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    asNavFor: '.slider',
-    focusOnSelect: true,
-    afterChange: (index:any) => {
-      setSelectedThumbnail(index);
-      setCurrentSlide(index); // Set the current slide to the selected thumbnail
+  const goBackward = () => {
+    if (imageGalleryRef.current) {
+      const currentIndex = imageGalleryRef.current.getCurrentIndex() - 1;
+      imageGalleryRef.current.slideToIndex(currentIndex);
+      handleSlide(currentIndex);
     }
   };
 
-  const openZoom = () => {
-    setIsZoomed(true);
+  const goForward = () => {
+    if (imageGalleryRef.current) {
+      const currentIndex = imageGalleryRef.current.getCurrentIndex() + 1;
+      imageGalleryRef.current.slideToIndex(currentIndex);
+      handleSlide(currentIndex);
+    }
   };
 
-  const closeZoom = () => {
-    setIsZoomed(false);
-  };
 
   return (
-    <div className="w-full max-w-screen-md mx-auto">
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-       
-        <div className="md:col-span-5">
-          <Slider {...mainSettings} className="slider">
-            {images.map((_image:any, index:any) => (
-              <div key={index}>
-                <img
-                  src={images[selectedThumbnail].src}
-                  alt={images[selectedThumbnail].alt}
-                  onDoubleClick={openZoom}
-                  className="cursor-pointer"
-                />
-              </div>
-            ))}
-          </Slider>
+    <div className="relative">
+      <div className="carousel-container flex justify-center">
+        <button className="left-arrow" onClick={goBackward}><Icons variant='leftArrow' /></button>
+
+        <div className="wrapper">
+          <ImageGallery
+            ref={imageGalleryRef}
+            items={images}
+            showPlayButton={false}
+            showFullscreenButton={false}
+            showNav={false}
+          />
         </div>
-        {/* <div >
-          <Slider {...thumbnailSettings}>
-            {images.map((_image: any, index: any) => (
-              <div key={index}>
-                <img src={images[index].src} alt={images[index].alt} />
-              </div>
-            ))}
-          </Slider>
-        </div> */}
+
+        <button className="right-arrow" onClick={goForward}> <Icons variant='rightArrow' /></button>
       </div>
-     
-      {isZoomed && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex items-center justify-center">
-          <div className="relative">
-            <img
-              src={images[currentSlide].src}
-              alt={images[currentSlide].alt}
-              className="max-h-screen"
-            />
-            <button
-              onClick={closeZoom}
-              className="absolute top-2 right-2 text-white text-2xl hover:text-red-500"
-            >
-              &#10006;
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default CarouselZoom;
+export default Carousel;

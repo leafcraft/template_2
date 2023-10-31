@@ -7,25 +7,7 @@ import img8 from '../../assets/products/img8.png';
 import img9 from '../../assets/products/img9.png';
 import CartPage from '../Atoms/CartCommon.Atoms';
 
-const images = [
-  {
-    src: Product1,
-    alt: 'Image 1',
-  },
-  {
-    src: img6,
-    alt: 'Image 2',
-  },
-  {
-    src: img7,
-    alt: 'Image 3',
-  },
-  {
-    src: img8,
-    alt: 'Image 4',
-  },
-  // Add more images as needed
-];
+
 
 const products = [
   {
@@ -59,7 +41,7 @@ const ExamplePage = () => {
   return (
     <div>
       {/* ... other content ... */}
-      <CartPage images={images} products={products} />
+      <CartPage products={products} />
       {/* ... other content ... */}
     </div>
   );

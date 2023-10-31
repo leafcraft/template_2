@@ -3,7 +3,10 @@ import CustomCarousel from './Carousel.Atoms';
 import ProductCard from './Productcard.Atoms';
 import { useNavigate } from 'react-router';
 
-const CartPage = ({ images, products }) => {
+
+
+const CartPage = ({  products }) => {
+
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to manage dropdown visibility
 
@@ -44,7 +47,10 @@ const CartPage = ({ images, products }) => {
               All products
               ›
               Blue Velvet Fully Embroidered Lehenga Set</p>
-            <div className='p-14'> <CustomCarousel images={images} /></div>
+            <div className='p-14'>
+               <CustomCarousel />
+              
+               </div>
           </div>
           <div className=" flex flex-col gap-4 pr-10">
             <div>
