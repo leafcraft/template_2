@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import img4 from '../assets/img4-component4.png'
+import * as Yup from 'yup';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { useNavigate } from 'react-router';
 
 const LoginComponent = () => {
   const [showSignupBox, setShowSignupBox] = useState(true);
   const [showCreateAccount, setShowCreateAccount] = useState(false);
   const [Login, setLogin] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   const showSignup = () => {
     setShowSignupBox(true);
@@ -31,6 +36,22 @@ const LoginComponent = () => {
     setLogin(false);
     setForgotPassword(false);
   };
+
+
+  // yup validation 
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    username: Yup.string().required('Username is required'),
+    // Add more fields and validation as necessary
+  });
+
+  // handle submit for forgot 
+  const handleSubmit = (values: any) => {
+
+    console.log("Form data:", values);
+  
+  };
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
@@ -57,32 +78,53 @@ const LoginComponent = () => {
       {/* Login */}
       <div className="flex flex-1 flex-col items-center justify-center px-10 relative">
       {forgotPassword && (
-          <div className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
+         <Formik
+         initialValues={{ email: '' }}
+         validationSchema={validationSchema}
+         onSubmit={(values, { setSubmitting }) => {
+         console.log(values,"vales forgot")
+            setSubmitting(false)
+        }}
+       >
+         {({
+         values,
+         handleChange,
+         handleSubmit,
+         isSubmitting,
+       }) => (
+        <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center" onSubmit={handleSubmit}>
             <div className="flex flex-col space-y-2 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold">Forgot Password?</h2>
-              <p className="text-md md:text-xl">
+              <h2 className="text-3xl md:text-4xl  font-Robot font-bold">Forgot Password?</h2>
+              <p className="text-md  font-Robot md:text-xl">
                 Enter your email address to reset your password.
               </p>
             </div>
             <div className="flex flex-col  w-full space-y-5 px-12 lg:px-24">
-              <input
-                type="text"
-                placeholder="Email"
-                className="flex px-3 py-2 focus:border-red md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+              <Field
+                type="email"
+                name='email'
+                value={values.email}
+                onChange={handleChange}
+                placeholder="Enter your Email"
+                className="flex font-Robot px-3 py-2 focus:border-red md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
               />
-              <button className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
-                Reset Password
-              </button>
+              <ErrorMessage name="email" component="div" />
+              <button disabled={isSubmitting}  type="submit" className="flex font-Robot items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+          Reset Password
+        </button>
               <div className='flex justify-center'>
-                <p className="text-sm md:text-md">
+                <p className=" font-Robot text-sm md:text-md">
                   Remembered your password?{" "}
-                  <a href="#" onClick={login} className="underline font-medium text-slate-950 opacity-50 pl-2">
+                  <a href="#" onClick={login} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
                     Login
                   </a>
                 </p>
               </div>
             </div>
-          </div>
+          </Form>
+       )}
+          </Formik>
+          
         )}
         <div className="flex lg:hidden justify-between items-center w-full py-4">
           <div className="flex items-center justify-start space-x-3">
@@ -109,7 +151,7 @@ const LoginComponent = () => {
               placeholder="Username"
               className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
             />
-            <button className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+            <button onClick={()=>{navigate('/')}} className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
               Confirm with email
             </button>
             <div className="flex justify-center items-center">
@@ -165,7 +207,7 @@ const LoginComponent = () => {
               className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
             />
            
-            <button className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+            <button onClick={login} className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
              Submit
             </button>
             <div className='flex justify-center'>
@@ -193,7 +235,7 @@ const LoginComponent = () => {
               placeholder="Password"
               className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
             />
-            <button className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+            <button onClick={()=>{navigate('/')}} className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
              Submit
             </button>
             <div className='flex justify-center'>

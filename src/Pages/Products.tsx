@@ -1,5 +1,6 @@
-import React from 'react';
-import Banner from '../components/ProductsComponents/banner';
+
+import ProductsCommonComponent from '../components/Atoms/Products.Atoms'
+
 import img1 from '../assets/products/img1.png';
 import img2 from '../assets/products/img2.png';
 import img3 from '../assets/products/img3.png';
@@ -14,17 +15,9 @@ import img11 from '../assets/products/img11.png';
 import img12 from '../assets/products/img12.png';
 import img13 from '../assets/products/img13.png';
 import img14 from '../assets/products/img14.png';
-import { Link } from 'react-router-dom';
+import Banner from '../components/ProductsComponents/banner';
 
-interface Product {
-  id: number;
-  name: string;
-  category: string;
-  price: string;
-  imageSrc: string;
-}
-
-const products: Product[] = [
+const products = [
   {
     id: 1,
     name: 'Royal Blue Strappy Flowy Gown with Trail',
@@ -126,39 +119,13 @@ const products: Product[] = [
   // Add more product data here
 ];
 
-const ProductList: React.FC = () => {
+const Products = () => {
   return (
     <section className="text-gray-600 body-font ">
     <Banner />
-    <div id='women_wear' className=" px-5 py-8 mx-auto">
-      <div className="flex flex-wrap ">
-        {products.map((product) => (
-          <div key={product.id} className="lg:w-1/4 md:w-1/3 p-7 w-full cursor-pointer" onClick={()=>console.log('pass the props')}>
-            <Link to={`/product/${product.id}`}>
-              <a className="flex relative h-80 rounded overflow-hidden">
-                <img
-                  alt="ecommerce"
-                  className="object-cover object-center w-full h-full block"
-                  src={product.imageSrc}
-                />
-              </a>
-            </Link>
-            <div className="mt-4 text-center">
-              
-              <h2 className="text-gray-900 title-font text-lg font-medium">
-                {product.name}
-              </h2>
-              <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                {product.category}
-              </h3>
-              <p className="mt-1">{product.price}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-  );
-};
+      <ProductsCommonComponent variant={'products-1'} products={products} />
+      </section>
+  )
+}
 
-export default ProductList;
+export default Products

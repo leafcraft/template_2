@@ -4,6 +4,7 @@ import Icons from "../Icons";
 interface ContentItem {
   name: string;
   section: string;
+  link:any;
 }
 
 interface ContentGroup {
@@ -13,24 +14,24 @@ interface ContentGroup {
 const Content: ContentGroup[] = [
   {
     contents: [
-      { name: "About Us", section: "hallucinations" },
-      { name: "Contact Us", section: "benefits" },
-      { name: "FAQS", section: "Trynow" },
-      { name: "Blog", section: "blog" },
+      { name: "About Us", section: "hallucinations" , link : '/aboutus' },
+      { name: "Contact Us", link : '/' , section: "benefits" },
+      { name: "FAQS", link : '/' , section: "Trynow" },
+      { name: "Blog", link : '/' , section: "blog" },
     ],
   },
   {
     contents: [
-      { name: "Media", section: "" },
-      { name: "Cancellation Policy", section: "blog" },
-      { name: "Privacy Policy", section: "" },
+      { name: "Media", link : '/' , section: "" },
+      { name: "Cancellation Policy", link : '/' , section: "blog" },
+      { name: "Privacy Policy", link : '/' , section: "" },
     ],
   },
   {
     contents: [
-      { name: "Return Policy", section: "team" },
-      { name: "T&C", section: "Trynow" },
-      { name: "Cookie Policy", section: "Trynow" },
+      { name: "Return Policy", link : '/' , section: "team" },
+      { name: "T&C", link : '/' , section: "Trynow" },
+      { name: "Cookie Policy", link : '/' , section: "Trynow" },
     ],
   },
 ];
@@ -111,7 +112,7 @@ const Footer: React.FC = () => {
               <nav className="list-none mb-10 flex flex-col gap-2">
                 {props.contents.map((map: ContentItem, subIndex) => (
                   <li key={subIndex}>
-                    <a className="text-white hover:text-brown cursor-pointer">
+                    <a href={map.link} className="text-white hover:text-brown cursor-pointer">
                       {map.name}
                     </a>
                   </li>
@@ -124,9 +125,10 @@ const Footer: React.FC = () => {
 
       <div className="container mx-auto py-4 px-5 flex justify-evenly flex-wrap flex-col sm:flex-row">
         <p className="text-gray-500 text-sm text-center sm:text-left">
-          Copyright © 2019 Stylease. All Rights Reserved
+        <p className="font-medium w-full flex-grow">© 2022 Company <a className='text-green-500' target='_blank' href='https://leafcraft.co/'>LeafCraft.co</a> All Rights Reserved</p>
+
         </p>
-        <p className="text-sm text-center sm:text-left">Powered By Ekommerce360</p>
+        <p className="text-sm text-center sm:text-left">Powered By  <a className='text-green-500' target='_blank' href='https://leafcraft.co/'>LeafCraft</a></p>
       </div>
     </footer>
   );

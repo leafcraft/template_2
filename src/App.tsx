@@ -13,6 +13,7 @@ import Login from "./Pages/Login";
 import ProtectedLayout from "./components/Layouts/ProtectedLayout";
 import ShoppingCart from "./Pages/ShoppingCart";
 import Profile from "./Pages/Profile";
+import AboutUs from "./Pages/AboutUs";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="/product/:id" element={<Product />} />
           <Route path='/shoppingcart' element={<ShoppingCart/>} />
           <Route path='/profile' element={<Profile />} />
+          <Route  path='/aboutus' element={<AboutUs />} />
          
           
           <Route path="/testing" element={<Test />} />
