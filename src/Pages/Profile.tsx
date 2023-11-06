@@ -1,8 +1,9 @@
 import React from 'react'
+import ProfileForm from './Test'
 
 const Profile = () => {
   return (
-    <div>Profile</div>
+    <div><ProfileForm/> </div>
   )
 }
 

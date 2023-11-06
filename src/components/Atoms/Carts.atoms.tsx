@@ -127,7 +127,7 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                                       viewBox="0 0 24 24"
                                       stroke="currentColor"
                                     >
-                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                   </button>
                                 </div>
@@ -213,7 +213,7 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                                 className="h-5 w-5 cursor-pointer duration-150 hover:text-red-500"
                                 onClick={() => removeItem(item.id)}
                               >
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                               </svg>
                             </div>
                           </div>

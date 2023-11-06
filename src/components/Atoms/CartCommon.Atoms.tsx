@@ -2,27 +2,27 @@ import React, { useState } from 'react';
 import CustomCarousel from './Carousel.Atoms';
 import ProductCard from './Productcard.Atoms';
 import { useNavigate } from 'react-router';
+import DropdownComponent from '../../components/Atoms/Dropdown';
 
 
 
 const CartPage = ({  products }) => {
+  // dropdown
+  const handleDropdownSelect = (selectedValue) => {
+    // Do something with the selected value, e.g., update state or perform an action
+    console.log(`Selected value: ${selectedValue}`);
+  };
+
+  const dropdownOptions = [
+    { label: 'item 1', value: 'Value 1' },
+    { label: 'item 2', value: 'Value 2' },
+    { label: 'item 3', value: 'Value 3' },
+    // Add more options as needed
+  ];
 
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to manage dropdown visibility
 
-  // dropdown
-  const [selectedValue, setSelectedValue] = useState('');
-  const [inputValue, setInputValue] = useState('');
-
-  const handleDropdownClick = () => {
-    setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown visibility
-  };
-
-  const handleDropdownSelect = (value) => {
-    setSelectedValue(value);
-    setInputValue(value);
-    setIsDropdownOpen(false);
-  };
   // Size select radio
   const [selectedSize, setSelectedSize] = useState('');
 
@@ -89,38 +89,7 @@ const CartPage = ({  products }) => {
                 </div>
               </div>
               {/* size dropdown */}
-              <div className="mb-4 w-full flex items-end relative">
-                <div className='w-full'>
-                  <button
-                    onClick={handleDropdownClick}
-                    className="text-black flex justify-between w-full bg-gray-100 border-2 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-                    type="button"
-                  >
-                    Dropdown button <svg className="w-2.5 h-2.5 ml-2.5 my-auto" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-                    </svg>
-                  </button>
-
-                  {isDropdownOpen && ( // Display the dropdown if isDropdownOpen is true
-                    <div className="absolute z-20 bg-white top-18 w-full divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700">
-                      <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                        <li>
-                          <a href="#" onClick={() => handleDropdownSelect('Value 1')} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">item 1</a>
-                        </li>
-                        <li>
-                          <a href="#" onClick={() => handleDropdownSelect('Value 2')} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">item 2</a>
-                        </li>
-                        <li>
-                          <a href="#" onClick={() => handleDropdownSelect('Value 3')} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">item 3</a>
-                        </li>
-                        {/* Other list items */}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-
-
-              </div>
+              <DropdownComponent options={dropdownOptions} handleSelect={handleDropdownSelect} />
             </div>
             <div className='flex gap-2'><div className="mb-4 w-full">
               <label className="text-gray-500">Start Date</label>

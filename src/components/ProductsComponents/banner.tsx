@@ -1,7 +1,19 @@
 
+import BreadcrumbPlainFlatTextIconPreview from '../../components/Atoms/BreadcrumbPreview';
 import BGIMAGE from '../../assets/Products-banner.png';
 
 const Banner = () => {
+    const breadcrumbsData = [
+        {
+          path: "Home",
+          to: "/", 
+        },
+        {
+          path: "Products",
+          to: "/products", 
+        },
+       
+      ];
     return (
         <div className='flex flex-col h-full w-full'>
             <div className="relative w-full ">
@@ -25,12 +37,7 @@ const Banner = () => {
                     <div className="container flex flex-grow items-center justify-between gap-4 px-10">
                         {/* Left side: Path location, Filters, and Sort By */}
                         <div className="flex flex-col gap-4">
-                            {/* Path location */}
-                            <div className=" text-3xl leading-6 gap-2 flex"> 
-                                <span className='text-black font-Robot font-normal text-sm leading-6 opacity-50'>Home</span>
-                                <span>/</span>
-                                <span className='text-black font-Robot font-normal text-base leading-6'>Products</span>
-                            </div>
+                            <BreadcrumbPlainFlatTextIconPreview breadcrumbs={breadcrumbsData} />
                         </div>
 
                         {/* Right side: eCommerce content */}
