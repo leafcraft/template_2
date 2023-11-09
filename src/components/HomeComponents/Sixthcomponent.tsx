@@ -7,31 +7,33 @@ import product2 from "../../assets/product2-component6.png";
 import Product3 from "../../assets/product3-component6.png";
 
 const Sixthcomponent = () => {
-  const dynamicComponentProps = {
-    smallHeader: 'Mens Wear',
-    title: 'Why Should Girls Have All The Fun?',
-    subtitle: 'For the dapper and uber stylish modern man',
-    buttonText: 'RENT NOW',
-    buttonLink: '/cart',
-    images: [
-      {
-        src: product1,
-        alt: 'Image 1',
-        description: 'Product title Rs. 99.00',
-      },
-      {
-        src: product2,
-        alt: 'Image 2',
-        description: 'Cream Fully Embroidered Sherwani With Dupatta Rs. 6,500.00',
-      },
-      {
-        src: Product3,
-        alt: 'Image 3',
-        description: 'Asymmetric Sherwani With Golden Dhoti Pants Rs. 5,500.00',
-      },
-    ],
-    posterImage: poster ,
+
+  const handleImageClick = (image: any) => {
+    console.log('Clicked image data:', image);
+    // Perform additional actions based on the clicked image data here
   };
+  const imagesData = [
+    {
+      id: '1',
+      src: product1,
+      alt: 'Image 1',
+      description: 'Product title Rs. 99.00',
+    },
+    {
+      id: '2',
+      src: product2,
+      alt: 'Image 2',
+      description: 'Cream Fully Embroidered Sherwani With Dupatta Rs. 6,500.00',
+    },
+    {
+      id: '3',
+      src: Product3,
+      alt: 'Image 1',
+      description: 'Product title Rs. 99.00',
+    },
+    // Add more images as needed
+  ];
+
   return (
     <>
     <div id="contact" className="bg-pink-500 bg-cover bg-center p-6 items-center flex flex-col" style={{ backgroundImage: `url(${image})` }}>
@@ -52,7 +54,16 @@ const Sixthcomponent = () => {
         </div>
       </div>
     </div>
-    <div id='mens_wear'><ThiredCommonComponent {...dynamicComponentProps} /></div>
+    <div id='mens_wear'> <ThiredCommonComponent
+        smallHeader='Mens Wear'
+        title='Why Should Girls Have All The Fun?'
+        subtitle='For the dapper and uber stylish modern man'
+        buttonText='RENT NOW'
+        buttonLink='/products'
+        images={imagesData}
+        posterImage={poster}
+        onImageClick={handleImageClick} // Pass the function to handle image click
+      /></div>
     </>
   );
 };

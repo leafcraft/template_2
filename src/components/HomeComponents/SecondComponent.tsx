@@ -1,4 +1,5 @@
 import React from 'react';
+import Typography from '../Atoms/Typography';
 
 const CardData = [
   {
@@ -31,9 +32,8 @@ const Secondcomponent = () => {
         <div key={index} className="flex justify-center w-full md:w-1/2 lg:w-1/3 p-4 gap-10">
           <div className="max-w-xs rounded">
             <div className="text-center font-Robot flex flex-col gap-6">
-              <div className='w-56 font-Robot font-normal text-sm md:text-lg leading-5 text-white '>{item.header}</div>
-
-              <div className=" w-60 font-Robot font-normal text-xs md:text-base leading-5 text-white">{item.text}</div>
+              <Typography variant='featuresHeader' >{item.header}</Typography>
+              <Typography variant='featuresHeader' className=' w-60 text-xs md:text-base' >{item.text}</Typography>
             </div>
           </div>
         </div>

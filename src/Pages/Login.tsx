@@ -3,6 +3,7 @@ import img4 from '../assets/img4-component4.png'
 import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
+import { Auth } from "aws-amplify";
 
 const LoginComponent = () => {
   const [showSignupBox, setShowSignupBox] = useState(true);
@@ -45,12 +46,52 @@ const LoginComponent = () => {
     // Add more fields and validation as necessary
   });
 
-  // handle submit for forgot 
-  const handleSubmit = (values: any) => {
+  
+  // const handleSignupSubmit = (values, { setSubmitting }) => {
+  //   console.log('Form submitted sign up:', values);
+  //   // You can add form submission logic here
+  //   setSubmitting(false);
+  // }
 
-    console.log("Form data:", values);
 
-  };
+
+const handleSignupSubmit = async (values, { setSubmitting }) => {
+  const { username, password } = values;
+
+  try {
+    var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+
+    if (strongRegex.test(password)) {
+      const response = await Auth.signUp({
+        username: username,
+        password: password,
+        attributes: {
+          email: username,
+        },
+      });
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', `${username}.${password}`);
+        setUserSub(response.userSub);
+        username(username);
+        setShowSignupBox(false); // Hides the signup box after successful signup
+      }
+    }
+  } catch (error) {
+    // Display error message for signup failure
+   console.log(error,"error in register user")
+  }
+
+  setSubmitting(false);
+};
+
+
+  // handle submit for Login
+  const handleLoginSubmit = (values, { setSubmitting }) => {
+    // Handle form submission logic here
+    console.log('Form submitted login:', values);
+    setSubmitting(false);
+  }
 
   return (
     <div className="flex min-h-screen">
@@ -65,8 +106,8 @@ const LoginComponent = () => {
           <div className='space-y-5'>
             <h1 className=" animate-fade-right animate-once animate-duration-[2000ms] animate-delay-[250ms] lg:text-3xl xl:text-5xl xl:leading-snug font-extrabold">Enter your account and discover new experiences</h1>
             {showSignupBox && (
-              <><p className="text-lg">You do not have an account?</p><button onClick={showCreateAccountForm} className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
-                Create account here
+              <><p className="text-lg">You do have a account?</p><button onClick={login} className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+                Login here
               </button></>
             )}
           </div>
@@ -141,60 +182,104 @@ const LoginComponent = () => {
         {/* Signup box */}
         {showSignupBox && (
          
-         <Formik
-           initialValues={{
-             username: '',
-           }}
-           validationSchema={Yup.object().shape({
-             username: Yup.string().email('Invalid email').required('Username is required'),
-           })}
-           onSubmit={(values, { setSubmitting }) => {
-             console.log('Form submitted:', values);
-             // You can add form submission logic here
-             setSubmitting(false);
-           }}
-         >
-           <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-             <div className="flex flex-col space-y-2 text-center">
-               <h2 className="text-3xl md:text-4xl font-bold">Sign in to account</h2>
-               <p className="text-md md:text-xl">
-                 Sign up or log in to place the order, no password required!
-               </p>
-             </div>
-             <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
-               <Field
-                 type="email" // Change the input type to "email" for email validation
-                 name="username"
-                 placeholder="Email"
-                 className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-               />
-               <ErrorMessage name="username" component="div" className="text-red-500" />
-               <button
-                 type="submit"
-                 className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
-               >
-                 Confirm with email
-               </button>
-               <div className="flex justify-center items-center">
-                 <span className="w-full border border-black"></span>
-                 <span className="px-4">Or</span>
-                 <span className="w-full border border-black"></span>
-               </div>
-               <button
-                 className="flex w-full items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black relative"
-                 onClick={() => {
-                   // Redirect to continue with mail when clicked
-                   window.location.href = 'URL_TO_EMAIL_LOGIN';
-                 }}
-               >
-                 <span className="absolute left-4">
-                   {/* Your SVG path */}
-                 </span>
-                 <span>Continue with Gmail</span>
-               </button>
-             </div>
-           </Form>
-         </Formik>
+        //  <Formik
+        //    initialValues={{
+        //      username: '',
+        //    }}
+        //    validationSchema={Yup.object().shape({
+        //      username: Yup.string().email('Invalid email').required('Username is required'),
+        //    })}
+        //    onSubmit={(values, { setSubmitting }) => {
+        //      console.log('Form submitted:', values);
+        //      // You can add form submission logic here
+        //      setSubmitting(false);
+        //    }}
+        //  >
+        //    <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
+        //      <div className="flex flex-col space-y-2 text-center">
+        //        <h2 className="text-3xl md:text-4xl font-bold">Sign in to account</h2>
+        //        <p className="text-md md:text-xl">
+        //          Sign up or log in to place the order, no password required!
+        //        </p>
+        //      </div>
+        //      <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
+        //        <Field
+        //          type="email" // Change the input type to "email" for email validation
+        //          name="username"
+        //          placeholder="Email"
+        //          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+        //        />
+        //        <ErrorMessage name="username" component="div" className="text-red-500" />
+        //        <button
+        //          type="submit"
+        //          className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
+        //        >
+        //          Confirm with email
+        //        </button>
+        //        <div className="flex justify-center items-center">
+        //          <span className="w-full border border-black"></span>
+        //          <span className="px-4">Or</span>
+        //          <span className="w-full border border-black"></span>
+        //        </div>
+        //        <button
+        //          className="flex w-full items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black relative"
+        //          onClick={() => {
+        //            // Redirect to continue with mail when clicked
+        //            window.location.href = 'URL_TO_EMAIL_LOGIN';
+        //          }}
+        //        >
+        //          <span className="absolute left-4">
+        //            {/* Your SVG path */}
+        //          </span>
+        //          <span>Continue with Gmail</span>
+        //        </button>
+        //      </div>
+        //    </Form>
+        //  </Formik>
+
+        <Formik
+  initialValues={{
+    username: '',
+    password: '', // Adding a password field
+  }}
+  validationSchema={Yup.object().shape({
+    username: Yup.string().email('Invalid email').required('Username is required'),
+    password: Yup.string().required('Password is required'),
+  })}
+  onSubmit={handleSignupSubmit}
+>
+  <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
+    <div className="flex flex-col space-y-2 text-center">
+      <h2 className="text-3xl md:text-4xl font-bold">Sign in to account</h2>
+      <p className="text-md md:text-xl">
+        Sign up or log in to place the order, no password required!
+      </p>
+    </div>
+    <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
+      <Field
+        type="email" // Change the input type to "email" for email validation
+        name="username"
+        placeholder="Email"
+        className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+      />
+      <ErrorMessage name="username" component="div" className="text-red-500" />
+      {/* Adding a password field */}
+      <Field
+        type="password"
+        name="password"
+        placeholder="Password"
+        className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+      />
+      <ErrorMessage name="password" component="div" className="text-red-500" />
+      <button
+        type="submit"
+        className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
+      >
+        Register
+      </button>
+    </div>
+  </Form>
+</Formik>
          
         )}
         {/* create user box */}
@@ -299,11 +384,7 @@ const LoginComponent = () => {
              username: Yup.string().required('Username is required'),
              password: Yup.string().required('Password is required'),
            })}
-           onSubmit={(values, { setSubmitting }) => {
-             // Handle form submission logic here
-             console.log('Form submitted:', values);
-             setSubmitting(false);
-           }}
+           onSubmit={handleLoginSubmit}
          >
            <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
              <div className="flex flex-col space-y-2 text-center">
@@ -336,7 +417,7 @@ const LoginComponent = () => {
                <div className='flex justify-center'>
                  <p className="text-sm md:text-md">
                    Don't have an account? Create one here
-                   <a href='/login' onClick={login} className="underline font-medium text-slate-950 opacity-50 pl-2">
+                   <a href='/login' onClick={showSignup} className="underline font-medium text-slate-950 opacity-50 pl-2">
                      Create one
                    </a>
                  </p>
@@ -359,3 +440,7 @@ const LoginComponent = () => {
 };
 
 export default LoginComponent;
+function setUserSub(userSub: string) {
+  throw new Error('Function not implemented.');
+}
+

@@ -17,7 +17,7 @@ const Data = [
 const NavbarCommonComponent  = (props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [userIsLoggedIn, setUserIsLoggedIn] = useState(true);
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {

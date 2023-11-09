@@ -17,7 +17,17 @@ const Typography = (props: {
           </p>
         );
         break;
-
+     case "featuresHeader":
+          return (
+            <p
+              className={`w-56 font-Robot font-normal text-sm md:text-lg leading-5 text-white  animate-flip-down animate-once animate-duration-[1500ms] animate-delay-500 ${
+                props?.className ? props?.className : ""
+              }`}
+            >
+              {props.children}
+            </p>
+          );
+          break;
       default:
         return (
           <p
