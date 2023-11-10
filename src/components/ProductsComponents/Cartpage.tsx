@@ -41,7 +41,7 @@ const ExamplePage = () => {
   return (
     <div>
       {/* ... other content ... */}
-      <CartPage products={products} />
+      <CartPage  />
       {/* ... other content ... */}
     </div>
   );

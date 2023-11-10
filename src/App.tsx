@@ -12,6 +12,9 @@ import ShoppingCart from "./Pages/ShoppingCart";
 import Profile from "./Pages/Profile";
 import AboutUs from "./Pages/AboutUs";
 import NavBar from "./components/Layouts/Navbar";
+import FAQs from "./Pages/FAQs";
+import ContactUs from "./Pages/CotactUs";
+import CartCard from "./components/Cart.Card";
 
 function App() {
   return (
@@ -21,9 +24,11 @@ function App() {
         <Route element={<ProtectedLayout />}>
 
         <Route path="/product/:id" element={<Product />} />
-          <Route path='/shoppingcart' element={<ShoppingCart/>} />
+          <Route path='/shoppingcart' element={<CartCard />} />
           <Route path='/profile' element={<Profile />} />
           <Route  path='/aboutus' element={<AboutUs />} />
+          <Route path='/faqs' element={<FAQs />} />
+          <Route path='/contactus' element={<ContactUs />} />
          
           
           <Route path="/testing" element={<Test />} />

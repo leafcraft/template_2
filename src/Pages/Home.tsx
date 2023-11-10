@@ -19,7 +19,7 @@ const Home = () => {
      <Fifthcomponent />
      <Sixthcomponent />
      <Seventhcomponent />
-     <EighthComponent />
+     <EighthComponent variant='cart-1' />
      </div>
     </>
   );

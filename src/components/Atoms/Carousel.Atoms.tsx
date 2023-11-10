@@ -1,32 +1,16 @@
 import React, { useState, useRef } from "react";
 import "../../../node_modules/react-image-gallery/styles/css/image-gallery.css";
 import ImageGallery, { ReactImageGalleryItem } from "react-image-gallery";
-import img7 from '../../assets/products/img7.png';
-import img8 from '../../assets/products/img8.png';
 import Icons from "../../components/Icons";
 
 type TestProps = {
-  // Define props if any
+  images: {
+    original: string;
+    thumbnail: string;
+  }[];
 };
 
-const Carousel: React.FC<TestProps> = () => {
-  const [images] = useState<ReactImageGalleryItem[]>([
-    {
-      original: img7,
-      thumbnail: img7,
-    },
-    {
-      original: img8,
-      thumbnail: img8,
-    },
-    {
-      original: img7,
-      thumbnail: img7,
-    }
-  ]);
-
-
-
+const Carousel: React.FC<TestProps> = ({ images }) => {
   const imageGalleryRef = useRef<ImageGallery>(null);
 
   const handleSlide = (index: number) => {
@@ -49,11 +33,12 @@ const Carousel: React.FC<TestProps> = () => {
     }
   };
 
-
   return (
     <div className="relative">
       <div className="carousel-container flex justify-center">
-        <button className="left-arrow" onClick={goBackward}><Icons variant='leftArrow' /></button>
+        <button className="left-arrow" onClick={goBackward}>
+          <Icons variant="leftArrow" />
+        </button>
 
         <div className="wrapper">
           <ImageGallery
@@ -65,7 +50,9 @@ const Carousel: React.FC<TestProps> = () => {
           />
         </div>
 
-        <button className="right-arrow" onClick={goForward}> <Icons variant='rightArrow' /></button>
+        <button className="right-arrow" onClick={goForward}>
+          <Icons variant="rightArrow" />
+        </button>
       </div>
     </div>
   );

@@ -107,7 +107,7 @@ const NavbarCommonComponent  = (props) => {
                       </Typography>
                     </Link>
                   ) : ( // Show Sign Up button if user is not logged in
-                    <Link to="/signup">
+                    <Link to="/login">
                       <Typography variant="Navbar1" className="bg-black p-3 rounded-md">
                         Sign Up
                       </Typography>

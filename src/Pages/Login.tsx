@@ -3,7 +3,6 @@ import img4 from '../assets/img4-component4.png'
 import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
-import { Auth } from "aws-amplify";
 
 const LoginComponent = () => {
   const [showSignupBox, setShowSignupBox] = useState(true);
@@ -47,43 +46,43 @@ const LoginComponent = () => {
   });
 
   
-  // const handleSignupSubmit = (values, { setSubmitting }) => {
-  //   console.log('Form submitted sign up:', values);
-  //   // You can add form submission logic here
-  //   setSubmitting(false);
-  // }
-
-
-
-const handleSignupSubmit = async (values, { setSubmitting }) => {
-  const { username, password } = values;
-
-  try {
-    var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-
-    if (strongRegex.test(password)) {
-      const response = await Auth.signUp({
-        username: username,
-        password: password,
-        attributes: {
-          email: username,
-        },
-      });
-
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('token', `${username}.${password}`);
-        setUserSub(response.userSub);
-        username(username);
-        setShowSignupBox(false); // Hides the signup box after successful signup
-      }
-    }
-  } catch (error) {
-    // Display error message for signup failure
-   console.log(error,"error in register user")
+  const handleSignupSubmit = (values, { setSubmitting }) => {
+    console.log('Form submitted sign up:', values);
+    // You can add form submission logic here
+    setSubmitting(false);
   }
 
-  setSubmitting(false);
-};
+
+
+// const handleSignupSubmit = async (values, { setSubmitting }) => {
+//   const { username, password } = values;
+
+//   try {
+//     var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+
+//     if (strongRegex.test(password)) {
+//       const response = await Auth.signUp({
+//         username: username,
+//         password: password,
+//         attributes: {
+//           email: username,
+//         },
+//       });
+
+//       if (typeof window !== 'undefined') {
+//         localStorage.setItem('token', `${username}.${password}`);
+//         setUserSub(response.userSub);
+//         username(username);
+//         setShowSignupBox(false); // Hides the signup box after successful signup
+//       }
+//     }
+//   } catch (error) {
+//     // Display error message for signup failure
+//    console.log(error,"error in register user")
+//   }
+
+//   setSubmitting(false);
+// };
 
 
   // handle submit for Login
@@ -440,7 +439,5 @@ const handleSignupSubmit = async (values, { setSubmitting }) => {
 };
 
 export default LoginComponent;
-function setUserSub(userSub: string) {
-  throw new Error('Function not implemented.');
-}
+
 
