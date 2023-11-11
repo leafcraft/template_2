@@ -93,11 +93,11 @@ const NavbarCommonComponent  = (props) => {
                   <Typography variant="Navbar1">MENS WEAR</Typography>
                 </Link>
                 <Link to="/products" onClick={() => scrollToComponent('products')}>
-                  <Typography variant="Navbar1">RENT FOR A CAUSE</Typography>
+                  <Typography variant="Navbar1">PRODUCTS</Typography>
                 </Link>
                
-                <Link to="#" onClick={() => scrollToComponent('blog')}>
-                  <Typography variant="Navbar1">BLOG</Typography>
+                <Link to="/aboutus" >
+                  <Typography variant="Navbar1">ABOUT US</Typography>
                 </Link></div>
                 <div className="flex ml-auto">
                 {userIsLoggedIn ? ( // Show Profile button if user is logged in
@@ -215,10 +215,11 @@ const NavbarCommonComponent  = (props) => {
                   <Typography variant="Navbar1">MENS WEAR</Typography>
                 </Link>
                 <Link to="/products" onClick={() => scrollToComponent('products')}>
-                  <Typography variant="Navbar1">RENT FOR A CAUSE</Typography>
+                  <Typography variant="Navbar1">PRODUCTS</Typography>
                 </Link>
-                <Link to="/" onClick={() => scrollToComponent('blog')}>
-                  <Typography variant="Navbar1">BLOG</Typography>
+               
+                <Link to="/aboutus" >
+                  <Typography variant="Navbar1">ABOUT US</Typography>
                 </Link>
                     </>
                   )}

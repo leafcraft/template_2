@@ -17,23 +17,16 @@ const Content: ContentGroup[] = [
       { name: "About Us", section: "hallucinations" , link : '/aboutus' },
       { name: "Contact Us", link : '/contactus' , section: "benefits" },
       { name: "FAQS", link : '/faqs' , section: "Trynow" },
-      { name: "Blog", link : '/' , section: "blog" },
     ],
   },
   {
     contents: [
-      { name: "Media", link : '/' , section: "" },
-      { name: "Cancellation Policy", link : '/' , section: "blog" },
-      { name: "Privacy Policy", link : '/' , section: "" },
+      { name: "T&C", link : '/terms&conditons' , section: "Trynow" },
+      { name: "Return Policy", link : '/terms&conditons' , section: "team" },
+      { name: "Privacy Policy", link : '/terms&conditons' , section: "" },
     ],
   },
-  {
-    contents: [
-      { name: "Return Policy", link : '/' , section: "team" },
-      { name: "T&C", link : '/' , section: "Trynow" },
-      { name: "Cookie Policy", link : '/' , section: "Trynow" },
-    ],
-  },
+  
 ];
 
 const Footer: React.FC = () => {

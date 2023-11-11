@@ -4,12 +4,10 @@ import ProductCard from './Productcard.Atoms';
 import { useNavigate } from 'react-router';
 import DropdownComponent from '../../components/Atoms/Dropdown';
 
-import img7 from '../../assets/products/img7.png';
-import img8 from '../../assets/products/img8.png';
 
 
 
-const CartPage = ({ }) => {
+const CartPage = ({ products ,items }) => {
   // dropdown
   const handleDropdownSelect = (selectedValue) => {
     // Do something with the selected value, e.g., update state or perform an action
@@ -21,25 +19,6 @@ const CartPage = ({ }) => {
     { label: 'item 2', value: 'Value 2' },
     { label: 'item 3', value: 'Value 3' },
     // Add more options as needed
-  ];
-
-  const products = [
-    {
-      id: 1,
-      category: 'Stylease Exclusive',
-      title: 'Blue Velvet Fully Embroidered Lehenga Set',
-      price: '$58.00',
-      images: [
-        { original: img7, thumbnail: img7 },
-        { original: img8, thumbnail: img8 },
-        { original: img7, thumbnail: img7 },
-      ],
-      description: 'Fam locavore kickstarter distillery...',
-      materialAndCare: 'Add Material and Care information here.',
-      aboutProduct: 'Add information about the product here.',
-      stylistNotes: 'Add Stylist\'s Notes here.',
-    },
-    // Add more products as needed
   ];
 
 
@@ -71,14 +50,14 @@ const CartPage = ({ }) => {
               ›
               Blue Velvet Fully Embroidered Lehenga Set</p>
             <div className='p-14'>
-            {products.map((product) => (
+            {items.map((product) => (
       <CustomCarousel key={product.id} images={product.images} />
     ))}
 
             </div>
           </div>
           <div className="flex flex-col gap-4 pr-10">
-  {products.map((product:any) => (
+  {items.map((product:any) => (
     <div key={product.id}>
       <h2 className="text-sm font-normal font-Robot pb-8 tracking-widest">{product.category}</h2>
       <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{product.title}</h1>
@@ -88,7 +67,7 @@ const CartPage = ({ }) => {
         <span className="font-normal font-Robot text-xl">{product.price}</span>
       </div>
 
-      <div className='flex gap-4'>
+      <div className='flex gap-4 mb-4'>
         <div>
           <h4 className="text-lg font-semibold mb-4">Select Size</h4>
           <div className="flex space-x-4">
