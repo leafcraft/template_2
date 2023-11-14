@@ -6,17 +6,25 @@ import { useNavigate } from 'react-router';
 
 const LoginComponent = () => {
   const [showSignupBox, setShowSignupBox] = useState(true);
+  const [OTPBox, setOtpbox] = useState(false);
   const [showCreateAccount, setShowCreateAccount] = useState(false);
   const [Login, setLogin] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
 
-  const navigate = useNavigate();
 
   const showSignup = () => {
     setShowSignupBox(true);
     setShowCreateAccount(false);
     setLogin(false);
     setForgotPassword(false);
+  };
+
+  const showOTPBox = () => {
+    setShowSignupBox(false);
+    setShowCreateAccount(false);
+    setLogin(false);
+    setForgotPassword(false);
+    setOtpbox(true);
   };
 
   const showForgotPassword = () => {
@@ -30,12 +38,6 @@ const LoginComponent = () => {
     setLogin(true); setForgotPassword(false);
   };
 
-  const showCreateAccountForm = () => {
-    setShowSignupBox(false);
-    setShowCreateAccount(true);
-    setLogin(false);
-    setForgotPassword(false);
-  };
 
 
   // yup validation 
@@ -45,50 +47,64 @@ const LoginComponent = () => {
     // Add more fields and validation as necessary
   });
 
-  
+
   const handleSignupSubmit = (values, { setSubmitting }) => {
     console.log('Form submitted sign up:', values);
+    if (values) {
+      setOtpbox(true);
+      setShowSignupBox(false);
+    }
     // You can add form submission logic here
     setSubmitting(false);
   }
 
 
 
-// const handleSignupSubmit = async (values, { setSubmitting }) => {
-//   const { username, password } = values;
 
-//   try {
-//     var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+  // const handleSignupSubmit = async (values, { setSubmitting }) => {
+  //   const { username, password } = values;
 
-//     if (strongRegex.test(password)) {
-//       const response = await Auth.signUp({
-//         username: username,
-//         password: password,
-//         attributes: {
-//           email: username,
-//         },
-//       });
+  //   try {
+  //     var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
 
-//       if (typeof window !== 'undefined') {
-//         localStorage.setItem('token', `${username}.${password}`);
-//         setUserSub(response.userSub);
-//         username(username);
-//         setShowSignupBox(false); // Hides the signup box after successful signup
-//       }
-//     }
-//   } catch (error) {
-//     // Display error message for signup failure
-//    console.log(error,"error in register user")
-//   }
+  //     if (strongRegex.test(password)) {
+  //       const response = await Auth.signUp({
+  //         username: username,
+  //         password: password,
+  //         attributes: {
+  //           email: username,
+  //         },
+  //       });
 
-//   setSubmitting(false);
-// };
+  //       if (typeof window !== 'undefined') {
+  //         localStorage.setItem('token', `${username}.${password}`);
+  //         setUserSub(response.userSub);
+  //         username(username);
+  //         setShowSignupBox(false); // Hides the signup box after successful signup
+  //       }
+  //     }
+  //   } catch (error) {
+  //     // Display error message for signup failure
+  //    console.log(error,"error in register user")
+  //   }
+
+  //   setSubmitting(false);
+  // };
 
 
   // handle submit for Login
   const handleLoginSubmit = (values, { setSubmitting }) => {
     // Handle form submission logic here
     console.log('Form submitted login:', values);
+    setSubmitting(false);
+  }
+
+  const handleOTPSubmit = (values, { setSubmitting }) => {
+    console.log("from otp verified ", values);
+    if (values) {
+      setOtpbox(false);
+      setShowSignupBox(true);
+    }
     setSubmitting(false);
   }
 
@@ -180,258 +196,312 @@ const LoginComponent = () => {
         </div>
         {/* Signup box */}
         {showSignupBox && (
-         
-        //  <Formik
-        //    initialValues={{
-        //      username: '',
-        //    }}
-        //    validationSchema={Yup.object().shape({
-        //      username: Yup.string().email('Invalid email').required('Username is required'),
-        //    })}
-        //    onSubmit={(values, { setSubmitting }) => {
-        //      console.log('Form submitted:', values);
-        //      // You can add form submission logic here
-        //      setSubmitting(false);
-        //    }}
-        //  >
-        //    <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-        //      <div className="flex flex-col space-y-2 text-center">
-        //        <h2 className="text-3xl md:text-4xl font-bold">Sign in to account</h2>
-        //        <p className="text-md md:text-xl">
-        //          Sign up or log in to place the order, no password required!
-        //        </p>
-        //      </div>
-        //      <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
-        //        <Field
-        //          type="email" // Change the input type to "email" for email validation
-        //          name="username"
-        //          placeholder="Email"
-        //          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        //        />
-        //        <ErrorMessage name="username" component="div" className="text-red-500" />
-        //        <button
-        //          type="submit"
-        //          className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
-        //        >
-        //          Confirm with email
-        //        </button>
-        //        <div className="flex justify-center items-center">
-        //          <span className="w-full border border-black"></span>
-        //          <span className="px-4">Or</span>
-        //          <span className="w-full border border-black"></span>
-        //        </div>
-        //        <button
-        //          className="flex w-full items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black relative"
-        //          onClick={() => {
-        //            // Redirect to continue with mail when clicked
-        //            window.location.href = 'URL_TO_EMAIL_LOGIN';
-        //          }}
-        //        >
-        //          <span className="absolute left-4">
-        //            {/* Your SVG path */}
-        //          </span>
-        //          <span>Continue with Gmail</span>
-        //        </button>
-        //      </div>
-        //    </Form>
-        //  </Formik>
 
-        <Formik
-  initialValues={{
-    username: '',
-    password: '', // Adding a password field
-  }}
-  validationSchema={Yup.object().shape({
-    username: Yup.string().email('Invalid email').required('Username is required'),
-    password: Yup.string().required('Password is required'),
-  })}
-  onSubmit={handleSignupSubmit}
->
-  <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-    <div className="flex flex-col space-y-2 text-center">
-      <h2 className="text-3xl md:text-4xl font-bold">Sign in to account</h2>
-      <p className="text-md md:text-xl">
-        Sign up or log in to place the order, no password required!
-      </p>
-    </div>
-    <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
-      <Field
-        type="email" // Change the input type to "email" for email validation
-        name="username"
-        placeholder="Email"
-        className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-      />
-      <ErrorMessage name="username" component="div" className="text-red-500" />
-      {/* Adding a password field */}
-      <Field
-        type="password"
-        name="password"
-        placeholder="Password"
-        className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-      />
-      <ErrorMessage name="password" component="div" className="text-red-500" />
-      <button
-        type="submit"
-        className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
-      >
-        Register
-      </button>
-    </div>
-  </Form>
-</Formik>
-         
+          //  <Formik
+          //    initialValues={{
+          //      username: '',
+          //    }}
+          //    validationSchema={Yup.object().shape({
+          //      username: Yup.string().email('Invalid email').required('Username is required'),
+          //    })}
+          //    onSubmit={(values, { setSubmitting }) => {
+          //      console.log('Form submitted:', values);
+          //      // You can add form submission logic here
+          //      setSubmitting(false);
+          //    }}
+          //  >
+          //    <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
+          //      <div className="flex flex-col space-y-2 text-center">
+          //        <h2 className="text-3xl md:text-4xl font-bold">Sign in to account</h2>
+          //        <p className="text-md md:text-xl">
+          //          Sign up or log in to place the order, no password required!
+          //        </p>
+          //      </div>
+          //      <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
+          //        <Field
+          //          type="email" // Change the input type to "email" for email validation
+          //          name="username"
+          //          placeholder="Email"
+          //          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+          //        />
+          //        <ErrorMessage name="username" component="div" className="text-red-500" />
+          //        <button
+          //          type="submit"
+          //          className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
+          //        >
+          //          Confirm with email
+          //        </button>
+          //        <div className="flex justify-center items-center">
+          //          <span className="w-full border border-black"></span>
+          //          <span className="px-4">Or</span>
+          //          <span className="w-full border border-black"></span>
+          //        </div>
+          //        <button
+          //          className="flex w-full items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black relative"
+          //          onClick={() => {
+          //            // Redirect to continue with mail when clicked
+          //            window.location.href = 'URL_TO_EMAIL_LOGIN';
+          //          }}
+          //        >
+          //          <span className="absolute left-4">
+          //            {/* Your SVG path */}
+          //          </span>
+          //          <span>Continue with Gmail</span>
+          //        </button>
+          //      </div>
+          //    </Form>
+          //  </Formik>
+
+          <Formik
+            initialValues={{
+              username: '',
+              password: '', // Adding a password field
+            }}
+            validationSchema={Yup.object().shape({
+              username: Yup.string().email('Invalid email').required('Username is required'),
+              password: Yup.string().required('Password is required'),
+            })}
+            onSubmit={handleSignupSubmit}
+          >
+            <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
+              <div className="flex flex-col space-y-2 text-center">
+                <h2 className="text-3xl md:text-4xl font-bold">Sign in to account</h2>
+                <p className="text-md md:text-xl">
+                  Sign up or log in to place the order, no password required!
+                </p>
+              </div>
+              <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
+                <Field
+                  type="email" // Change the input type to "email" for email validation
+                  name="username"
+                  placeholder="Email"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="username" component="div" className="text-red-500" />
+                {/* Adding a password field */}
+                <Field
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="password" component="div" className="text-red-500" />
+                <button
+                  type="submit"
+                  className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
+                >
+                  Register
+                </button>
+              </div>
+            </Form>
+          </Formik>
+
+        )}
+        {/* verify screen */}
+        {OTPBox && (
+          <Formik
+            initialValues={{
+              OTP: '',
+              password: '', // Adding a password field
+            }}
+            validationSchema={Yup.object().shape({
+              OTP: Yup.string().required('OTP is required'), // Remove email validation
+              password: Yup.string().required('Password is required'),
+            })}
+            onSubmit={handleOTPSubmit}
+          >
+            <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
+              <div className="flex flex-col space-y-2 text-center">
+                <h2 className="text-3xl md:text-4xl font-bold">Verify the OTP</h2>
+                <p className="text-md md:text-xl">
+                  confirm  password required!
+                </p>
+              </div>
+              <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
+                <Field
+                  type="number" // Change the input type to "number" for OTP
+                  name="OTP"
+                  placeholder="OTP"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="OTP" component="div" className="text-red-500" />
+                {/* Adding a password field */}
+                <Field
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="password" component="div" className="text-red-500" />
+                <Field
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="confirmPassword" component="div" className="text-red-500" />
+                <button
+                  type="submit"
+                  className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
+                >
+                  Register
+                </button>
+              </div>
+            </Form>
+          </Formik>
+
         )}
         {/* create user box */}
         {showCreateAccount && (
           <Formik
-          initialValues={{
-            username: '',
-            email: '',
-            phone: '',
-            password: '',
-            confirmPassword: '',
-          }}
-          validationSchema={Yup.object().shape({
-            username: Yup.string().required('Username is required'),
-            email: Yup.string().email('Invalid email').required('Email is required'),
-            phone: Yup.string().required('Phone is required'),
-            password: Yup.string().required('Password is required'),
-            confirmPassword: Yup.string()
-              .oneOf([Yup.ref('password')], 'Passwords must match')
-              .required('Confirm Password is required'),
-          })}
-          onSubmit={(values, { setSubmitting }) => {
-            // Handle form submission logic here
-            console.log('Form submitted:', values);
-            setSubmitting(false);
-          }}
-        >
-          <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-            <div className="flex flex-col space-y-2 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold">Create an account</h2>
-              <p className="text-md md:text-xl">Please fill out the form</p>
-            </div>
-            <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
-              <Field
-                type="text"
-                name="username"
-                placeholder="Username"
-                className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-              />
-              <ErrorMessage name="username" component="div" className="text-red-500" />
-    
-              <Field
-                type="text"
-                name="email"
-                placeholder="Email"
-                className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-              />
-              <ErrorMessage name="email" component="div" className="text-red-500" />
-    
-              <Field
-                type="text"
-                name="phone"
-                placeholder="Phone No."
-                className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-              />
-              <ErrorMessage name="phone" component="div" className="text-red-500" />
-    
-              <Field
-                type="text"
-                name="password"
-                placeholder="Password"
-                className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-              />
-              <ErrorMessage name="password" component="div" className="text-red-500" />
-    
-              <Field
-                type="text"
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-              />
-              <ErrorMessage name="confirmPassword" component="div" className="text-red-500" />
-    
-              <button
-                type="submit"
-                className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
-              >
-                Submit
-              </button>
-    
-              <div className="flex justify-center">
-                <p className="text-sm md:text-md">
-                  Already have an account?
-                  <a href="#" onClick={login} className="underline font-medium text-slate-950 opacity-50 pl-2">
-                    Login
-                  </a>
-                </p>
+            initialValues={{
+              username: '',
+              email: '',
+              phone: '',
+              password: '',
+              confirmPassword: '',
+            }}
+            validationSchema={Yup.object().shape({
+              username: Yup.string().required('Username is required'),
+              email: Yup.string().email('Invalid email').required('Email is required'),
+              phone: Yup.string().required('Phone is required'),
+              password: Yup.string().required('Password is required'),
+              confirmPassword: Yup.string()
+                .oneOf([Yup.ref('password')], 'Passwords must match')
+                .required('Confirm Password is required'),
+            })}
+            onSubmit={(values, { setSubmitting }) => {
+              // Handle form submission logic here
+              console.log('Form submitted:', values);
+              setSubmitting(false);
+            }}
+          >
+            <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
+              <div className="flex flex-col space-y-2 text-center">
+                <h2 className="text-3xl md:text-4xl font-bold">Create an account</h2>
+                <p className="text-md md:text-xl">Please fill out the form</p>
               </div>
-            </div>
-          </Form>
-        </Formik>
+              <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
+                <Field
+                  type="text"
+                  name="username"
+                  placeholder="Username"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="username" component="div" className="text-red-500" />
+
+                <Field
+                  type="text"
+                  name="email"
+                  placeholder="Email"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="email" component="div" className="text-red-500" />
+
+                <Field
+                  type="text"
+                  name="phone"
+                  placeholder="Phone No."
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="phone" component="div" className="text-red-500" />
+
+                <Field
+                  type="text"
+                  name="password"
+                  placeholder="Password"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="password" component="div" className="text-red-500" />
+
+                <Field
+                  type="text"
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="confirmPassword" component="div" className="text-red-500" />
+
+                <button
+                  type="submit"
+                  className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
+                >
+                  Submit
+                </button>
+
+                <div className="flex justify-center">
+                  <p className="text-sm md:text-md">
+                    Already have an account?
+                    <a href="#" onClick={login} className="underline font-medium text-slate-950 opacity-50 pl-2">
+                      Login
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </Form>
+          </Formik>
         )}
 
         {/* Login  */}
         {Login && (
-           <Formik
-           initialValues={{
-             username: '',
-             password: '',
-           }}
-           validationSchema={Yup.object().shape({
-             username: Yup.string().required('Username is required'),
-             password: Yup.string().required('Password is required'),
-           })}
-           onSubmit={handleLoginSubmit}
-         >
-           <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-             <div className="flex flex-col space-y-2 text-center">
-               <h2 className="text-3xl md:text-4xl font-bold">Login</h2>
-             </div>
-             <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
-               <Field
-                 type="text"
-                 name="username"
-                 placeholder="Username"
-                 className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-               />
-               <ErrorMessage name="username" component="div" className="text-red-500" />
-     
-               <Field
-                 type="password"
-                 name="password"
-                 placeholder="Password"
-                 className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-               />
-               <ErrorMessage name="password" component="div" className="text-red-500" />
-     
-               <button
-                 type="submit"
-                 className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
-               >
-                 Submit
-               </button>
-     
-               <div className='flex justify-center'>
-                 <p className="text-sm md:text-md">
-                   Don't have an account? Create one here
-                   <a href='/login' onClick={showSignup} className="underline font-medium text-slate-950 opacity-50 pl-2">
-                     Create one
-                   </a>
-                 </p>
-               </div>
-               
-               <div className='flex justify-center'>
-                 <p className="text-sm md:text-md">
-                   <a href="#" onClick={showForgotPassword} className="underline font-medium text-slate-950 opacity-50 pl-2">
-                     Forgot your password?
-                   </a>
-                 </p>
-               </div>
-             </div>
-           </Form>
-         </Formik>
+          <Formik
+            initialValues={{
+              username: '',
+              password: '',
+            }}
+            validationSchema={Yup.object().shape({
+              username: Yup.string().required('Username is required'),
+              password: Yup.string().required('Password is required'),
+            })}
+            onSubmit={handleLoginSubmit}
+          >
+            <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
+              <div className="flex flex-col space-y-2 text-center">
+                <h2 className="text-3xl md:text-4xl font-bold">Login</h2>
+              </div>
+              <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
+                <Field
+                  type="text"
+                  name="username"
+                  placeholder="Username"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="username" component="div" className="text-red-500" />
+
+                <Field
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="password" component="div" className="text-red-500" />
+
+                <button
+                  type="submit"
+                  className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
+                >
+                  Submit
+                </button>
+
+                <div className='flex justify-center'>
+                  <p className="text-sm md:text-md">
+                    Don't have an account? Create one here
+                    <a href='/login' onClick={showSignup} className="underline font-medium text-slate-950 opacity-50 pl-2">
+                      Create one
+                    </a>
+                  </p>
+                </div>
+
+                <div className='flex justify-center'>
+                  <p className="text-sm md:text-md">
+                    <a href="#" onClick={showForgotPassword} className="underline font-medium text-slate-950 opacity-50 pl-2">
+                      Forgot your password?
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </Form>
+          </Formik>
         )}
       </div>
     </div>
