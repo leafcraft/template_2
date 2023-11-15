@@ -54,40 +54,58 @@ const items = [
     aboutProduct: 'Add information about the product here.',
     stylistNotes: 'Add Stylist\'s Notes here.',
   },
-  {
-    id: 2,
-    category: 'CatWalk Exclusive',
-    title: 'red Velvet Fully Embroidered Lehenga Set',
-    price: '$100.00',
-    images: [
-      { original: img7, thumbnail: img7 },
-      { original: img8, thumbnail: img8 },
-      { original: img7, thumbnail: img7 },
-    ],
-    description: 'Fam locavore kickstarter distillery...',
-    materialAndCare: 'Add Material and Care information here.',
-    aboutProduct: 'Add information about the product here.',
-    stylistNotes: 'Add Stylist\'s Notes here.',
-  },
-  {
-    id: 3,
-    category: 'Sheeneeds Exclusive',
-    title: 'pink Velvet Fully Embroidered Lehenga Set',
-    price: '$76.00',
-    images: [
-      { original: img7, thumbnail: img7 },
-      { original: img8, thumbnail: img8 },
-      { original: img7, thumbnail: img7 },
-    ],
-    description: 'Fam locavore kickstarter distillery...',
-    materialAndCare: 'Add Material and Care information here.',
-    aboutProduct: 'Add information about the product here.',
-    stylistNotes: 'Add Stylist\'s Notes here.',
-  },
+
   // Add more products as needed
 ];
  
-
+// const items = [
+//   {
+//     id: 1,
+//     category: 'Stylease Exclusive',
+//     title: 'Blue Velvet Fully Embroidered Lehenga Set',
+//     price: '$58.00',
+//     images: [
+//       { original: img7, thumbnail: img7 },
+//       { original: img8, thumbnail: img8 },
+//       { original: img7, thumbnail: img7 },
+//     ],
+//     description: 'Fam locavore kickstarter distillery...',
+//     materialAndCare: 'Add Material and Care information here.',
+//     aboutProduct: 'Add information about the product here.',
+//     stylistNotes: 'Add Stylist\'s Notes here.',
+//   },
+//   {
+//     id: 2,
+//     category: 'CatWalk Exclusive',
+//     title: 'red Velvet Fully Embroidered Lehenga Set',
+//     price: '$100.00',
+//     images: [
+//       { original: img7, thumbnail: img7 },
+//       { original: img8, thumbnail: img8 },
+//       { original: img7, thumbnail: img7 },
+//     ],
+//     description: 'Fam locavore kickstarter distillery...',
+//     materialAndCare: 'Add Material and Care information here.',
+//     aboutProduct: 'Add information about the product here.',
+//     stylistNotes: 'Add Stylist\'s Notes here.',
+//   },
+//   {
+//     id: 3,
+//     category: 'Sheeneeds Exclusive',
+//     title: 'pink Velvet Fully Embroidered Lehenga Set',
+//     price: '$76.00',
+//     images: [
+//       { original: img7, thumbnail: img7 },
+//       { original: img8, thumbnail: img8 },
+//       { original: img7, thumbnail: img7 },
+//     ],
+//     description: 'Fam locavore kickstarter distillery...',
+//     materialAndCare: 'Add Material and Care information here.',
+//     aboutProduct: 'Add information about the product here.',
+//     stylistNotes: 'Add Stylist\'s Notes here.',
+//   },
+//   // Add more products as needed
+// ];
 
  
 const Product = () => {
@@ -95,6 +113,7 @@ const Product = () => {
     <div>
       {/* ... other content ... */}
       <CartPage products={products} items={items} />
+      
       {/* ... other content ... */}
     </div>
   );

@@ -316,13 +316,12 @@ const NavbarCommonComponent  = (props) => {
                       </button>
                       {/* Mobile menu content */}
                       <ul>
-                        {Data.map((item) => (
-                        <li key={item.key}>
-                            <a href="#" className="block p-4 text-sm font-semibold text-gray-400 hover:bg-blue-50 hover:text-blue-600 rounded">
-                              {item.name}
-                            </a>
-                          </li>
-                        ))}
+                      {Data.map((item) => (
+  <li key={item.key}   className="block p-4 text-sm font-semibold text-gray-400 hover:bg-blue-50 hover:text-blue-600 rounded">
+      {item.name}
+    
+  </li>
+))}
                       </ul>
                     </nav>
                   </div>

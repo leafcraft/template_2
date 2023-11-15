@@ -20,6 +20,7 @@ import TermsConditions from "./Pages/Terms&condtions";
 function App() {
   return (
     <>
+    <CartCard />
       <BrowserRouter>
         <Routes>
         <Route element={<ProtectedLayout />}>

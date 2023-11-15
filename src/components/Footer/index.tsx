@@ -16,7 +16,7 @@ const Content: ContentGroup[] = [
     contents: [
       { name: "About Us", section: "hallucinations" , link : '/aboutus' },
       { name: "Contact Us", link : '/contactus' , section: "benefits" },
-      { name: "FAQS", link : '/faqs' , section: "Trynow" },
+      { name: "FAQ'S", link : '/faqs' , section: "Trynow" },
     ],
   },
   {
