@@ -56,20 +56,31 @@ const LoginComponent = () => {
   const handleSignupSubmit = (values, { setSubmitting }) => {
     console.log('Form submitted sign up:', values);
     Register({
-      variables:{
-        userInput:{
-          name:values?.username,
-          password:values?.password,
-          
+      variables: {
+        userInput: {
+          name: values?.username,
+          password: values?.password,
+          email: values?.username,
+          dob: "2023-09-20T10:46:34.317+00:00",
+          organisationID: "650439122f67cb537c73d076",
+          addressInput: {
+            name: "name",
+            address: "Hi there",
+            pincode: "12345",
+          },
+          contactInput: {
+            number: "8296544837",
+          }
+
         }
       }
     })
-    .then((response)=>{
-      console.log(response,"singup response");
-    })
-    .catch((err)=>{
-      toast.error(err.message);
-    })
+      .then((response) => {
+        console.log(response, "singup response");
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      })
     // if (values) {
     //   setOtpbox(true);
     //   setShowSignupBox(false);
