@@ -18,7 +18,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { PersistGate } from "redux-persist/lib/integration/react";
 
 const httpLink = new HttpLink({
-  uri: "http://localhost:3000/graphql",
+  uri: "http://localhost:4000/custom/graphql",
 });
 
 const errorLink = onError(({ graphQLErrors }) => {

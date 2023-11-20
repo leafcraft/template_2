@@ -3,6 +3,10 @@ import img4 from '../assets/img4-component4.png'
 import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
+import { useMutation } from '@apollo/client';
+import { signUp } from '../components/graphql/mutation';
+import { register } from 'module';
+import toast from 'react-hot-toast';
 
 const LoginComponent = () => {
   const [showSignupBox, setShowSignupBox] = useState(true);
@@ -10,6 +14,7 @@ const LoginComponent = () => {
   const [showCreateAccount, setShowCreateAccount] = useState(false);
   const [Login, setLogin] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
+  const [Register] = useMutation(signUp);
 
 
   const showSignup = () => {
@@ -50,47 +55,28 @@ const LoginComponent = () => {
 
   const handleSignupSubmit = (values, { setSubmitting }) => {
     console.log('Form submitted sign up:', values);
-    if (values) {
-      setOtpbox(true);
-      setShowSignupBox(false);
-    }
-    // You can add form submission logic here
-    setSubmitting(false);
+    Register({
+      variables:{
+        userInput:{
+          name:values?.username,
+          password:values?.password,
+          
+        }
+      }
+    })
+    .then((response)=>{
+      console.log(response,"singup response");
+    })
+    .catch((err)=>{
+      toast.error(err.message);
+    })
+    // if (values) {
+    //   setOtpbox(true);
+    //   setShowSignupBox(false);
+    // }
+    // // You can add form submission logic here
+    // setSubmitting(false);
   }
-
-
-
-
-  // const handleSignupSubmit = async (values, { setSubmitting }) => {
-  //   const { username, password } = values;
-
-  //   try {
-  //     var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-
-  //     if (strongRegex.test(password)) {
-  //       const response = await Auth.signUp({
-  //         username: username,
-  //         password: password,
-  //         attributes: {
-  //           email: username,
-  //         },
-  //       });
-
-  //       if (typeof window !== 'undefined') {
-  //         localStorage.setItem('token', `${username}.${password}`);
-  //         setUserSub(response.userSub);
-  //         username(username);
-  //         setShowSignupBox(false); // Hides the signup box after successful signup
-  //       }
-  //     }
-  //   } catch (error) {
-  //     // Display error message for signup failure
-  //    console.log(error,"error in register user")
-  //   }
-
-  //   setSubmitting(false);
-  // };
-
 
   // handle submit for Login
   const handleLoginSubmit = (values, { setSubmitting }) => {

@@ -1,20 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BGIMAGE from '../../assets/bg-component1.svg';
 import forHim from '../../assets/forHim.svg';
 import forHer from '../../assets/forHer.svg';
 import Skeleton from 'react-loading-skeleton';
 
 const Banner = () => {
+  const [isload,setIsload] = useState(true);
   return (
     <div>
       {" "}
       <div className="relative">
-     
-        <img
-          src={BGIMAGE}
-          alt="Banner Image"
-          className="w-full h-auto object-cover"
-        />
+      {isload ? (
+  <img
+    src={BGIMAGE}
+    alt="Banner Image"
+    className="w-full h-auto object-cover"
+  />
+) : (
+  <Skeleton count={1000} />
+)}
+       
      
          
         <div className="absolute inset-0  lg:bottom-0 md:bottom[-63px] bottom-0 flex flex-col justify-center items-center text-white bg-opacity-0 bg-black">

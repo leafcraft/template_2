@@ -64,15 +64,15 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
           switch (props.variant) {
             case 'cart-1':
               return (
-                <section className="flex justify-center bg-gray-100 ">
+                <section className="flex justify-center bg-white shadow-2xl ">
                 <div className="w-full px-4 sm:px-6 lg:px-8">
                   <div className="flex items-center justify-center">
-                    <h1 className="text-2xl font-semibold text-gray-900">Your Cart</h1>
+                    <h1 className="text-2xl font-semibold text-gray-900 bg-red">Your Cart</h1>
                   </div>
         
                   <div className="mt-8 w-full md:my-12 ">
-                    <div className="bg-slate-200 rounded-lg shadow w-full">
-                      <div className="px-4 py-6 sm:px-8 sm:py-10 w-full">
+                    <div className="bg-white shadow-xl rounded-2xl  w-full">
+                      <div className=" flex gap-5 px-4 py-6 sm:px-8 sm:py-10 w-full">
                         <div className="flow-root">
                           <ul className="grid grid-cols-1 gap-4 w-full items-center">
                             {cartItems.map((item) => (
@@ -139,7 +139,12 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                         {/* Rest of the component remains unchanged */}
         
                         <div className="mt-6 text-center w-full">
-                          <div className=" border-t-2 p-4  mt-4">
+                          <div className=" p-4  mt-4">
+                          <div className="flex justify-between">
+                              {/* display the  items add price  */}
+                              {cartItems.map((item) => (
+                                <div key={item.id}>{item.price.toFixed(2)}</div>))}
+                            </div>
                             <div className="flex justify-between">
                               <p className="text-gray-700">Subtotal</p>
                               <p className="text-gray-700">{calculateSubtotal()} ₹</p>
@@ -167,7 +172,7 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
 
             case 'cart-2':
               return (
-                <div className="h-screen bg-slate-500 pt-20">
+                <div className="h-screen bg-slate-200 shadow-lg pt-20">
                 <h1 className="mb-10 text-center text-2xl font-bold">Cart Items</h1>
                 <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
                   <div className="rounded-lg md:w-2/3">
