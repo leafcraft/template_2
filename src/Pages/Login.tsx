@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import img4 from '../assets/img4-component4.png'
 import * as Yup from 'yup';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik';
 import { useNavigate } from 'react-router';
 import { useMutation } from '@apollo/client';
 import { signUp } from '../components/graphql/mutation';
 import { register } from 'module';
 import toast from 'react-hot-toast';
+import { setSignUpData } from '../Store/Reducers/SignUpReducer';
+import { store } from '../Store';
+import { useSelector } from 'react-redux';
 
 const LoginComponent = () => {
   const [showSignupBox, setShowSignupBox] = useState(true);
   const [OTPBox, setOtpbox] = useState(false);
   const [showCreateAccount, setShowCreateAccount] = useState(false);
+  const [fulldetails, setFulldetails] = useState(false);
   const [Login, setLogin] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [Register] = useMutation(signUp);
@@ -23,6 +27,17 @@ const LoginComponent = () => {
     setLogin(false);
     setForgotPassword(false);
   };
+
+  
+  const showFullDetails = () => {
+    setShowSignupBox(false);
+    setShowCreateAccount(false);
+    setLogin(false);
+    setForgotPassword(false);
+    setOtpbox(false);
+    setFulldetails(true);
+  };
+
 
   const showOTPBox = () => {
     setShowSignupBox(false);
@@ -53,40 +68,52 @@ const LoginComponent = () => {
   });
 
 
-  const handleSignupSubmit = (values, { setSubmitting }) => {
-    console.log('Form submitted sign up:', values);
+  const handleSignupSubmit = (SignUPvalues) => {
+    console.log('Form submitted sign up:', SignUPvalues);
+  store.dispatch(setSignUpData(SignUPvalues))
+    if (SignUPvalues) {
+      setFulldetails(true);
+      setShowSignupBox(false);
+    }
+  }
+//values from store for signup
+  const signUpValues = useSelector((data:any)=>data.setSignUpData);
+  console.log(signUpValues,"reducer")
+//handle for full detail submit
+  const handleFullDetailsSubmit = (values,) => {
+    console.log("Form values from OTP submit:", values);
+   
     Register({
       variables: {
         userInput: {
-          name: values?.username,
-          password: values?.password,
-          email: values?.username,
-          dob: "2023-09-20T10:46:34.317+00:00",
+          name: values?.username || '',
+          password: "password",
+          email: "email@hjbd.com",
+          dob:values?.DOB,
           organisationID: "650439122f67cb537c73d076",
           addressInput: {
-            name: "name",
-            address: "Hi there",
-            pincode: "12345",
+            name: values?.AddressName || '',
+            address: values?.Address || '',
+            pincode:String(values?.pincode),
           },
           contactInput: {
-            number: "8296544837",
+            number: String(values?.contact),
           }
 
         }
       }
     })
+  
       .then((response) => {
         console.log(response, "singup response");
+        setOtpbox(true);
+        setFulldetails(false);
       })
       .catch((err) => {
         toast.error(err.message);
       })
-    // if (values) {
-    //   setOtpbox(true);
-    //   setShowSignupBox(false);
-    // }
-    // // You can add form submission logic here
-    // setSubmitting(false);
+      
+    
   }
 
   // handle submit for Login
@@ -98,12 +125,15 @@ const LoginComponent = () => {
 
   const handleOTPSubmit = (values, { setSubmitting }) => {
     console.log("from otp verified ", values);
+    
     if (values) {
       setOtpbox(false);
-      setShowSignupBox(true);
+      setLogin(true);
     }
     setSubmitting(false);
   }
+
+  const isOrgIDDisabled:any = true; 
 
   return (
     <div className="flex min-h-screen">
@@ -194,61 +224,7 @@ const LoginComponent = () => {
         {/* Signup box */}
         {showSignupBox && (
 
-          //  <Formik
-          //    initialValues={{
-          //      username: '',
-          //    }}
-          //    validationSchema={Yup.object().shape({
-          //      username: Yup.string().email('Invalid email').required('Username is required'),
-          //    })}
-          //    onSubmit={(values, { setSubmitting }) => {
-          //      console.log('Form submitted:', values);
-          //      // You can add form submission logic here
-          //      setSubmitting(false);
-          //    }}
-          //  >
-          //    <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-          //      <div className="flex flex-col space-y-2 text-center">
-          //        <h2 className="text-3xl md:text-4xl font-bold">Sign in to account</h2>
-          //        <p className="text-md md:text-xl">
-          //          Sign up or log in to place the order, no password required!
-          //        </p>
-          //      </div>
-          //      <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
-          //        <Field
-          //          type="email" // Change the input type to "email" for email validation
-          //          name="username"
-          //          placeholder="Email"
-          //          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-          //        />
-          //        <ErrorMessage name="username" component="div" className="text-red-500" />
-          //        <button
-          //          type="submit"
-          //          className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
-          //        >
-          //          Confirm with email
-          //        </button>
-          //        <div className="flex justify-center items-center">
-          //          <span className="w-full border border-black"></span>
-          //          <span className="px-4">Or</span>
-          //          <span className="w-full border border-black"></span>
-          //        </div>
-          //        <button
-          //          className="flex w-full items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black relative"
-          //          onClick={() => {
-          //            // Redirect to continue with mail when clicked
-          //            window.location.href = 'URL_TO_EMAIL_LOGIN';
-          //          }}
-          //        >
-          //          <span className="absolute left-4">
-          //            {/* Your SVG path */}
-          //          </span>
-          //          <span>Continue with Gmail</span>
-          //        </button>
-          //      </div>
-          //    </Form>
-          //  </Formik>
-
+          
           <Formik
             initialValues={{
               username: '',
@@ -294,16 +270,113 @@ const LoginComponent = () => {
           </Formik>
 
         )}
+        {/* full details */}
+        {fulldetails && (
+          <Formik
+            initialValues={{
+              name: '',
+              DOB: '',
+              OrgID: '',
+              AddressName: '',
+              pincode: '',
+              Address: '',
+              contact: '',
+            }} 
+            // validationSchema={Yup.object().shape({
+            //             OTP: Yup.string().required('OTP is required'), // Remove email validation
+            //   password: Yup.string().required('Password is required'),
+            // })}
+            onSubmit={handleFullDetailsSubmit}
+          >
+            <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
+              <div className="flex flex-col space-y-2 text-center">
+                <h2 className="text-3xl md:text-4xl font-bold">Fill the Details</h2>
+              </div>
+              <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
+                {/* <Field
+                  type="number" // Change the input type to "number" for OTP
+                  name="OTP"
+                  placeholder="OTP"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="OTP" component="div" className="text-red-500" />
+               */}
+                <Field
+                  type="text"
+                  name="name"
+                  placeholder="Name"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="name" component="div" className="text-red-500" />
+                <Field
+                  type="date"
+                  name="DOB"
+                  placeholder="Date of birth"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="DOB" component="div" className="text-red-500" />
+                <Field
+                  type="text"
+                  name="OrgID"
+                  value= "org9876543"
+                  placeholder="Organization ID"
+                  className={`flex px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium placeholder:font-normal ${isOrgIDDisabled ? 'bg-gray-300 text-gray' : 'text-black'}`}
+                  disabled={isOrgIDDisabled}
+                />
+                <ErrorMessage name="OrgID" component="div" className="text-red-500" />
+                <div className='flex gap-2'>
+                  <Field
+                    type="text"
+                    name="AddressName"
+                    placeholder="Address Name"
+                    className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                  />
+                  <ErrorMessage name="AddressName" component="div" className="text-red-500" />
+                  <Field
+                    type="text"
+                    name="pincode"
+                    placeholder="Pincode"
+                    className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                  />
+                  <ErrorMessage name="pincode" component="div" className="text-red-500" />
+                </div>
+                <Field
+                  type="text"
+                  name="Address"
+                  placeholder="Address"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="Address" component="div" className="text-red-500" />
+                <Field
+                  type="text"
+                  name="contact"
+                  placeholder="Contact Number"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="contact" component="div" className="text-red-500" />
+
+                <button
+                  type='submit'
+                
+                  className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
+                >
+                  Register
+                </button>
+              </div>
+            </Form>
+          </Formik>
+
+        )}
         {/* verify screen */}
         {OTPBox && (
           <Formik
             initialValues={{
               OTP: '',
-              password: '', // Adding a password field
+             
             }}
             validationSchema={Yup.object().shape({
               OTP: Yup.string().required('OTP is required'), // Remove email validation
-              password: Yup.string().required('Password is required'),
+              
             })}
             onSubmit={handleOTPSubmit}
           >
@@ -323,20 +396,6 @@ const LoginComponent = () => {
                 />
                 <ErrorMessage name="OTP" component="div" className="text-red-500" />
                 {/* Adding a password field */}
-                <Field
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-                />
-                <ErrorMessage name="password" component="div" className="text-red-500" />
-                <Field
-                  type="password"
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-                />
-                <ErrorMessage name="confirmPassword" component="div" className="text-red-500" />
                 <button
                   type="submit"
                   className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"

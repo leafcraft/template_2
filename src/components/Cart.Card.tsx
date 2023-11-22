@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import Icons from './Icons';
 
+import img13 from '../assets/products/img13.png';
+import img14 from '../assets/products/img14.png';
+
 const CartCard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -10,14 +13,14 @@ const CartCard = () => {
       name: 'Throwback Hip Bag',
       price: '$90.00',
       color: 'Salmon',
-      imageUrl: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
+      imageUrl: img13,
     },
     {
       id: 2,
       name: 'Medium Stuff Satchel',
       price: '$32.00',
       color: 'Blue',
-      imageUrl: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
+      imageUrl: img14,
     },
   ]);
 
@@ -141,30 +144,31 @@ const CartCard = () => {
                     </div>
 
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-                      <div className="flex justify-between text-base font-medium text-gray-900">
+                      <div className="flex tracking-wider justify-between text-base font-semibold text-gray-900">
                       Subtotal: ${calculateSubtotal()}
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                       <div className="mt-6">
                         <a
                           href="/shoppingcart"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                          className="flex items-center justify-center rounded-md border border-transparent bg-black px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                         >
                           Checkout
                         </a>
                       </div>
-                      <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
+                      <div className="mt-6 flex flex-col  justify-center text-center text-sm text-gray-500">
                         <p>
                           or
+                          </p>
                           <button
                             type="button"
-                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                            className="font-medium pt-2 text-indigo-600 hover:text-indigo-500"
                             onClick={toggleSidebar}
                           >
                             Continue Shopping
                             <span aria-hidden="true"> &rarr;</span>
                           </button>
-                        </p>
+                        
                       </div>
                     </div>
                   </div>

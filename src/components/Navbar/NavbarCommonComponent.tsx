@@ -86,10 +86,10 @@ const NavbarCommonComponent  = (props) => {
           <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-start justify-center">
           <nav className="hidden md:flex xl:flex-wrap items-center text-base justify-between">
             <div className="flex"> 
-            <Link to="#" onClick={() => scrollToComponent('women_wear')}>
+            <Link to="/products" onClick={() => scrollToComponent('women_wear')}>
                   <Typography variant="Navbar1"  >WOMENS WEAR</Typography>
                 </Link>
-                <Link to="#" onClick={() => scrollToComponent('mens_wear')}>
+                <Link to="/products" onClick={() => scrollToComponent('mens_wear')}>
                   <Typography variant="Navbar1">MENS WEAR</Typography>
                 </Link>
                 <Link to="/products" onClick={() => scrollToComponent('products')}>

@@ -4,17 +4,19 @@ import storage from "redux-persist/lib/storage";
 import AuthReducer from "./Auth";
 import ProductsReducer from "./ProductsData";
 import Cartreducer from "./CartModal";
+import setSignUpData  from "./SignUpReducer";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["userReducer", "AuthReducer",'Cartreducer'],
+  whitelist: ["userReducer", "AuthReducer",'Cartreducer','setSignUpData'],
 };
 
 const reducers = combineReducers({
   AuthReducer,
   ProductsReducer,
   Cartreducer,
+  setSignUpData,
 });
 
 const rootReducer = (state: any, action: any) => {
