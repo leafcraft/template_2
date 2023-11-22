@@ -5,11 +5,12 @@ import AuthReducer from "./Auth";
 import ProductsReducer from "./ProductsData";
 import Cartreducer from "./CartModal";
 import setSignUpData  from "./SignUpReducer";
+import setRegistrationData  from "./Registerdetails";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["userReducer", "AuthReducer",'Cartreducer','setSignUpData'],
+  whitelist: ["userReducer", "AuthReducer",'Cartreducer','setSignUpData','setRegistrationData'],
 };
 
 const reducers = combineReducers({
@@ -17,6 +18,7 @@ const reducers = combineReducers({
   ProductsReducer,
   Cartreducer,
   setSignUpData,
+  setRegistrationData,
 });
 
 const rootReducer = (state: any, action: any) => {

@@ -3,13 +3,15 @@ import img4 from '../assets/img4-component4.png'
 import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik';
 import { useNavigate } from 'react-router';
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { signUp } from '../components/graphql/mutation';
 import { register } from 'module';
 import toast from 'react-hot-toast';
 import { setSignUpData } from '../Store/Reducers/SignUpReducer';
 import { store } from '../Store';
 import { useSelector } from 'react-redux';
+import { setRegistrationData } from '../Store/Reducers/Registerdetails';
+import { confirmUser } from '../components/graphql/query';
 
 const LoginComponent = () => {
   const [showSignupBox, setShowSignupBox] = useState(true);
@@ -19,6 +21,8 @@ const LoginComponent = () => {
   const [Login, setLogin] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [Register] = useMutation(signUp);
+  const [verifyOTP] = useLazyQuery(confirmUser);
+
 
 
   const showSignup = () => {
@@ -28,7 +32,7 @@ const LoginComponent = () => {
     setForgotPassword(false);
   };
 
-  
+
   const showFullDetails = () => {
     setShowSignupBox(false);
     setShowCreateAccount(false);
@@ -70,31 +74,31 @@ const LoginComponent = () => {
 
   const handleSignupSubmit = (SignUPvalues) => {
     console.log('Form submitted sign up:', SignUPvalues);
-  store.dispatch(setSignUpData(SignUPvalues))
+    store.dispatch(setSignUpData(SignUPvalues))
     if (SignUPvalues) {
       setFulldetails(true);
       setShowSignupBox(false);
     }
   }
-//values from store for signup
-  const signUpValues = useSelector((data:any)=>data.setSignUpData);
-  console.log(signUpValues,"reducer")
-//handle for full detail submit
-  const handleFullDetailsSubmit = (values,) => {
+  //values from store for signup
+  const signUpValues = useSelector((data: any) => data.setSignUpData);
+  console.log(signUpValues, "reducer")
+  //handle for full detail submit
+  const handleFullDetailsSubmit = (values) => {
     console.log("Form values from OTP submit:", values);
-   
+
     Register({
       variables: {
         userInput: {
           name: values?.username || '',
-          password: "password",
-          email: "email@hjbd.com",
-          dob:values?.DOB,
+          password: signUpValues?.password,
+          email: signUpValues?.username,
+          dob: values?.DOB,
           organisationID: "650439122f67cb537c73d076",
           addressInput: {
             name: values?.AddressName || '',
             address: values?.Address || '',
-            pincode:String(values?.pincode),
+            pincode: String(values?.pincode),
           },
           contactInput: {
             number: String(values?.contact),
@@ -103,37 +107,49 @@ const LoginComponent = () => {
         }
       }
     })
-  
-      .then((response) => {
-        console.log(response, "singup response");
+
+      .then((response: any) => {
+        store.dispatch(setRegistrationData(response));
         setOtpbox(true);
         setFulldetails(false);
       })
       .catch((err) => {
         toast.error(err.message);
       })
-      
-    
   }
 
+  //get data from store register data 
+  const RegisterData = useSelector((data: any) => data.setRegistrationData.data?.signUp?.email);
+  console.log(RegisterData?.signUp?.email, "dataaaaaaaaaaaaaaaaa")
   // handle submit for Login
-  const handleLoginSubmit = (values, { setSubmitting }) => {
+  const handleLoginSubmit = (values) => {
     // Handle form submission logic here
     console.log('Form submitted login:', values);
-    setSubmitting(false);
+
   }
 
-  const handleOTPSubmit = (values, { setSubmitting }) => {
+  const handleOTPSubmit = (values: any) => {
     console.log("from otp verified ", values);
-    
-    if (values) {
-      setOtpbox(false);
-      setLogin(true);
-    }
-    setSubmitting(false);
+    verifyOTP({
+      variables: {
+        ConfirmInput: {
+          email: "twinkle009@mailinator.com",
+          code: values?.OTP
+        }
+
+      }
+    })
+      .then((response: any) => {
+        toast.success(response);
+        setOtpbox(false);
+        setLogin(true);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      })
   }
 
-  const isOrgIDDisabled:any = true; 
+  const isOrgIDDisabled: any = true;
 
   return (
     <div className="flex min-h-screen">
@@ -148,7 +164,7 @@ const LoginComponent = () => {
           <div className='space-y-5'>
             <h1 className=" animate-fade-right animate-once animate-duration-[2000ms] animate-delay-[250ms] lg:text-3xl xl:text-5xl xl:leading-snug font-extrabold">Enter your account and discover new experiences</h1>
             {showSignupBox && (
-              <><p className="text-lg">You do have a account?</p><button onClick={login} className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+              <><p className="text-lg">You do have a account?</p><button onClick={showOTPBox} className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
                 Login here
               </button></>
             )}
@@ -224,7 +240,7 @@ const LoginComponent = () => {
         {/* Signup box */}
         {showSignupBox && (
 
-          
+
           <Formik
             initialValues={{
               username: '',
@@ -265,6 +281,14 @@ const LoginComponent = () => {
                 >
                   Register
                 </button>
+                <div className='flex justify-center'>
+                  <p className=" font-Robot text-sm md:text-md">
+                    Remembered your password?{" "}
+                    <a href="#" onClick={login} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
+                      Login
+                    </a>
+                  </p>
+                </div>
               </div>
             </Form>
           </Formik>
@@ -281,7 +305,7 @@ const LoginComponent = () => {
               pincode: '',
               Address: '',
               contact: '',
-            }} 
+            }}
             // validationSchema={Yup.object().shape({
             //             OTP: Yup.string().required('OTP is required'), // Remove email validation
             //   password: Yup.string().required('Password is required'),
@@ -318,7 +342,7 @@ const LoginComponent = () => {
                 <Field
                   type="text"
                   name="OrgID"
-                  value= "org9876543"
+                  value="org9876543"
                   placeholder="Organization ID"
                   className={`flex px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium placeholder:font-normal ${isOrgIDDisabled ? 'bg-gray-300 text-gray' : 'text-black'}`}
                   disabled={isOrgIDDisabled}
@@ -357,7 +381,7 @@ const LoginComponent = () => {
 
                 <button
                   type='submit'
-                
+
                   className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
                 >
                   Register
@@ -372,11 +396,11 @@ const LoginComponent = () => {
           <Formik
             initialValues={{
               OTP: '',
-             
+
             }}
             validationSchema={Yup.object().shape({
               OTP: Yup.string().required('OTP is required'), // Remove email validation
-              
+
             })}
             onSubmit={handleOTPSubmit}
           >
@@ -565,5 +589,6 @@ const LoginComponent = () => {
 };
 
 export default LoginComponent;
+
 
 

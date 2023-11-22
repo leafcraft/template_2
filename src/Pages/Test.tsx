@@ -1,25 +1,27 @@
 import React, { useState } from 'react';
 import img4 from '../assets/img4-component4.png'
 import * as Yup from 'yup';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik';
 import { useNavigate } from 'react-router';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { signUp } from '../components/graphql/mutation';
+import { register } from 'module';
 import toast from 'react-hot-toast';
-import { store } from '../Store';
 import { setSignUpData } from '../Store/Reducers/SignUpReducer';
+import { store } from '../Store';
 import { useSelector } from 'react-redux';
-import { login } from '../components/graphql/query';
+import { setRegistrationData } from '../Store/Reducers/Registerdetails';
+import { confirmUser } from '../components/graphql/query';
 
 const LoginComponent = () => {
-  const [showSignupBox, setShowSignupBox] = useState(false);
+  const [showSignupBox, setShowSignupBox] = useState(true);
   const [OTPBox, setOtpbox] = useState(false);
-  const [fulldetails, setFulldetails] = useState(false);
   const [showCreateAccount, setShowCreateAccount] = useState(false);
+  const [fulldetails, setFulldetails] = useState(false);
   const [Login, setLogin] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [Register] = useMutation(signUp);
-  const [LoginQuery] = useLazyQuery(login);
+  const [verifyOTP] = useLazyQuery(confirmUser);
 
 
   const showSignup = () => {
@@ -27,9 +29,10 @@ const LoginComponent = () => {
     setShowCreateAccount(false);
     setLogin(false);
     setForgotPassword(false);
-    setFulldetails(false);
   };
-  const Showfulldetails = () => {
+
+  
+  const showFullDetails = () => {
     setShowSignupBox(false);
     setShowCreateAccount(false);
     setLogin(false);
@@ -38,12 +41,12 @@ const LoginComponent = () => {
     setFulldetails(true);
   };
 
+
   const showOTPBox = () => {
     setShowSignupBox(false);
     setShowCreateAccount(false);
     setLogin(false);
     setForgotPassword(false);
-    setFulldetails(false);
     setOtpbox(true);
   };
 
@@ -52,7 +55,7 @@ const LoginComponent = () => {
     setLogin(false);
   };
 
-  const showlogin = () => {
+  const login = () => {
     setShowSignupBox(false);
     setShowCreateAccount(false);
     setLogin(true); setForgotPassword(false);
@@ -67,43 +70,20 @@ const LoginComponent = () => {
     // Add more fields and validation as necessary
   });
 
-  const handleSignupSubmit = (SignUPvalues:any,) => {
-   
-    store.dispatch(setSignUpData(SignUPvalues));
-     if (SignUPvalues) {
-       
-       setFulldetails(true);
-       setShowSignupBox(false);
-     }
-     // You can add form submission logic here
-    
-   } 
- 
-const location =useNavigate();
-  // handle submit for Login
-  const handleLoginSubmit = (values) => {
-    // Handle form submission logic here
-    console.log('Form submitted login:', values);
-LoginQuery({
-  variables:{
-    email:values?.username,
-    password:values?.password,
-  }
-})
-location('/');
-    // setSubmitting(false);
-  }
-   // handle submit for Login
-   const handleOTPSubmit = (values) => {
-    // Handle form submission logic here
-    console.log('Form submitted login:', values);
-    // setSubmitting(false);
-  }
 
+  const handleSignupSubmit = (SignUPvalues) => {
+    console.log('Form submitted sign up:', SignUPvalues);
+  store.dispatch(setSignUpData(SignUPvalues))
+    if (SignUPvalues) {
+      setFulldetails(true);
+      setShowSignupBox(false);
+    }
+  }
+//values from store for signup
   const signUpValues = useSelector((data:any)=>data.setSignUpData);
   console.log(signUpValues,"reducer")
-
-  const handleFullDetailsSubmit = (values,) => {
+//handle for full detail submit
+  const handleFullDetailsSubmit = (values) => {
     console.log("Form values from OTP submit:", values);
    
     Register({
@@ -124,27 +104,54 @@ location('/');
           }
 
         }
-      }
+      },
     })
-  
-      .then((response) => {
-        console.log(response, "singup response");
+      .then((response:any) => {
+        store.dispatch(setRegistrationData(response));
         setOtpbox(true);
         setFulldetails(false);
       })
       .catch((err) => {
         toast.error(err.message);
       })
-      
-    
   }
+
+  //get data from store register data 
+  const RegisterData = useSelector((data:any)=>data.setRegistrationData);
+  console.log(RegisterData?.data?.signUp?.email,"dataaaaaaaaaaaaaaaaa")
+  // handle submit for Login
+  const handleLoginSubmit = (values) => {
+    // Handle form submission logic here
+    console.log('Form submitted login:', values);
  
+  }
+
+  const handleOTPSubmit = (values:any) => {
+    console.log("from otp verified ", values);
+    verifyOTP({
+      variables:{
+        // email: RegisterData,
+        code: values?.OTP
+      }
+    })
+    .then((response:any)=>{
+      toast.success(response);
+      setOtpbox(false);
+      setLogin(true);
+    })
+    .catch((err)=>{
+      toast.error(err.message);
+    })
+  }
+
   const isOrgIDDisabled:any = true; 
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <div className='lg:flex flex-col justify-between items-center bg-cover' style={{ backgroundImage: `url(${img4})` }}>
         <div className='hidden text-white font-Robot  bg-black bg-opacity-70 h-full lg:flex flex-col justify-between  lg:p-8 xl:p-12 lg:max-w-sm xl:max-w-lg'>
+
           <div className="flex items-center justify-start space-x-3">
             <span className="bg-black rounded-full w-8 h-8"></span>
             <a href="#" className="font-medium text-xl">Brand</a>
@@ -152,13 +159,14 @@ location('/');
           <div className='space-y-5'>
             <h1 className=" animate-fade-right animate-once animate-duration-[2000ms] animate-delay-[250ms] lg:text-3xl xl:text-5xl xl:leading-snug font-extrabold">Enter your account and discover new experiences</h1>
             {showSignupBox && (
-              <><p className="text-lg">You do have a account?</p><button onClick={Showfulldetails} className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+              <><p className="text-lg">You do have a account?</p><button onClick={showOTPBox} className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
                 Login here
               </button></>
             )}
           </div>
           <p className="font-medium">© 2022 Company <a className='text-green-500' target='_blank' href='https://leafcraft.co/'>LeafCraft.co</a></p>
         </div>
+
       </div>
 
       {/* Login */}
@@ -201,7 +209,7 @@ location('/');
                   <div className='flex justify-center'>
                     <p className=" font-Robot text-sm md:text-md">
                       Remembered your password?{" "}
-                      <a href="#" onClick={showlogin} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
+                      <a href="#" onClick={login} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
                         Login
                       </a>
                     </p>
@@ -219,13 +227,15 @@ location('/');
           </div>
           <div className="flex items-center space-x-2">
             <span>Not a member? </span>
-            <a ref={showSignup} className="underline font-medium text-[#070eff]">
-              Login now
+            <a href="#" className="underline font-medium text-[#070eff]">
+              Sign up now
             </a>
           </div>
         </div>
         {/* Signup box */}
         {showSignupBox && (
+
+          
           <Formik
             initialValues={{
               username: '',
@@ -271,7 +281,7 @@ location('/');
           </Formik>
 
         )}
-        {/* Filled screen */}
+        {/* full details */}
         {fulldetails && (
           <Formik
             initialValues={{
@@ -282,9 +292,9 @@ location('/');
               pincode: '',
               Address: '',
               contact: '',
-            }}
+            }} 
             // validationSchema={Yup.object().shape({
-            //   OTP: Yup.string().required('OTP is required'), // Remove email validation
+            //             OTP: Yup.string().required('OTP is required'), // Remove email validation
             //   password: Yup.string().required('Password is required'),
             // })}
             onSubmit={handleFullDetailsSubmit}
@@ -356,21 +366,6 @@ location('/');
                 />
                 <ErrorMessage name="contact" component="div" className="text-red-500" />
 
-
-                {/* <Field
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-                />
-                <ErrorMessage name="password" component="div" className="text-red-500" />
-                <Field
-                  type="password"
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-                />
-                <ErrorMessage name="confirmPassword" component="div" className="text-red-500" /> */}
                 <button
                   type='submit'
                 
@@ -383,17 +378,25 @@ location('/');
           </Formik>
 
         )}
+        {/* verify screen */}
         {OTPBox && (
-        <Formik
+          <Formik
             initialValues={{
-             OTP:''
+              OTP: '',
+             
             }}
-            
+            validationSchema={Yup.object().shape({
+              OTP: Yup.string().required('OTP is required'), // Remove email validation
+              
+            })}
             onSubmit={handleOTPSubmit}
           >
             <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
               <div className="flex flex-col space-y-2 text-center">
-                <h2 className="text-3xl md:text-4xl font-bold">Verify OTP</h2>
+                <h2 className="text-3xl md:text-4xl font-bold">Verify the OTP</h2>
+                <p className="text-md md:text-xl">
+                  confirm  password required!
+                </p>
               </div>
               <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
                 <Field
@@ -403,16 +406,18 @@ location('/');
                   className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
                 />
                 <ErrorMessage name="OTP" component="div" className="text-red-500" />
+                {/* Adding a password field */}
                 <button
-                  type='submit'
-                
+                  type="submit"
                   className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
                 >
-                  Verify
+                  Register
                 </button>
               </div>
             </Form>
-          </Formik>) }
+          </Formik>
+
+        )}
         {/* create user box */}
         {showCreateAccount && (
           <Formik
@@ -494,7 +499,7 @@ location('/');
                 <div className="flex justify-center">
                   <p className="text-sm md:text-md">
                     Already have an account?
-                    <a href="#" onClick={showlogin} className="underline font-medium text-slate-950 opacity-50 pl-2">
+                    <a href="#" onClick={login} className="underline font-medium text-slate-950 opacity-50 pl-2">
                       Login
                     </a>
                   </p>
@@ -523,7 +528,7 @@ location('/');
               </div>
               <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
                 <Field
-                  type="email"
+                  type="text"
                   name="username"
                   placeholder="Username"
                   className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
@@ -571,6 +576,3 @@ location('/');
 };
 
 export default LoginComponent;
-
-
-

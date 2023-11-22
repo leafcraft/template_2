@@ -12,11 +12,8 @@ export const login = gql`
   }
 `;
 
-
-export const resendConfirmCode = gql`
-mutation resendConfirmCode($resendConfirmationCodeInput:resendConfirmationCodeInput!){
-  resendConfirmCode(resendConfirmationCodeInput:$resendConfirmationCodeInput){
-    email
+export const confirmUser = gql`
+  query confirmUser($ConfirmInput:ConfirmInput!) {
+    confirmUser(ConfirmInput:$ConfirmInput)
   }
-}
 `;
