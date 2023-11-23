@@ -11,7 +11,7 @@ import { setSignUpData } from '../Store/Reducers/SignUpReducer';
 import { store } from '../Store';
 import { useSelector } from 'react-redux';
 import { setRegistrationData } from '../Store/Reducers/Registerdetails';
-import { confirmUser } from '../components/graphql/query';
+import { confirmUser, loginUser } from '../components/graphql/query';
 
 const LoginComponent = () => {
   const [showSignupBox, setShowSignupBox] = useState(true);
@@ -22,6 +22,7 @@ const LoginComponent = () => {
   const [forgotPassword, setForgotPassword] = useState(false);
   const [Register] = useMutation(signUp);
   const [verifyOTP] = useLazyQuery(confirmUser);
+  const [LoginUser] = useLazyQuery(loginUser);
 
 
 
@@ -82,7 +83,8 @@ const LoginComponent = () => {
   }
   //values from store for signup
   const signUpValues = useSelector((data: any) => data.setSignUpData);
-  console.log(signUpValues, "reducer")
+  console.log(signUpValues, "reducer");
+
   //handle for full detail submit
   const handleFullDetailsSubmit = (values) => {
     console.log("Form values from OTP submit:", values);
@@ -118,6 +120,8 @@ const LoginComponent = () => {
       })
   }
 
+  const location = useNavigate();
+
   //get data from store register data 
   const RegisterData = useSelector((data: any) => data.setRegistrationData.data?.signUp?.email);
   console.log(RegisterData?.signUp?.email, "dataaaaaaaaaaaaaaaaa")
@@ -125,6 +129,23 @@ const LoginComponent = () => {
   const handleLoginSubmit = (values) => {
     // Handle form submission logic here
     console.log('Form submitted login:', values);
+    LoginUser({
+      variables:{
+        LoginInput:{
+          email: values.username,
+          password:values.password
+        }
+      }
+    })
+    .then((res)=>{
+      console.log(res.data.login.AccessToken,"loginnnnnnnnnnnnnnnnnnnnnnnnn")
+      if(res.data.login.AccessToken){
+        location('/');
+      }
+    })
+    .catch((err)=>{
+      toast.error(err);
+    })
 
   }
 
@@ -133,14 +154,14 @@ const LoginComponent = () => {
     verifyOTP({
       variables: {
         ConfirmInput: {
-          email: "twinkle009@mailinator.com",
-          code: values?.OTP
+          email: RegisterData,
+          code: values?.OTP.toString()
         }
 
       }
     })
       .then((response: any) => {
-        toast.success(response);
+       console.log(response,"otp conformmmmmmmmmmmmmmmmmmmmmmm");
         setOtpbox(false);
         setLogin(true);
       })
@@ -164,7 +185,7 @@ const LoginComponent = () => {
           <div className='space-y-5'>
             <h1 className=" animate-fade-right animate-once animate-duration-[2000ms] animate-delay-[250ms] lg:text-3xl xl:text-5xl xl:leading-snug font-extrabold">Enter your account and discover new experiences</h1>
             {showSignupBox && (
-              <><p className="text-lg">You do have a account?</p><button onClick={showOTPBox} className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+              <><p className="text-lg">You do have a account?</p><button onClick={login} className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
                 Login here
               </button></>
             )}

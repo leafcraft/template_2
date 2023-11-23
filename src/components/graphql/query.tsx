@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-export const login = gql`
-  query login($password: String!, $email: String!) {
-    login(password: $password, email: $email) {
+export const loginUser = gql`
+  query login($LoginInput: LoginInput!) {
+    login(LoginInput: $LoginInput) {
       AccessToken
       ExpiresIn
       TokenType
