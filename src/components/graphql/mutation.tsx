@@ -38,3 +38,10 @@ export const signUp = gql`
       }
   }
 `;
+
+
+export const ForgotPasswordOtp = gql`
+mutation forgotPasswordCode($ForgotPassowrdInput:ForgotPasswordCodeInput!){
+  forgotPasswordCode(ForgotPassowrdInput:$ForgotPassowrdInput)
+}
+`

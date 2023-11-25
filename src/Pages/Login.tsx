@@ -4,14 +4,14 @@ import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik';
 import { useNavigate } from 'react-router';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
-import { signUp } from '../components/graphql/mutation';
+import { ForgotPasswordOtp, signUp } from '../components/graphql/mutation';
 import { register } from 'module';
 import toast from 'react-hot-toast';
 import { setSignUpData } from '../Store/Reducers/SignUpReducer';
 import { store } from '../Store';
 import { useSelector } from 'react-redux';
 import { setRegistrationData } from '../Store/Reducers/Registerdetails';
-import { confirmUser, loginUser } from '../components/graphql/query';
+import { confirmUser, forgotPasswordLogin, loginUser, reconfirmUser } from '../components/graphql/query';
 
 const LoginComponent = () => {
   const [showSignupBox, setShowSignupBox] = useState(true);
@@ -20,9 +20,13 @@ const LoginComponent = () => {
   const [fulldetails, setFulldetails] = useState(false);
   const [Login, setLogin] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
+  const [forgotPasswordOTP, setForgotPasswordOTP] = useState(false);
   const [Register] = useMutation(signUp);
   const [verifyOTP] = useLazyQuery(confirmUser);
   const [LoginUser] = useLazyQuery(loginUser);
+  const [ReverifyOTP] = useLazyQuery(reconfirmUser);
+  const [ForgotPassword] = useLazyQuery(forgotPasswordLogin);
+  const [ForgotPassCode] = useMutation(ForgotPasswordOtp);
 
 
 
@@ -83,12 +87,10 @@ const LoginComponent = () => {
   }
   //values from store for signup
   const signUpValues = useSelector((data: any) => data.setSignUpData);
-  console.log(signUpValues, "reducer");
+
 
   //handle for full detail submit
   const handleFullDetailsSubmit = (values) => {
-    console.log("Form values from OTP submit:", values);
-
     Register({
       variables: {
         userInput: {
@@ -111,12 +113,13 @@ const LoginComponent = () => {
     })
 
       .then((response: any) => {
+        console.log(response,"res registerrrrrrrrrrrrrrrr")
         store.dispatch(setRegistrationData(response));
         setOtpbox(true);
         setFulldetails(false);
       })
       .catch((err) => {
-        toast.error(err.message);
+      // toast.error(err.message);
       })
   }
 
@@ -124,7 +127,6 @@ const LoginComponent = () => {
 
   //get data from store register data 
   const RegisterData = useSelector((data: any) => data.setRegistrationData.data?.signUp?.email);
-  console.log(RegisterData?.signUp?.email, "dataaaaaaaaaaaaaaaaa")
   // handle submit for Login
   const handleLoginSubmit = (values) => {
     // Handle form submission logic here
@@ -138,8 +140,8 @@ const LoginComponent = () => {
       }
     })
     .then((res)=>{
-      console.log(res.data.login.AccessToken,"loginnnnnnnnnnnnnnnnnnnnnnnnn")
-      if(res.data.login.AccessToken){
+      console.log(res.data,"loginnnnnnnnnnnnnnnnnnnnnnnnn")
+      if(res?.data?.login?.AccessToken){
         location('/');
       }
     })
@@ -167,8 +169,81 @@ const LoginComponent = () => {
       })
       .catch((err) => {
         toast.error(err.message);
+        setOtpbox(false);
       })
   }
+
+  const resendOtp = (values: any) => {
+    console.log("from otp verified ", values);
+    ReverifyOTP({
+      variables: {
+        resendConfirmationCodeInput: {
+          email:RegisterData,
+        }
+
+      }
+    })
+      .then((response: any) => {
+       console.log(response,"resend Otp conformmmmmmmmmmmmmmmmmmmmmmm");
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      })
+  }
+
+  const handleForgotPassword = (values) =>{
+    console.log(values,"forgottttttttttttttttttt")
+ForgotPassword({
+  variables:{
+    ForgotInput :{
+      email: values.username
+    }
+  }
+})
+.then((response)=>{
+  if(response?.data?.forgot_password === true)
+  console.log(response?.data?.forgot_password,"forgotpaswordddddddddddddddddd")
+setForgotPasswordOTP(true);
+setForgotPassword(false)
+})
+.catch((err:any)=>{
+ 
+})
+  }
+
+  const handleForgotPasswordOTP = (values) => {
+    console.log(values,"forgotttttttttttttttttttotppppppppp")
+    ForgotPassCode({
+      variables:{
+        ForgotPassowrdInput :{
+          email: values.username,
+          code: values.OTP,
+          password:values.password,
+          
+        }
+      }
+    })
+    .then((response)=>{
+      console.log(response?.data?.forgot_password,"forgotpasworddddddddddddddddddOTPPPP")
+      // if(response?.data?.forgot_password === true){
+      //   setForgotPasswordOTP(false);
+      // }
+   
+    })
+    .catch((err)=>{
+      toast.error(err.message);
+    })   
+  }
+
+ const handleFuldetailstoLogin = () =>{
+setFulldetails(false);
+setLogin(true);
+ }
+
+ const forgotPassCode = () => {
+setLogin(true);
+setForgotPasswordOTP(false);
+ }
 
   const isOrgIDDisabled: any = true;
 
@@ -185,7 +260,7 @@ const LoginComponent = () => {
           <div className='space-y-5'>
             <h1 className=" animate-fade-right animate-once animate-duration-[2000ms] animate-delay-[250ms] lg:text-3xl xl:text-5xl xl:leading-snug font-extrabold">Enter your account and discover new experiences</h1>
             {showSignupBox && (
-              <><p className="text-lg">You do have a account?</p><button onClick={login} className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+              <><p className="text-lg">You do have a account?</p><button onClick={showOTPBox} className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
                 Login here
               </button></>
             )}
@@ -197,55 +272,7 @@ const LoginComponent = () => {
 
       {/* Login */}
       <div className="flex flex-1 flex-col items-center justify-center px-10 relative">
-        {forgotPassword && (
-          <Formik
-            initialValues={{ email: '' }}
-            validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              console.log(values, "vales forgot")
-              setSubmitting(false)
-            }}
-          >
-            {({
-              values,
-              handleChange,
-              handleSubmit,
-              isSubmitting,
-            }) => (
-              <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center" onSubmit={handleSubmit}>
-                <div className="flex flex-col space-y-2 text-center">
-                  <h2 className="text-3xl md:text-4xl  font-Robot font-bold">Forgot Password?</h2>
-                  <p className="text-md  font-Robot md:text-xl">
-                    Enter your email address to reset your password.
-                  </p>
-                </div>
-                <div className="flex flex-col  w-full space-y-5 px-12 lg:px-24">
-                  <Field
-                    type="email"
-                    name='email'
-                    value={values.email}
-                    onChange={handleChange}
-                    placeholder="Enter your Email"
-                    className="flex font-Robot px-3 py-2 focus:border-red md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-                  />
-                  <ErrorMessage name="email" component="div" />
-                  <button disabled={isSubmitting} type="submit" className="flex font-Robot items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
-                    Reset Password
-                  </button>
-                  <div className='flex justify-center'>
-                    <p className=" font-Robot text-sm md:text-md">
-                      Remembered your password?{" "}
-                      <a href="#" onClick={login} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
-                        Login
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </Form>
-            )}
-          </Formik>
-
-        )}
+        
         <div className="flex lg:hidden justify-between items-center w-full py-4">
           <div className="flex items-center justify-start space-x-3">
             <span className="bg-black rounded-full w-6 h-6"></span>
@@ -258,6 +285,116 @@ const LoginComponent = () => {
             </a>
           </div>
         </div>
+        {/* forgot password */}
+        {forgotPassword && (
+          <Formik
+          initialValues={{
+            username: '',
+           
+          }}
+          validationSchema={Yup.object().shape({
+            username: Yup.string().email('Invalid email').required('Username is required'),
+            
+          })}
+          onSubmit={handleForgotPassword}
+        >
+            <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
+                <div className="flex flex-col space-y-2 text-center">
+                  <h2 className="text-3xl md:text-4xl  font-Robot font-bold">Forgot Password?</h2>
+                  <p className="text-md  font-Robot md:text-xl">
+                    Enter your email address to reset your password.
+                  </p>
+                </div>
+                <div className="flex flex-col  w-full space-y-5 px-12 lg:px-24">
+                <Field
+                  type="email" // Change the input type to "email" for email validation
+                  name="username"
+                  placeholder="Email"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="username" component="div" className="text-red-500" />
+                  <button type="submit" className="flex font-Robot items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+                    Reset Password
+                  </button>
+                  <div className='flex justify-center'>
+                    <p className=" font-Robot text-sm md:text-md">
+                      Remembered your password?{" "}
+                      <a href="#" onClick={login} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
+                        Login
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </Form>
+          </Formik>
+
+        )}
+        {/* forgotpassword otp screen */}
+        {forgotPasswordOTP && (
+          <Formik
+          initialValues={{
+            username: '',
+            password:'',
+            OTP:'',
+          }}
+          validationSchema={Yup.object().shape({
+            username: Yup.string().email('Invalid email').required('Username is required'),
+            password: Yup.string()
+            .required('Password is required')
+            .matches(
+              /^(?=.*[A-Z])(?=.*[0-9a-zA-Z]).{8,}$/,
+              'Password must be alphanumeric and contain at least one capital letter'
+            ),
+            OTP: Yup.string().required('OTP is required'),
+          })}
+          onSubmit={handleForgotPasswordOTP}
+        >
+            <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
+                <div className="flex flex-col space-y-2 text-center">
+                  <h2 className="text-3xl md:text-4xl  font-Robot font-bold">Set Password</h2>
+                  <p className="text-md  font-Robot md:text-xl">
+                    Enter your email,password and OTP address to reset your password.
+                  </p>
+                </div>
+                <div className="flex flex-col  w-full space-y-5 px-12 lg:px-24">
+                <Field
+                  type="email" // Change the input type to "email" for email validation
+                  name="username"
+                  placeholder="Email"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="username" component="div" className="text-red-500" />
+                <Field
+                  type="password" // Change the input type to "email" for email validation
+                  name="password"
+                  placeholder="password"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="password" component="div" className="text-red-500" />
+                <Field
+                  type="OTP" // Change the input type to "email" for email validation
+                  name="OTP"
+                  placeholder="OTP"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="OTP" component="div" className="text-red-500" />
+                  <button type="submit" className="flex font-Robot items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+                  confirm
+                  </button>
+                  <div className='flex justify-center'>
+                    <p className=" font-Robot text-sm md:text-md">
+                      Remembered your password?{" "}
+                      <a href="#" onClick={forgotPassCode} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
+                        Login
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </Form>
+          </Formik>
+
+        )}
+
         {/* Signup box */}
         {showSignupBox && (
 
@@ -296,6 +433,7 @@ const LoginComponent = () => {
                   className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
                 />
                 <ErrorMessage name="password" component="div" className="text-red-500" />
+                
                 <button
                   type="submit"
                   className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
@@ -360,7 +498,7 @@ const LoginComponent = () => {
                   className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
                 />
                 <ErrorMessage name="DOB" component="div" className="text-red-500" />
-                <Field
+                {/* <Field
                   type="text"
                   name="OrgID"
                   value="org9876543"
@@ -368,7 +506,7 @@ const LoginComponent = () => {
                   className={`flex px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium placeholder:font-normal ${isOrgIDDisabled ? 'bg-gray-300 text-gray' : 'text-black'}`}
                   disabled={isOrgIDDisabled}
                 />
-                <ErrorMessage name="OrgID" component="div" className="text-red-500" />
+                <ErrorMessage name="OrgID" component="div" className="text-red-500" /> */}
                 <div className='flex gap-2'>
                   <Field
                     type="text"
@@ -407,6 +545,14 @@ const LoginComponent = () => {
                 >
                   Register
                 </button>
+                <div className="flex justify-center">
+                  <p className="text-sm md:text-md">
+                 get back to login
+                    <a href="#" onClick={handleFuldetailstoLogin} className="underline font-medium text-slate-950 opacity-50 pl-2">
+                    login
+                    </a>
+                  </p>
+                </div>
               </div>
             </Form>
           </Formik>
@@ -429,7 +575,7 @@ const LoginComponent = () => {
               <div className="flex flex-col space-y-2 text-center">
                 <h2 className="text-3xl md:text-4xl font-bold">Verify the OTP</h2>
                 <p className="text-md md:text-xl">
-                  confirm  password required!
+                  confirm  OTP required!
                 </p>
               </div>
               <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
@@ -445,8 +591,16 @@ const LoginComponent = () => {
                   type="submit"
                   className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
                 >
-                  Register
+                  Verify
                 </button>
+                <div className="flex justify-center">
+                  <p className="text-sm md:text-md">
+                   Resend the OTP 
+                    <a href="#" onClick={resendOtp} className="underline font-medium text-slate-950 opacity-50 pl-2">
+                      Resend OTP
+                    </a>
+                  </p>
+                </div>
               </div>
             </Form>
           </Formik>
@@ -552,7 +706,12 @@ const LoginComponent = () => {
             }}
             validationSchema={Yup.object().shape({
               username: Yup.string().required('Username is required'),
-              password: Yup.string().required('Password is required'),
+              password: Yup.string()
+          .required('Password is required')
+          .matches(
+            /^(?=.*[A-Z])(?=.*[0-9a-zA-Z]).{8,}$/,
+            'Password must be alphanumeric and contain at least one capital letter'
+          ),
             })}
             onSubmit={handleLoginSubmit}
           >
@@ -588,7 +747,7 @@ const LoginComponent = () => {
                   <p className="text-sm md:text-md">
                     Don't have an account? Create one here
                     <a href='/login' onClick={showSignup} className="underline font-medium text-slate-950 opacity-50 pl-2">
-                      Create one
+                     Sign Up
                     </a>
                   </p>
                 </div>
