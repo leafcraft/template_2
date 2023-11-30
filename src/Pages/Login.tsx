@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import img4 from '../assets/img4-component4.png'
 import * as Yup from 'yup';
-import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation} from '@apollo/client';
 import { ForgotPasswordOtp, signUp } from '../components/graphql/mutation';
-import { register } from 'module';
 import toast from 'react-hot-toast';
 import { setSignUpData } from '../Store/Reducers/SignUpReducer';
 import { store } from '../Store';
 import { useSelector } from 'react-redux';
 import { setRegistrationData } from '../Store/Reducers/Registerdetails';
-import { confirmUser, forgotPasswordLogin, loginUser, reconfirmUser } from '../components/graphql/query';
+import { UserDetails, confirmUser, forgotPasswordLogin, loginUser, reconfirmUser } from '../components/graphql/query';
+import { setLoginData } from '../Store/Reducers/LoginData';
+import { setAcessToken } from '../Store/Reducers/AccessToken';
 
 const LoginComponent = () => {
   const [showSignupBox, setShowSignupBox] = useState(true);
@@ -27,6 +28,7 @@ const LoginComponent = () => {
   const [ReverifyOTP] = useLazyQuery(reconfirmUser);
   const [ForgotPassword] = useLazyQuery(forgotPasswordLogin);
   const [ForgotPassCode] = useMutation(ForgotPasswordOtp);
+  const [userDetails] = useLazyQuery(UserDetails);
 
 
 
@@ -78,7 +80,7 @@ const LoginComponent = () => {
 
 
   const handleSignupSubmit = (SignUPvalues) => {
-    console.log('Form submitted sign up:', SignUPvalues);
+  
     store.dispatch(setSignUpData(SignUPvalues))
     if (SignUPvalues) {
       setFulldetails(true);
@@ -91,14 +93,15 @@ const LoginComponent = () => {
 
   //handle for full detail submit
   const handleFullDetailsSubmit = (values) => {
+  
     Register({
       variables: {
         userInput: {
-          name: values?.username || '',
+          name: values?.name || '',
           password: signUpValues?.password,
           email: signUpValues?.username,
           dob: values?.DOB,
-          organisationID: "650439122f67cb537c73d076",
+          organisationID: process.env.orgID,
           addressInput: {
             name: values?.AddressName || '',
             address: values?.Address || '',
@@ -113,13 +116,14 @@ const LoginComponent = () => {
     })
 
       .then((response: any) => {
-        console.log(response,"res registerrrrrrrrrrrrrrrr")
+       
         store.dispatch(setRegistrationData(response));
         setOtpbox(true);
         setFulldetails(false);
       })
-      .catch((err) => {
-      // toast.error(err.message);
+      .catch((err:any) => {
+
+       console.log(err.message);
       })
   }
 
@@ -130,29 +134,50 @@ const LoginComponent = () => {
   // handle submit for Login
   const handleLoginSubmit = (values) => {
     // Handle form submission logic here
-    console.log('Form submitted login:', values);
+   
     LoginUser({
-      variables:{
-        LoginInput:{
+      variables: {
+        LoginInput: {
           email: values.username,
-          password:values.password
+          password: values.password
         }
       }
     })
-    .then((res)=>{
-      console.log(res.data,"loginnnnnnnnnnnnnnnnnnnnnnnnn")
-      if(res?.data?.login?.AccessToken){
-        location('/');
-      }
-    })
-    .catch((err)=>{
-      toast.error(err);
-    })
+      .then((res) => {
+       
+         store.dispatch(setAcessToken(res.data))
+        const accessToken = res?.data?.login?.AccessToken;
+      
+        if (accessToken) {
+          userDetails({
+            variables: {},
+        context: {
+          headers: {
+            Authorization: accessToken,
+          }
+        }
+          })
+            .then((res) => {
+              store.dispatch(setLoginData(res.data));
+           
+              if(res.data.userDetails.email){
+                location('/')
+              }
+            })
+            .catch((err) => {
+              toast.error(err);
+            })
+        } 
+
+      })
+      .catch((err) => {
+        toast.error(err);
+      })
 
   }
 
   const handleOTPSubmit = (values: any) => {
-    console.log("from otp verified ", values);
+
     verifyOTP({
       variables: {
         ConfirmInput: {
@@ -163,9 +188,11 @@ const LoginComponent = () => {
       }
     })
       .then((response: any) => {
-       console.log(response,"otp conformmmmmmmmmmmmmmmmmmmmmmm");
+       if(response){
         setOtpbox(false);
         setLogin(true);
+       }
+       
       })
       .catch((err) => {
         toast.error(err.message);
@@ -173,77 +200,77 @@ const LoginComponent = () => {
       })
   }
 
-  const resendOtp = (values: any) => {
-    console.log("from otp verified ", values);
+  const resendOtp = () => {
+   
     ReverifyOTP({
       variables: {
         resendConfirmationCodeInput: {
-          email:RegisterData,
+          email: RegisterData,
         }
 
       }
     })
       .then((response: any) => {
-       console.log(response,"resend Otp conformmmmmmmmmmmmmmmmmmmmmmm");
+        console.log(response, "resend Otp conformmmmmmmmmmmmmmmmmmmmmmm");
       })
       .catch((err) => {
         toast.error(err.message);
       })
   }
 
-  const handleForgotPassword = (values) =>{
-    console.log(values,"forgottttttttttttttttttt")
-ForgotPassword({
-  variables:{
-    ForgotInput :{
-      email: values.username
-    }
-  }
-})
-.then((response)=>{
-  if(response?.data?.forgot_password === true)
-  console.log(response?.data?.forgot_password,"forgotpaswordddddddddddddddddd")
-setForgotPasswordOTP(true);
-setForgotPassword(false)
-})
-.catch((err:any)=>{
- 
-})
-  }
-
-  const handleForgotPasswordOTP = (values) => {
-    console.log(values,"forgotttttttttttttttttttotppppppppp")
-    ForgotPassCode({
-      variables:{
-        ForgotPassowrdInput :{
-          email: values.username,
-          code: values.OTP,
-          password:values.password,
-          
+  const handleForgotPassword = (values) => {
+  
+    ForgotPassword({
+      variables: {
+        ForgotInput: {
+          email: values.username
         }
       }
     })
-    .then((response)=>{
-      console.log(response?.data?.forgot_password,"forgotpasworddddddddddddddddddOTPPPP")
-      // if(response?.data?.forgot_password === true){
-      //   setForgotPasswordOTP(false);
-      // }
-   
-    })
-    .catch((err)=>{
-      toast.error(err.message);
-    })   
+      .then((response) => {
+        if (response?.data?.forgot_password === true)
+         
+        setForgotPasswordOTP(true);
+        setForgotPassword(false)
+      })
+      .catch((err: any) => {
+console.log("ForgotPassword error:",err.message);
+      })
   }
 
- const handleFuldetailstoLogin = () =>{
-setFulldetails(false);
-setLogin(true);
- }
+  const handleForgotPasswordOTP = (values) => {
+   
+    ForgotPassCode({
+      variables: {
+        ForgotPassowrdInput: {
+          email: values.username,
+          code: values.OTP,
+          password: values.password,
 
- const forgotPassCode = () => {
-setLogin(true);
-setForgotPasswordOTP(false);
- }
+        }
+      }
+    })
+      .then((response) => {
+        console.log(response?.data?.forgot_password, "forgotpasworddddddddddddddddddOTPPPP")
+        // if(response?.data?.forgot_password === true){
+        //   setForgotPasswordOTP(false);
+        // }
+
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      })
+  }
+
+  const handleFuldetailstoLogin = () => {
+    setFulldetails(false);
+    setLogin(true);
+  }
+
+  const forgotPassCode = () => {
+    setLogin(true);
+    setForgotPasswordOTP(false);
+  }
 
   const isOrgIDDisabled: any = true;
 
@@ -260,7 +287,7 @@ setForgotPasswordOTP(false);
           <div className='space-y-5'>
             <h1 className=" animate-fade-right animate-once animate-duration-[2000ms] animate-delay-[250ms] lg:text-3xl xl:text-5xl xl:leading-snug font-extrabold">Enter your account and discover new experiences</h1>
             {showSignupBox && (
-              <><p className="text-lg">You do have a account?</p><button onClick={showOTPBox} className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+              <><p className="text-lg">You do have a account?</p><button onClick={login} className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
                 Login here
               </button></>
             )}
@@ -272,7 +299,7 @@ setForgotPasswordOTP(false);
 
       {/* Login */}
       <div className="flex flex-1 flex-col items-center justify-center px-10 relative">
-        
+
         <div className="flex lg:hidden justify-between items-center w-full py-4">
           <div className="flex items-center justify-start space-x-3">
             <span className="bg-black rounded-full w-6 h-6"></span>
@@ -288,24 +315,24 @@ setForgotPasswordOTP(false);
         {/* forgot password */}
         {forgotPassword && (
           <Formik
-          initialValues={{
-            username: '',
-           
-          }}
-          validationSchema={Yup.object().shape({
-            username: Yup.string().email('Invalid email').required('Username is required'),
-            
-          })}
-          onSubmit={handleForgotPassword}
-        >
+            initialValues={{
+              username: '',
+
+            }}
+            validationSchema={Yup.object().shape({
+              username: Yup.string().email('Invalid email').required('Username is required'),
+
+            })}
+            onSubmit={handleForgotPassword}
+          >
             <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-                <div className="flex flex-col space-y-2 text-center">
-                  <h2 className="text-3xl md:text-4xl  font-Robot font-bold">Forgot Password?</h2>
-                  <p className="text-md  font-Robot md:text-xl">
-                    Enter your email address to reset your password.
-                  </p>
-                </div>
-                <div className="flex flex-col  w-full space-y-5 px-12 lg:px-24">
+              <div className="flex flex-col space-y-2 text-center">
+                <h2 className="text-3xl md:text-4xl  font-Robot font-bold">Forgot Password?</h2>
+                <p className="text-md  font-Robot md:text-xl">
+                  Enter your email address to reset your password.
+                </p>
+              </div>
+              <div className="flex flex-col  w-full space-y-5 px-12 lg:px-24">
                 <Field
                   type="email" // Change the input type to "email" for email validation
                   name="username"
@@ -313,50 +340,50 @@ setForgotPasswordOTP(false);
                   className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
                 />
                 <ErrorMessage name="username" component="div" className="text-red-500" />
-                  <button type="submit" className="flex font-Robot items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
-                    Reset Password
-                  </button>
-                  <div className='flex justify-center'>
-                    <p className=" font-Robot text-sm md:text-md">
-                      Remembered your password?{" "}
-                      <a href="#" onClick={login} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
-                        Login
-                      </a>
-                    </p>
-                  </div>
+                <button type="submit" className="flex font-Robot items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+                  Reset Password
+                </button>
+                <div className='flex justify-center'>
+                  <p className=" font-Robot text-sm md:text-md">
+                    Remembered your password?{" "}
+                    <a href="#" onClick={login} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
+                      Login
+                    </a>
+                  </p>
                 </div>
-              </Form>
+              </div>
+            </Form>
           </Formik>
 
         )}
         {/* forgotpassword otp screen */}
         {forgotPasswordOTP && (
           <Formik
-          initialValues={{
-            username: '',
-            password:'',
-            OTP:'',
-          }}
-          validationSchema={Yup.object().shape({
-            username: Yup.string().email('Invalid email').required('Username is required'),
-            password: Yup.string()
-            .required('Password is required')
-            .matches(
-              /^(?=.*[A-Z])(?=.*[0-9a-zA-Z]).{8,}$/,
-              'Password must be alphanumeric and contain at least one capital letter'
-            ),
-            OTP: Yup.string().required('OTP is required'),
-          })}
-          onSubmit={handleForgotPasswordOTP}
-        >
+            initialValues={{
+              username: '',
+              password: '',
+              OTP: '',
+            }}
+            validationSchema={Yup.object().shape({
+              username: Yup.string().email('Invalid email').required('Username is required'),
+              password: Yup.string()
+                .required('Password is required')
+                .matches(
+                  /^(?=.*[A-Z])(?=.*[0-9a-zA-Z]).{8,}$/,
+                  'Password must be alphanumeric and contain at least one capital letter'
+                ),
+              OTP: Yup.string().required('OTP is required'),
+            })}
+            onSubmit={handleForgotPasswordOTP}
+          >
             <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-                <div className="flex flex-col space-y-2 text-center">
-                  <h2 className="text-3xl md:text-4xl  font-Robot font-bold">Set Password</h2>
-                  <p className="text-md  font-Robot md:text-xl">
-                    Enter your email,password and OTP address to reset your password.
-                  </p>
-                </div>
-                <div className="flex flex-col  w-full space-y-5 px-12 lg:px-24">
+              <div className="flex flex-col space-y-2 text-center">
+                <h2 className="text-3xl md:text-4xl  font-Robot font-bold">Set Password</h2>
+                <p className="text-md  font-Robot md:text-xl">
+                  Enter your email,password and OTP address to reset your password.
+                </p>
+              </div>
+              <div className="flex flex-col  w-full space-y-5 px-12 lg:px-24">
                 <Field
                   type="email" // Change the input type to "email" for email validation
                   name="username"
@@ -378,19 +405,19 @@ setForgotPasswordOTP(false);
                   className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
                 />
                 <ErrorMessage name="OTP" component="div" className="text-red-500" />
-                  <button type="submit" className="flex font-Robot items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+                <button type="submit" className="flex font-Robot items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
                   confirm
-                  </button>
-                  <div className='flex justify-center'>
-                    <p className=" font-Robot text-sm md:text-md">
-                      Remembered your password?{" "}
-                      <a href="#" onClick={forgotPassCode} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
-                        Login
-                      </a>
-                    </p>
-                  </div>
+                </button>
+                <div className='flex justify-center'>
+                  <p className=" font-Robot text-sm md:text-md">
+                    Remembered your password?{" "}
+                    <a href="#" onClick={forgotPassCode} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
+                      Login
+                    </a>
+                  </p>
                 </div>
-              </Form>
+              </div>
+            </Form>
           </Formik>
 
         )}
@@ -433,7 +460,7 @@ setForgotPasswordOTP(false);
                   className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
                 />
                 <ErrorMessage name="password" component="div" className="text-red-500" />
-                
+
                 <button
                   type="submit"
                   className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
@@ -547,9 +574,9 @@ setForgotPasswordOTP(false);
                 </button>
                 <div className="flex justify-center">
                   <p className="text-sm md:text-md">
-                 get back to login
+                    get back to login
                     <a href="#" onClick={handleFuldetailstoLogin} className="underline font-medium text-slate-950 opacity-50 pl-2">
-                    login
+                      login
                     </a>
                   </p>
                 </div>
@@ -595,7 +622,7 @@ setForgotPasswordOTP(false);
                 </button>
                 <div className="flex justify-center">
                   <p className="text-sm md:text-md">
-                   Resend the OTP 
+                    Resend the OTP
                     <a href="#" onClick={resendOtp} className="underline font-medium text-slate-950 opacity-50 pl-2">
                       Resend OTP
                     </a>
@@ -707,11 +734,11 @@ setForgotPasswordOTP(false);
             validationSchema={Yup.object().shape({
               username: Yup.string().required('Username is required'),
               password: Yup.string()
-          .required('Password is required')
-          .matches(
-            /^(?=.*[A-Z])(?=.*[0-9a-zA-Z]).{8,}$/,
-            'Password must be alphanumeric and contain at least one capital letter'
-          ),
+                .required('Password is required')
+                .matches(
+                  /^(?=.*[A-Z])(?=.*[0-9a-zA-Z]).{8,}$/,
+                  'Password must be alphanumeric and contain at least one capital letter'
+                ),
             })}
             onSubmit={handleLoginSubmit}
           >
@@ -747,7 +774,7 @@ setForgotPasswordOTP(false);
                   <p className="text-sm md:text-md">
                     Don't have an account? Create one here
                     <a href='/login' onClick={showSignup} className="underline font-medium text-slate-950 opacity-50 pl-2">
-                     Sign Up
+                      Sign Up
                     </a>
                   </p>
                 </div>
@@ -769,6 +796,4 @@ setForgotPasswordOTP(false);
 };
 
 export default LoginComponent;
-
-
 

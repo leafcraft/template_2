@@ -15,9 +15,9 @@ const signUpSlice = createSlice({
   name: 'signUp',
   initialState: initialSignUpState,
   reducers: {
-    setSignUpData(state, action: PayloadAction<SignUpState>) {
-        console.log(action.payload,"reducer sign up")
-      return action.payload;
+    setSignUpData(state: SignUpState, action: PayloadAction<SignUpState>) {
+      // Return a new state object with the updated values
+      return { ...state, ...action.payload };
     },
     // Add other actions as needed
   },

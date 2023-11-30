@@ -3,14 +3,18 @@ import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
 import AuthReducer from "./Auth";
 import ProductsReducer from "./ProductsData";
+import setProducts from "./ProductsData";
 import Cartreducer from "./CartModal";
 import setSignUpData  from "./SignUpReducer";
 import setRegistrationData  from "./Registerdetails";
+import setLoginData from "./LoginData";
+import resetLoginData from "./LoginData";
+import setAcessToken from "./AccessToken";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["userReducer", "AuthReducer",'Cartreducer','setSignUpData','setRegistrationData'],
+  whitelist: ["userReducer", "AuthReducer",'Cartreducer','setSignUpData','setRegistrationData','setLoginData','setAcessToken','resetLoginData','setProducts'],
 };
 
 const reducers = combineReducers({
@@ -19,6 +23,10 @@ const reducers = combineReducers({
   Cartreducer,
   setSignUpData,
   setRegistrationData,
+  setLoginData,
+  setAcessToken,
+  resetLoginData,
+  setProducts,
 });
 
 const rootReducer = (state: any, action: any) => {

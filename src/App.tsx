@@ -25,7 +25,7 @@ function App() {
         <Routes>
         <Route element={<ProtectedLayout />}>
 
-        <Route path="/product/:id" element={<Product />} />
+        <Route path="/products/:slug/:id" element={<Product />} />
           <Route path='/shoppingcart' element={<ShoppingCart />} />
           <Route path='/profile' element={<Profile />} />
           <Route  path='/aboutus' element={<AboutUs />} />

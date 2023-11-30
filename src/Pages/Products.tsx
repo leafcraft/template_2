@@ -1,6 +1,6 @@
 
-import ProductsCommonComponent from '../components/Atoms/Products.Atoms'
-
+import ProductsCommonComponent from '../components/Atoms/Products.Atoms';
+// import "dotenv/config";
 import img1 from '../assets/products/img1.png';
 import img2 from '../assets/products/img2.png';
 import img3 from '../assets/products/img3.png';
@@ -17,6 +17,11 @@ import img13 from '../assets/products/img13.png';
 import img14 from '../assets/products/img14.png';
 import Banner from '../components/ProductsComponents/banner';
 import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useLazyQuery } from '@apollo/client';
+import { ProductsData } from '../components/graphql/query';
+import toast from 'react-hot-toast';
+import { date } from 'yup';
 
 const products = [
   {
@@ -121,16 +126,19 @@ const products = [
 ];
 
 
+
 // const productData = useSelector((data:any)=>data.productData);
 // console.log(productData,"produuts data ");
 
 const Products = () => {
+  
+
   return (
-    <section className="text-gray-600 body-font ">
-    <Banner />
-      <ProductsCommonComponent variant={'products-1'} products={products} />
-      </section>
-  )
+    <section className="text-gray-600 body-font">
+      <Banner />
+      <ProductsCommonComponent variant={'products-1'}  />
+    </section>
+  );
 }
 
-export default Products
+export default Products;

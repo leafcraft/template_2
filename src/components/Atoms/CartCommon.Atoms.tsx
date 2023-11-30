@@ -1,17 +1,68 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CustomCarousel from './Carousel.Atoms';
 import ProductCard from './Productcard.Atoms';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import DropdownComponent from '../../components/Atoms/Dropdown';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import BreadcrumbPlainFlatTextIconPreview from './BreadcrumbPreview';
 import CartCard from '../Cart.Card';
 import { store } from '../../Store';
+import img6 from '../../assets/products/img6.png';
+import img7 from '../../assets/products/img7.png';
+import img8 from '../../assets/products/img8.png';
+import img9 from '../../assets/products/img9.png';
+import { useLazyQuery } from '@apollo/client';
+import { ProductDataID } from '../graphql/query';
+import toast from 'react-hot-toast';
 
 
 
+interface Product {
+  _id: string;
+  name: string;
+  slug: string;
+  unit: number;
+  creation_date: string;
+  // Add other properties as needed
+}
 
-const CartPage = ({ products ,items }) => {
+const CartPage = ( ) => {
+  const {slug, id } = useParams();
+  const [ProductData] = useLazyQuery(ProductDataID);
+  const [data, setData] = useState<{ product: Product }>({ product: {
+    _id: '',
+    name: '',
+    slug: '',
+    unit: 0,
+    creation_date: ''
+  } });
+
+  const ProductsData = useSelector((data:any)=>data.setProducts.products);
+
+  console.log(ProductsData,"productsData:")
+  
+  useEffect(() => {
+  
+    ProductData({
+      variables:{
+        slug:slug,
+        productID:id,
+        organisationID:"650439122f67cb537c73d076",
+      }
+    })
+    .then((res)=>{
+     
+      const getdata = res?.data?.product || {};
+      console.log("data res:", getdata);
+      setData({ product: getdata });
+    })
+    .catch((err)=>{
+      toast.error(err);
+    })
+    // Now, you can use the id for any other logic you need
+  }, [id,slug,ProductData]);
+
+ 
   // dropdown
   const handleDropdownSelect = (selectedValue) => {
     // Do something with the selected value, e.g., update state or perform an action
@@ -25,6 +76,26 @@ const CartPage = ({ products ,items }) => {
     // Add more options as needed
   ];
 
+    const items = [
+  {
+    id: 1,
+    category: 'Stylease Exclusive',
+    title: 'Blue Velvet Fully Embroidered Lehenga Set',
+    price: '$58.00',
+    images: [
+      { original: img7, thumbnail: img7 },
+      { original: img8, thumbnail: img8 },
+      { original: img7, thumbnail: img7 },
+    ],
+    description: 'Fam locavore kickstarter distillery...',
+    materialAndCare: 'Add Material and Care information here.',
+    aboutProduct: 'Add information about the product here.',
+    stylistNotes: 'Add Stylist\'s Notes here.',
+  },
+
+  // Add more products as needed
+];
+
 
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to manage dropdown visibility
@@ -34,7 +105,7 @@ const CartPage = ({ products ,items }) => {
 
   const handleSizeChange = (value) => {
     setSelectedSize(value);
-    console.log(value);
+  
   };
 
   const labelClass = 'inline-block cursor-pointer rounded-lg border border-[#e7e7e7] py-1 px-3 select-label';
@@ -76,6 +147,7 @@ const CartPage = ({ products ,items }) => {
         <div className=" grid grid-cols-1 md:grid-cols-2   place-content-center gap-24">
           <div >
           <div className="flex flex-col gap-1">
+          <p>Product ID: {id}{data.product.name}</p>
                             <BreadcrumbPlainFlatTextIconPreview breadcrumbs={breadcrumbsData} />
                         </div>
           
@@ -87,14 +159,15 @@ const CartPage = ({ products ,items }) => {
             </div>
           </div>
           <div className="flex flex-col gap-4 pr-10">
-  {items.map((product:any) => (
-    <div key={product.id}>
-      <h2 className="text-sm font-normal font-Robot pb-8 tracking-widest">{product.category}</h2>
-      <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{product.title}</h1>
+          {data.product ? (
+
+    <div key={data.product._id}>
+      <h2 className="text-sm font-normal font-Robot pb-8 tracking-widest">{data.product.name}</h2>
+      <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{data.product.slug}</h1>
 
       <div className="flex items-center gap-3 mb-4">
         <span className="font-normal font-Robot text-xl">Rent :</span>
-        <span className="font-normal font-Robot text-xl">{product.price}</span>
+        <span className="font-normal font-Robot text-xl">{data.product.slug}</span>
       </div>
 
       <div className='flex gap-4 mb-4'>
@@ -125,7 +198,7 @@ const CartPage = ({ products ,items }) => {
         {/* Dropdown and Date inputs can be added here */}
       </div>
 
-      <button onClick={() => handleAddToCart(product)} className='bg-black text-white font-normal font-Robot p-4'>Add to cart</button>
+      <button onClick={() => handleAddToCart(data.product._id)} className='bg-black text-white font-normal font-Robot p-4'>Add to cart</button>
 
       <div className="mt-4">
         <a href="#" className="text-gray-500">
@@ -138,27 +211,29 @@ const CartPage = ({ products ,items }) => {
 
       <div className="mt-4">
         <h2 className="text-xl font-medium mb-2">Description</h2>
-        <p className="leading-relaxed">{product.description}</p>
+        <p className="leading-relaxed">{data.product.name}</p>
       </div>
 
       <div className="mt-4">
         <h2 className="text-xl font-medium mb-2">Stylist's Notes</h2>
-        <p className="leading-relaxed">{product.stylistNotes}</p>
+        <p className="leading-relaxed">{data.product.name}</p>
       </div>
 
       <div className="mt-4">
         <h2 className="text-xl font-medium mb-2">Material and Care</h2>
-        <p className="leading-relaxed">{product.materialAndCare}</p>
+        <p className="leading-relaxed">{data.product.name}</p>
       </div>
 
       <div className="mt-4">
         <h2 className="text-xl font-medium mb-2">About Product</h2>
-        <p className="leading-relaxed">{product.aboutProduct}</p>
+        <p className="leading-relaxed">{data.product.name}</p>
       </div>
       
     </div>
-    
-  ))}
+          ):(
+            <div>loding ... </div>
+          )}
+
 </div>
 
 
@@ -168,7 +243,7 @@ const CartPage = ({ products ,items }) => {
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
           <div className="flex flex-wrap -m-4">
-            {products.map((product:any, index:any) => (
+            {ProductsData.map((product:any, index:any) => (
               <ProductCard key={index} {...product} />
             ))}
           </div>
@@ -179,6 +254,5 @@ const CartPage = ({ products ,items }) => {
       </section>
     </section >
   );
-};
-
+            };
 export default CartPage;

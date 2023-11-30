@@ -17,9 +17,9 @@ const registrationSlice = createSlice({
   name: 'registration',
   initialState: initialRegistrationState,
   reducers: {
-    setRegistrationData(state:any, action: PayloadAction<RegistrationState>) {
-      console.log(action.payload, "reducer registration");
-      return action.payload;
+    setRegistrationData(state: RegistrationState, action: PayloadAction<RegistrationState>) {
+      // Return a new state object with the updated values
+      return { ...state, ...action.payload };
     },
     // Add other actions as needed
   },

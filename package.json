@@ -14,6 +14,7 @@
     "@types/node": "^20.7.2",
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react-swc": "^3.4.0",
+    "dotenv": "^16.3.1",
     "flowbite": "^2.0.0",
     "formik": "^2.4.5",
     "graphql": "^16.8.1",

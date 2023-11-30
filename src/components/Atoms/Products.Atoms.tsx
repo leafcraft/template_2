@@ -1,18 +1,55 @@
-import React from 'react';
+import { useLazyQuery } from '@apollo/client';
+import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { ProductsData } from '../graphql/query';
+import { store } from '../../Store';
+import { setProducts } from '../../Store/Reducers/ProductsData';
 
 interface Product {
-  id: number;
+  _id: string;
   name: string;
   category: string;
   price: string;
-  imageSrc: string;
+  image: string;
+  type: string; // Assuming 'type' is a property in your product data
 }
 
 
+const ProductsCommonComponent  = (props:{variant:any }) => {
+  const { variant } = props; 
+  
+  const [data, setData] = useState<Product[]>([]);
+  const [productDetails] = useLazyQuery(ProductsData);
+  const AccessToken = useSelector((data:any)=>data?.setAcessToken?.accessToken?.login?.AccessToken);
 
-const ProductsCommonComponent  = (props:{variant:any, products: Product[] }) => {
-  const { variant, products } = props; 
+  useEffect(() => {
+   
+    productDetails({
+      variables: {
+        organisationID:"650439122f67cb537c73d076",
+        isAllowed: true,
+        isAdmin: false,
+      },
+      context: {
+        headers: {
+          Authorization: AccessToken,
+        }
+      }
+    }).then((res) => {
+    
+      const getdata = res?.data?.products?.items || [];
+      setData(getdata);
+      store.dispatch(setProducts(getdata));
+    }).catch((err) => {
+      toast.error(err);
+    });
+  }, [AccessToken]); // Empty dependency array triggers the effect only on initial render
+
+
+
+ 
   return (
     <> {(() => {
         switch (variant) {
@@ -20,14 +57,14 @@ const ProductsCommonComponent  = (props:{variant:any, products: Product[] }) => 
             return (
                 <div id='women_wear' className=" px-5 py-8 mx-auto">
                 <div className="flex flex-wrap ">
-                  {products.map((product) => (
-                    <div key={product.id} className="lg:w-1/4 md:w-1/3 p-7 w-full cursor-pointer" onClick={()=>console.log('pass the props')}>
-                      <Link to={`/product/${product.id}`}>
+                  {data.map((product:any) => (
+                    <div key={product._id} className="lg:w-1/4 md:w-1/3 p-7 w-full cursor-pointer" onClick={()=>console.log('pass the props')}>
+                      <Link to={`/products/${product.slug}/${product._id}`}>
                         <a className="flex relative h-80 rounded overflow-hidden">
                           <img
                             alt="ecommerce"
                             className="object-cover object-center w-full h-full block"
-                            src={product.imageSrc}
+                            src={product.image}
                           />
                         </a>
                       </Link>
@@ -37,7 +74,7 @@ const ProductsCommonComponent  = (props:{variant:any, products: Product[] }) => 
                           {product.name}
                         </h2>
                         <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                          {product.category}
+                          {product.type}
                         </h3>
                         <p className="mt-1">{product.price}</p>
                       </div>
@@ -54,10 +91,10 @@ const ProductsCommonComponent  = (props:{variant:any, products: Product[] }) => 
                   <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2>
         
                   <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                    {products.map((product) => (
-                      <div key={product.id} className="group relative">
+                    {data.map((product:any) => (
+                      <div key={product._id} className="group relative">
                         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                          <img src={product.imageSrc} alt={product.name} className="h-full w-full object-cover object-center lg:h-full lg:w-full" />
+                          <img src={product.image} alt={product.name} className="h-full w-full object-cover object-center lg:h-full lg:w-full" />
                         </div>
                         <div className="mt-4 flex justify-between">
                           <div>

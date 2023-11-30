@@ -72,7 +72,7 @@ const LoginComponent = () => {
 
 
   const handleSignupSubmit = (SignUPvalues) => {
-    console.log('Form submitted sign up:', SignUPvalues);
+   
   store.dispatch(setSignUpData(SignUPvalues))
     if (SignUPvalues) {
       setFulldetails(true);
@@ -81,10 +81,10 @@ const LoginComponent = () => {
   }
 //values from store for signup
   const signUpValues = useSelector((data:any)=>data.setSignUpData);
-  console.log(signUpValues,"reducer")
+
 //handle for full detail submit
   const handleFullDetailsSubmit = (values) => {
-    console.log("Form values from OTP submit:", values);
+  
    
     Register({
       variables: {
@@ -118,7 +118,7 @@ const LoginComponent = () => {
 
   //get data from store register data 
   const RegisterData = useSelector((data:any)=>data.setRegistrationData);
-  console.log(RegisterData?.data?.signUp?.email,"dataaaaaaaaaaaaaaaaa")
+
   // handle submit for Login
   const handleLoginSubmit = (values) => {
     // Handle form submission logic here
@@ -127,7 +127,7 @@ const LoginComponent = () => {
   }
 
   const handleOTPSubmit = (values:any) => {
-    console.log("from otp verified ", values);
+  
     verifyOTP({
       variables:{
         // email: RegisterData,

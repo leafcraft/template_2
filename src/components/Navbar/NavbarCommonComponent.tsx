@@ -4,13 +4,18 @@ import Button from '../../components/Button';
 import Typography from '../../components/Atoms/Typography';
 
 import logo from '../../assets/logo.png'
+import { useSelector } from 'react-redux';
+import { logout } from '../graphql/query';
+import { useLazyQuery } from '@apollo/client';
+import { store } from '../../Store';
+import { resetLoginData } from '../../Store/Reducers/LoginData';
 
 const Data = [
-  { name: "Product", section: "product", key: "product" },
-  { name: "Benefits", section: "benefits", key: "benefits" },
-  { name: "Use Cases", section: "usecase", key: "usecase" },
-  { name: "Pricing", section: "costing", key: "costing" },
-  { name: "Team", section: "team", key: "team" },
+  { name: "Profile", section: "product", key: "product" },
+  { name: "Product", section: "benefits", key: "benefits" },
+  { name: "Contact Us", section: "usecase", key: "usecase" },
+  { name: "HOME", section: "costing", key: "costing" },
+ 
 ];
 
 
@@ -18,6 +23,9 @@ const NavbarCommonComponent  = (props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
+
+  const isUserLoggedIn = useSelector((data:any)=> data.setLoginData?.loginData?.userDetails?.isOk);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -75,6 +83,36 @@ const NavbarCommonComponent  = (props) => {
   };
 
   const { variant, products } = props; 
+
+
+  // logout handle function
+  const [loggoutUser] = useLazyQuery(logout);
+  const AccessToken = useSelector((data:any)=>data?.setAcessToken?.accessToken?.login?.AccessToken);
+  const location = useNavigate();
+  const [data,setData] = useState();
+
+
+  const handleLogout = ( ) => {
+  
+    loggoutUser({
+      variables:{}, 
+      context: {
+        headers: {
+          Authorization: AccessToken,
+        }
+      }
+    }).then((res)=>{
+   
+    const getData = res.data.logout.isOk;
+    setData(getData);
+   
+    })
+    .catch((err)=>{
+      console.log(err,"err,Logout");
+    })
+    store.dispatch(resetLoginData());
+    window.location.reload();
+  }
   return (
     <>
      {(() => {
@@ -86,26 +124,31 @@ const NavbarCommonComponent  = (props) => {
           <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-start justify-center">
           <nav className="hidden md:flex xl:flex-wrap items-center text-base justify-between">
             <div className="flex"> 
-            <Link to="/products" onClick={() => scrollToComponent('women_wear')}>
-                  <Typography variant="Navbar1"  >WOMENS WEAR</Typography>
-                </Link>
-                <Link to="/products" onClick={() => scrollToComponent('mens_wear')}>
-                  <Typography variant="Navbar1">MENS WEAR</Typography>
+                <Link to="/aboutus" >
+                  <Typography variant="Navbar1">ABOUT US</Typography>
                 </Link>
                 <Link to="/products" onClick={() => scrollToComponent('products')}>
                   <Typography variant="Navbar1">PRODUCTS</Typography>
                 </Link>
-               
-                <Link to="/aboutus" >
-                  <Typography variant="Navbar1">ABOUT US</Typography>
-                </Link></div>
+                <Link to="/terms&conditons" onClick={() => scrollToComponent('women_wear')}>
+                  <Typography variant="Navbar1"  >TERMS </Typography>
+                </Link>
+                </div>
                 <div className="flex ml-auto">
-                {userIsLoggedIn ? ( // Show Profile button if user is logged in
-                    <Link to="/profile">
+                {isUserLoggedIn || data ? ( // Show Profile button if user is logged in
+                <>
+                   <Link to="/profile">
                       <Typography variant="Navbar1" className="bg-black p-3 rounded-md">
                         Profile
                       </Typography>
                     </Link>
+                    <Link to="" onClick={handleLogout}>
+                    <Typography  variant="Navbar1" className="bg-black p-3 rounded-md">
+                      logout
+                    </Typography>
+                  </Link>
+                  </>
+                   
                   ) : ( // Show Sign Up button if user is not logged in
                     <Link to="/login">
                       <Typography variant="Navbar1" className="bg-black p-3 rounded-md">
@@ -209,10 +252,10 @@ const NavbarCommonComponent  = (props) => {
                   {!isMobile && (
                     <>
                      <Link to="/" onClick={() => scrollToComponent('women_wear')}>
-                  <Typography variant="Navbar1"  >WOMENS WEAR</Typography>
+                  <Typography variant="Navbar1"  >HOME</Typography>
                 </Link>
-                <Link to="/" onClick={() => scrollToComponent('mens_wear')}>
-                  <Typography variant="Navbar1">MENS WEAR</Typography>
+                <Link to="/profile" onClick={() => scrollToComponent('mens_wear')}>
+                  <Typography variant="Navbar1">PROFILE</Typography>
                 </Link>
                 <Link to="/products" onClick={() => scrollToComponent('products')}>
                   <Typography variant="Navbar1">PRODUCTS</Typography>
