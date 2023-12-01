@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Icons from '../components/Icons';
+import { useSelector } from 'react-redux';
 
 interface SidebarProps {
   // Add any props as needed
@@ -21,20 +22,31 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
   };
 
+  const userDetails = useSelector((data: any) => data.setLoginData?.loginData?.userDetails);
+  console.log("userDEtails in profile:", userDetails);
+
+  const [isEmailEditable, setIsEmailEditable] = useState<boolean>(false);
+
+  const [isNameEditable, setIsNameEditable] = useState<boolean>(false);
+
+  const [isNameContact, setIsNameContact] = useState<boolean>(false);
+  const [isNameAddress, setIsNameAddress] = useState<boolean>(false);
+
+
   return (
     <div className='flex flex-col md:flex-row gap-2 md:gap-6 p-4 md:p-7 h-full'>
       <div className=" text-white h-full md:w-1/5 md:p-4">
         <div className=" w-full md:max-w-sm rounded overflow-hidden shadow-lg bg-white">
           <nav>
             <ul className='flex justify-around items-center md:flex-col '>
-              <li className={`text-black  hover:text-gray-300 ${selectedMenuItem === 'orders' ? 'font-bold ' : ''}`} onClick={() => handleMenuItemClick('orders')}>
+              <li className={`text-black   p-4 hover:text-gray-300 ${selectedMenuItem === 'orders' ? 'font-bold ' : ''}`} onClick={() => handleMenuItemClick('orders')}>
                 Orders
-                <ul className='my-3'>FAQ</ul>
               </li>
-              <li className={`text-black  hover:text-gray-300 ${selectedMenuItem === 'profile' ? 'font-bold' : ''}`} onClick={() => handleMenuItemClick('profile')}>
+              <li className={`text-black   p-4 hover:text-gray-300 ${selectedMenuItem === 'profile' ? 'font-bold' : ''}`} onClick={() => handleMenuItemClick('profile')}>
                 Profile
-                <ul className='my-3'>Favorite</ul>
               </li>
+              <li className={`text-black p-4 hover:text-gray-300 ${selectedMenuItem === 'Password' ? 'font-bold' : ''}`} onClick={() => handleMenuItemClick('Password')}>
+                 Change Password</li>
             </ul>
           </nav>
         </div>
@@ -55,10 +67,10 @@ const Sidebar: React.FC<SidebarProps> = () => {
             {/* Add the content for the Profile page */}
             <Formik
               initialValues={{
-                name: '',
-                email: '',
-                contacts: [{ id: 1, value: '' }],
-                deliveryAddresses: [''],
+                name: userDetails.name || '',
+                email: userDetails.email || '',
+                contacts: [{ id: 1, value: userDetails._id || '' }],
+                deliveryAddresses: [userDetails.dob || ''],
               }}
               validationSchema={Yup.object().shape({
                 name: Yup.string().required('Name is required'),
@@ -72,7 +84,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
               })}
               onSubmit={handleFormSubmit}
             >
-              {({values,handleChange}) => (
+              {({ values, handleChange }) => (
                 <Form className="flex flex-1 flex-col h-full justify-center space-y-5 w-full items-center">
                   <div className="flex flex-col space-y-2 text-center h-full">
                     <h2 className="text-3xl md:text-4xl font-bold">User Information</h2>
@@ -81,81 +93,127 @@ const Sidebar: React.FC<SidebarProps> = () => {
                     </p>
                   </div>
                   <div className="flex flex-col w-full space-y-5 px-4 md:px-12 lg:px-24">
-                    <Field
-                      type="text"
-                      name="name"
-                      placeholder="Name"
-                      className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-                    />
-                    <ErrorMessage name="name" component="div" className="text-red-500" />
+                    <div className='flex w-full gap-2'>
+                      <div className='w-full'>
+                        <Field
+                          type="text"
+                          name="name"
+                          placeholder="Name"
+                          className={`flex px-3 w-full py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal ${isNameEditable ? 'bg-blue-500 shadow-lg shadow-blue-3/50' : ''}`}
+                          disabled={!isNameEditable}
+                          onBlur={() => setIsNameEditable(false)}
+                          onMouseLeave={() => setIsNameEditable(false)}
 
-                    <Field
-                      type="email"
-                      name="email"
-                      placeholder="Email"
-                      className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-                    />
-                    <ErrorMessage name="email" component="div" className="text-red-500" />
-                    {values.contacts.map((contact, index) => (
-                    <div key={contact.id} className='flex w-full gap-2'>
-                      <Field
-                        type='text'
-                        name={`contacts[${index}].value`}
-                        placeholder={`Contact ${index + 1}`}
-                        value={contact.value}
-                        onChange={handleChange}
-                        className='flex px-3 w-full py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal'
-                      />
-                      {index === values.contacts.length - 1 && (
-                        <div
-                          className='bg-black rounded-full pt-2 px-2 cursor-pointer'
-                          onClick={() => {
-                            setContactCounter(contactCounter + 1);
-                            handleChange({
-                              target: {
-                                name: `contacts[${index + 1}].value`,
-                                value: '',
-                              },
-                            });
-                          }}
-                        >
-                          <Icons variant='add' />
-                        </div>
-                      )}
-                      <ErrorMessage name={`contacts[${index}].value`} component='div' className='text-red-500' />
+                        />
+                        <ErrorMessage name="name" component="div" className="text-red-500" /></div>
+                      <div className='mt-2 bg-bg-footer text-white rounded-lg p-3 cursor-pointer' onClick={() => setIsNameEditable(true)}>
+                        {/* <Icons variant='edit' /> */}Edit
+                      </div>
                     </div>
-                  ))}
 
-
-{values.deliveryAddresses.map((address, index) => (
-                    <div key={index} className='flex w-full gap-2'>
+                    <div className='flex w-full gap-2'>
+                      <div className='w-full'> 
                       <Field
-                        type='text'
-                        name={`deliveryAddresses[${index}]`}
-                        placeholder={`Delivery Address ${index + 1}`}
-                        value={address}
-                        onChange={handleChange}
-                        className='flex px-3 w-full py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal'
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        className={`flex relative w-full px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal ${isEmailEditable ? ' bg-b  shadow-lg shadow-blue-3/50 ' : ''}`}
+                        disabled={!isEmailEditable}
+                        onBlur={() => setIsEmailEditable(false)}
+                        onMouseLeave={() => setIsEmailEditable(false)}
                       />
-                      {index === values.deliveryAddresses.length - 1 && (
-                        <div
-                          className='bg-black rounded-full pt-2 px-2 cursor-pointer'
-                          onClick={() => {
-                            setAddressCounter(addressCounter + 1);
-                            handleChange({
-                              target: {
-                                name: `deliveryAddresses[${index + 1}]`,
-                                value: '',
-                              },
-                            });
-                          }}
-                        >
-                          <Icons variant='add' />
-                        </div>
-                      )}
-                      <ErrorMessage name={`deliveryAddresses[${index}]`} component='div' className='text-red-500' />
+                        <ErrorMessage name="email" component="div" className="text-red-500" /></div>
+
+
+
+                      <div className='mt-2 bg-bg-footer text-white rounded-lg p-3 cursor-pointer' onClick={() => setIsEmailEditable(true)}>
+                        {/* <Icons variant='edit' /> */}Edit
+                      </div>
+
                     </div>
-                  ))}
+
+                    <div className='flex flex-col w-full gap-2'>
+                     
+   {values.contacts.map((contact, index) => (
+                      <div key={contact.id} className='flex  w-full gap-2'>
+                        <div className=' flex w-full gap-2'>
+                        <Field
+                          type='text'
+                          name={`contacts[${index}].value`}
+                          placeholder={`Contact ${index + 1}`}
+                          value={contact.value}
+                          onChange={handleChange}
+                          disabled={!isNameContact}
+                          onBlur={() => setIsNameContact(false)}
+                          onMouseLeave={() => setIsNameContact(false)}
+                          className={`flex px-3 w-full py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal ${isNameContact ? ' bg-b  shadow-lg shadow-blue-3/50 ' : ''}`}
+                        />
+                        {index === values.contacts.length - 1 && (
+                          <div
+                            className='bg-black rounded-full pt-2 px-2 cursor-pointer'
+                            onClick={() => {
+                              setContactCounter(contactCounter + 1);
+                              handleChange({
+                                target: {
+                                  name: `contacts[${index + 1}].value`,
+                                  value: '',
+                                },
+                              });
+                            }}
+                          >
+                            <Icons variant='add' />
+                          </div>
+                        )}
+                        <ErrorMessage name={`contacts[${index}].value`} component='div' className='text-red-500' />
+                        </div>
+                       
+                      
+                        <div className='mt-2 bg-bg-footer text-white rounded-lg p-3 cursor-pointer' onClick={() => setIsNameContact(true)}>
+                        {/* <Icons variant='edit' /> */} Edit
+                      </div>
+                      </div>
+                    ))}
+</div>
+                   
+<div className='flex flex-col w-full gap-2'>
+                    {values.deliveryAddresses.map((address, index) => (
+                      <div key={index} className='flex w-full gap-2'>
+                         <div className=' flex w-full gap-2'>
+                        <Field
+                          type='text'
+                          name={`deliveryAddresses[${index}]`}
+                          placeholder={`Delivery Address ${index + 1}`}
+                          value={address}
+                          onChange={handleChange}
+                          disabled={!isNameAddress}
+                          onBlur={() => setIsNameAddress(false)}
+                          onMouseLeave={() => setIsNameAddress(false)}
+                          className={`flex px-3 w-full py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal ${isNameAddress ? ' bg-b  shadow-lg shadow-blue-3/50 ' : ''}`}
+                        />
+                        {index === values.deliveryAddresses.length - 1 && (
+                          <div
+                            className='bg-black rounded-full pt-2 px-2 cursor-pointer'
+                            onClick={() => {
+                              setAddressCounter(addressCounter + 1);
+                              handleChange({
+                                target: {
+                                  name: `deliveryAddresses[${index + 1}]`,
+                                  value: '',
+                                },
+                              });
+                            }}
+                          >
+                            <Icons variant='add' />
+                          </div>
+                        )}
+                        <ErrorMessage name={`deliveryAddresses[${index}]`} component='div' className='text-red-500' />
+                        </div>
+                        <div className='mt-2 bg-bg-footer text-white rounded-lg p-3 cursor-pointer' onClick={() => setIsNameAddress(true)}>
+                        {/* <Icons variant='edit' /> */}Edit
+                      </div>
+                      </div>
+                    ))}
+                    </div>
                     <button
                       type="submit"
                       className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
@@ -167,6 +225,60 @@ const Sidebar: React.FC<SidebarProps> = () => {
               )}
             </Formik>
           </div>
+        )}
+
+        {selectedMenuItem === 'Password' && (
+          <div className='flex gap-4'>
+          
+          <Formik
+            initialValues={{
+              
+              password: '',
+             
+            }}
+            validationSchema={Yup.object().shape({
+             
+              password: Yup.string()
+                .required('Password is required')
+                .matches(
+                  /^(?=.*[A-Z])(?=.*[0-9a-zA-Z]).{8,}$/,
+                  'Password must be alphanumeric and contain at least one capital letter'
+                ),
+             
+            })}
+            onSubmit={()=>console.log("chnages password")}
+          >
+            <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
+              <div className="flex flex-col space-y-2 text-center">
+                <h2 className="text-3xl md:text-4xl  font-Robot font-bold">Set Password</h2>
+                <p className="text-md  font-Robot md:text-xl">
+                  To reset your password
+                </p>
+              </div>
+              <div className="flex flex-col  w-full space-y-5 px-12 lg:px-24">
+                <Field
+                  type="password" // Change the input type to "email" for email validation
+                  name="password"
+                  placeholder="password"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="password" component="div" className="text-red-500" />
+                <Field
+                  type="OTP" // Change the input type to "email" for email validation
+                  name="OTP"
+                  placeholder="Confirm Password"
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
+                />
+                <ErrorMessage name="OTP" component="div" className="text-red-500" />
+                <button type="submit" className="flex font-Robot items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
+                  Change Password
+                </button>
+               
+              </div>
+            </Form>
+          </Formik>
+          {/* Add the content for the Orders page */}
+        </div>
         )}
       </div>
     </div>

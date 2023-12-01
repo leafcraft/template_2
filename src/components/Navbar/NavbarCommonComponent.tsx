@@ -12,20 +12,19 @@ import { resetLoginData } from '../../Store/Reducers/LoginData';
 import LogoutResponse, { setlogout } from '../../Store/Reducers/LogoutResponse';
 
 const Data = [
-  { name: "Profile", section: "product", key: "product" },
-  { name: "Product", section: "benefits", key: "benefits" },
-  { name: "Contact Us", section: "usecase", key: "usecase" },
-  { name: "HOME", section: "costing", key: "costing" },
- 
+  { name: "Profile", path: "/profile", key: "profile" },
+  { name: "Product", path: "/products", key: "products" },
+  { name: "Contact Us", path: "/contactus", key: "contact" },
+  { name: "HOME", path: "/", key: "home" },
 ];
 
 
-const NavbarCommonComponent  = (props) => {
+const NavbarCommonComponent = (props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
 
-  const isUserLoggedIn = useSelector((data:any)=> data.setLoginData?.loginData?.userDetails?.isOk);
+  const isUserLoggedIn = useSelector((data: any) => data.setLoginData?.loginData?.userDetails?.isOk);
 
 
   useEffect(() => {
@@ -44,7 +43,7 @@ const NavbarCommonComponent  = (props) => {
     };
   }, []);
 
-  function scrollToComponent(sectionId:any) {
+  function scrollToComponent(sectionId: any) {
     const section = document.getElementById(sectionId);
     if (section) {
       section.scrollIntoView({
@@ -75,7 +74,10 @@ const NavbarCommonComponent  = (props) => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  
+
+
+
+
   //Navbar3
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -83,241 +85,245 @@ const NavbarCommonComponent  = (props) => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const { variant, products } = props; 
+  const { variant, products } = props;
 
 
   // logout handle function
   const [loggoutUser] = useLazyQuery(logout);
-  const AccessToken = useSelector((data:any)=>data?.setAcessToken?.accessToken?.login?.AccessToken);
+  const AccessToken = useSelector((data: any) => data?.setAcessToken?.accessToken?.login?.AccessToken);
   const location = useNavigate();
-  const [data,setData] = useState();
+  const [data, setData] = useState();
 
 
-  const handleLogout = ( ) => {
-  
+  const handleLogout = () => {
+
     loggoutUser({
-      variables:{}, 
+      variables: {},
       context: {
         headers: {
           Authorization: AccessToken,
         }
       }
-    }).then((res)=>{
-   
-    const getData = res.data.logout.isOk;
-  store.dispatch(setlogout(getData));
-    setData(getData);
-   
+    }).then((res) => {
+
+      const getData = res.data.logout.isOk;
+      store.dispatch(setlogout(getData));
+      setData(getData);
+
     })
-    .catch((err)=>{
-      console.log(err,"err,Logout");
-    })
+      .catch((err) => {
+        console.log(err, "err,Logout");
+      })
     store.dispatch(resetLoginData());
     window.location.reload();
   }
   return (
     <>
-     {(() => {
+      {(() => {
         switch (variant) {
           case 'Navbar':
             return (
-              <div className={`relative z-40 ${showMenu ? '':''}`}>
-                <div className={`flex justify-between  items-center lg:px-20 px-6 z-30 absolute w-full max-lg:h-20 text-white  ${showMenu ? 'bg-black ':''}`}>
-              <header className="text-gray-600 body-font contents">
-          <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-start justify-center">
-          <nav className="hidden md:flex xl:flex-wrap items-center text-base justify-between">
-            <div className="flex"> 
-                <Link to="/aboutus" >
-                  <Typography variant="Navbar1">ABOUT US</Typography>
-                </Link>
-                <Link to="/products" onClick={() => scrollToComponent('products')}>
-                  <Typography variant="Navbar1">PRODUCTS</Typography>
-                </Link>
-                <Link to="/terms&conditons" onClick={() => scrollToComponent('women_wear')}>
-                  <Typography variant="Navbar1"  >TERMS </Typography>
-                </Link>
-                </div>
-                <div className="flex ml-auto">
-                {isUserLoggedIn || data ? ( // Show Profile button if user is logged in
-                <>
-                   <Link to="/profile">
-                      <Typography variant="Navbar1" className="bg-black p-3 rounded-md">
-                        Profile
-                      </Typography>
-                    </Link>
-                    <Link to="" onClick={handleLogout}>
-                    <Typography  variant="Navbar1" className="bg-black p-3 rounded-md">
-                      logout
-                    </Typography>
-                  </Link>
-                  </>
-                   
-                  ) : ( // Show Sign Up button if user is not logged in
-                    <Link to="/login">
-                      <Typography variant="Navbar1" className="bg-black p-3 rounded-md">
-                        Sign Up
-                      </Typography>
-                    </Link>
-                  )}
-                </div>
-               
-              </nav>
-        
-          </div>
-        </header>
-        
-              {/* Hamberger menu  */}
-              <div className=" md:hidden flex ">
-                <div className="lg:hidden ml-auto my-auto ">
-                  <div
-                    className={`cursor-pointer h-auto w-10 p-1 flex flex-col gap-1.5 ${
-                      showMenu ? " gap-0 mt-2 " : "gap-1 "
-                    } `}
-                    onClick={() => setShowMenu(!showMenu)}
-                  >
-                    <div
-                      className={`h-1 rounded-xl transition-all duration-250 bg-white  ${
-                        showMenu ? " rotate-45 w-8 " : " w-10  "
-                      } `}
-                    >
-                      {" "}
+              <div className={`relative top-12  z-40 `}>
+                <div className={`flex justify-between h-full  items-center lg:px-20 px-6 z-30 absolute w-full max-lg:h-20 text-white  `}>
+                  <header className="text-gray-600 body-font contents">
+                    <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-start justify-center">
+                      <nav className="hidden md:flex xl:flex-wrap items-center text-base justify-between">
+                        <div className="flex">
+                          <Link to="/aboutus" >
+                            <Typography variant="Navbar1">ABOUT US</Typography>
+                          </Link>
+                          <Link to="/products" onClick={() => scrollToComponent('products')}>
+                            <Typography variant="Navbar1">PRODUCTS</Typography>
+                          </Link>
+                          <Link to="/terms&conditons" onClick={() => scrollToComponent('women_wear')}>
+                            <Typography variant="Navbar1"  >TERMS </Typography>
+                          </Link>
+                        </div>
+                        <div className="flex ml-auto">
+                          {isUserLoggedIn || data ? ( // Show Profile button if user is logged in
+                            <>
+                              <Link to="/profile">
+                                <Typography variant="Navbar1" className="bg-black p-3 rounded-md">
+                                  Profile
+                                </Typography>
+                              </Link>
+                              <Link to="" onClick={handleLogout}>
+                                <Typography variant="Navbar1" className="bg-black p-3 rounded-md">
+                                  logout
+                                </Typography>
+                              </Link>
+                            </>
+
+                          ) : ( // Show Sign Up button if user is not logged in
+                            <Link to="/login">
+                              <Typography variant="Navbar1" className="bg-black p-3 rounded-md">
+                                Sign Up
+                              </Typography>
+                            </Link>
+                          )}
+                        </div>
+
+                      </nav>
+
                     </div>
-                    <div
-                      className={`h-1 rounded-xl transition-all duration-250 bg-white  ${
-                        showMenu ? " -rotate-45  -mt-2.5 w-8 " : " w-10 "
-                      } `}
-                    >
-                      {" "}
-                    </div>
-                    <div
-                      className={`h-1 w-10 rounded-xl transition-all duration-100 bg-white ${
-                        showMenu ? "hidden " : " "
-                      } `}
-                    >
-                      {" "}
+                  </header>
+
+                  {/* Hamberger menu icon */}
+                  <div className=" md:hidden flex ">
+                    <div className="lg:hidden z-40 ml-auto my-auto ">
+                      <div
+                        className={`cursor-pointer h-auto w-10 p-1 flex flex-col gap-1.5 ${showMenu ? " gap-0 mt-2 " : "gap-1 "
+                          } `}
+                        onClick={() => setShowMenu(!showMenu)}
+                      >
+                        <div
+                          className={`h-1 rounded-xl transition-all duration-250 bg-white  ${showMenu ? " rotate-45 w-8 " : " w-10  "
+                            } `}
+                        >
+                          {" "}
+                        </div>
+                        <div
+                          className={`h-1 rounded-xl transition-all duration-250 bg-white  ${showMenu ? " -rotate-45  -mt-2.5 w-8 " : " w-10 "
+                            } `}
+                        >
+                          {" "}
+                        </div>
+                        <div
+                          className={`h-1 w-10 rounded-xl transition-all duration-100 bg-white ${showMenu ? "hidden " : " "
+                            } `}
+                        >
+                          {" "}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-        
-              {/* Mobile Menu */}
-              <div
-                className={`fixed top-20 h-auto bottom-0 pb-32 z-20  left-0 w-full bg-black ${
-                  showMenu ? "flex" : "hidden"
-                } flex-col gap-6 p-8 justify-between`}
-              >
-                <div className="flex flex-col gap-10 text-center">
-                  {Data.map((props: any) => (
-                    <Button 
-                    
-                      vairant="navbar"
-                      name={props.name}
-                      // section={props.section}
-                      onClick={(e: any) => {
-                        setShowMenu(false);
-        
-                        let contactus = document.getElementById(props.section);
-                        e.preventDefault(); // Stop Page Reloading
-                        if (contactus) {
-                          const elementTop =
-                            contactus.getBoundingClientRect().top + window.scrollY;
-                          const scrollTo = elementTop - 80;
-        
-                          window.scrollTo({
-                            top: scrollTo,
-                            behavior: "smooth",
-                          });
-                        }
-                      }}
-                      classtext=" !text-3xl"
-                    />
-                  ))}
-                  {/* <Button
+
+                  {/* Mobile Menu */}
+                  <div
+                    className={`absolute top-0 h-screen overflow-hidden bottom-0 pb-32 z-20  left-0 w-full bg-black ${showMenu ? "flex" : "hidden"
+                      } flex-col gap-6 p-8 justify-between`}
+                  >
+                    <div className="flex flex-col gap-10 text-center py-8">
+                    {Data.map((props: any) => (
+                            <Link key={props.index} to={props.path} onClick={() => setIsMenuOpen(false)}>
+                              <button className="text-white">
+
+                                {props.name}
+
+                              </button>
+                            </Link>
+                          ))}
+                      {/* <Button
                     vairant="navbar-secondary"
                     name="Try Now"
                     section="trynow"
                     onClick={() => window.open("https://chat.subtl.ai", "_blank")}
                   /> */}
-                </div>
-              </div>
-            </div></div>
-              
+                    </div>
+                  </div>
+                </div></div>
+
             );
 
           case 'ProtectedNavbar':
             return (
-              <header className="bg-gray-100 text-gray-600 body-font flex flex-col items-center justify-center">
-              <div className='bg-black text-white font-Robot font-normal  text-[0.50rem] md:text-sm w-full h-8 flex justify-center items-center cursor-pointer leading-6' onClick={()=>{navigate('/')}}>Did you know you can make money from your personal wardrobe? Earn with us!</div>
-              <div className="container px-12 flex flex-wrap p-5 flex-row justify-between md:flex-row items-center">
-                <a className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-                <img src={logo} alt='logo' className='w-20 h-auto' />
-                </a>
-                <nav className={`md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center ${isMobile && !showMenu ? 'hidden' : 'md:flex'}`}>
-                  {!isMobile && (
-                    <>
-                     <Link to="/" onClick={() => scrollToComponent('women_wear')}>
-                  <Typography variant="Navbar1"  >HOME</Typography>
-                </Link>
-                <Link to="/profile" onClick={() => scrollToComponent('mens_wear')}>
-                  <Typography variant="Navbar1">PROFILE</Typography>
-                </Link>
-                <Link to="/products" onClick={() => scrollToComponent('products')}>
-                  <Typography variant="Navbar1">PRODUCTS</Typography>
-                </Link>
-               
-                <Link to="/aboutus" >
-                  <Typography variant="Navbar1">ABOUT US</Typography>
-                </Link>
-                    </>
-                  )}
-                </nav>
-                <div className="flex">
-                  <button className="bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mr-4">
-                    Search
-                  </button>
-                  {/* <Icons variant={Search} /> */}
-                  <button className="bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
+              <header className="bg-gray-100 text-gray-600 body-font flex flex-col  justify-center">
+                <div className='bg-black text-white font-Robot font-normal text-[0.50rem] md:text-sm w-full h-8 flex justify-center items-center cursor-pointer leading-6' onClick={() => { navigate('/') }}>Did you know you can make money from your personal wardrobe? Earn with us!</div>
+                <div className=" px-8 md:px-12 flex gap-2 p-5 flex-row justify-between md:flex-row items-center">
+                  <a className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+                    <img src={logo} alt='logo' className='w-20 h-auto' />
+                  </a>
+                  <nav className={`md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center ${isMobile && !showMenu ? 'hidden' : 'md:flex'}`}>
+                    {!isMobile && (
+                      <>
+                        <Link to="/" onClick={() => scrollToComponent('women_wear')}>
+                          <Typography variant="Navbar1"  >HOME</Typography>
+                        </Link>
+                        <Link to="/profile" onClick={() => scrollToComponent('mens_wear')}>
+                          <Typography variant="Navbar1">PROFILE</Typography>
+                        </Link>
+                        <Link to="/products" onClick={() => scrollToComponent('products')}>
+                          <Typography variant="Navbar1">PRODUCTS</Typography>
+                        </Link>
+
+                        <Link to="/aboutus" >
+                          <Typography variant="Navbar1">ABOUT US</Typography>
+                        </Link>
+                      </>
+                    )}
+                  </nav>
+                  <div className="flex flex-col md:flex-row pb-5">
+                    <button className="bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mr-4">
+                      Search
+                    </button>
+                    {/* <Icons variant={Search} /> */}
+                    {/* <button className="bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
                     Cart
-                  </button>
-                </div>
-                {/* Mobile Hamburger Menu */}
-                <div className="md:hidden flex items-center">
-                  <button
-                    onClick={() => setShowMenu(!showMenu)}
-                    className="bg-transparent p-2 rounded-lg focus:outline-none"
+                  </button> */}
+                  </div>
+                  {/* Mobile Hamburger Menu */}
+                 
+                  {/* Hamberger menu icon */}
+                  <div className=" md:hidden flex ">
+                    <div className="lg:hidden z-40 ml-auto my-auto ">
+                      <div
+                        className={`cursor-pointer h-auto w-10 p-1 flex flex-col gap-1.5 ${showMenu ? " gap-0 mt-2 " : "gap-1 "
+                          } `}
+                        onClick={() => setShowMenu(!showMenu)}
+                      >
+                        <div
+                          className={`h-1 rounded-xl transition-all duration-250   ${showMenu ? "bg-white rotate-45 w-8 " : "bg-black w-10  "
+                            } `}
+                        >
+                          {" "}
+                        </div>
+                        <div
+                          className={`h-1 rounded-xl transition-all duration-250   ${showMenu ? "bg-white -rotate-45  -mt-2.5 w-8 " : " bg-black w-10 "
+                            } `}
+                        >
+                          {" "}
+                        </div>
+                        <div
+                          className={`h-1 w-10 rounded-xl transition-all duration-100  ${showMenu ? "bg-white hidden " : "bg-black "
+                            } `}
+                        >
+                          {" "}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Mobile Menu */}
+                  <div
+                    className={`absolute top-0 h-screen overflow-hidden bottom-0 pb-32 z-20  left-0 w-full bg-black ${showMenu ? "flex" : "hidden"
+                      } flex-col gap-6 p-8 justify-between`}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-6 h-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      {showMenu ? (
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      ) : (
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M3 12h18M3 6h18M3 18h18"
-                        />
-                      )}
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </header>
+                    <div className="flex flex-col gap-10 text-center py-20">
+                    {Data.map((props: any) => (
+                            <Link key={props.index} to={props.path} onClick={() => setIsMenuOpen(false)}>
+                              <button className="text-white">
+
+                                {props.name}
+
+                              </button>
+                            </Link>
+                          ))}
+                      {/* <Button
+                    vairant="navbar-secondary"
+                    name="Try Now"
+                    section="trynow"
+                    onClick={() => window.open("https://chat.subtl.ai", "_blank")}
+                  /> */}
+                    </div>
+                  </div>
+                  </div>
+             
+              </header>
             );
 
-            case 'Navbar3':
-              return (
-                <>
+          case 'Navbar3':
+            return (
+              <>
                 <nav className="bg-bg-footer w-full flex justify-between items-center h-full px-6">
                   <div className="px-4 py-4 flex justify-between w-full items-center text-white relative z-10">
                     {/* Your logo */}
@@ -353,7 +359,7 @@ const NavbarCommonComponent  = (props) => {
                     </div>
                   </div>
                 </nav>
-          
+
                 {isMenuOpen && (
                   <div className="navbar-menu fixed inset-0 z-50">
                     <div className="navbar-backdrop fixed inset-0 bg-gray-800 opacity-25" onClick={handleMenuToggle}></div>
@@ -363,26 +369,26 @@ const NavbarCommonComponent  = (props) => {
                       </button>
                       {/* Mobile menu content */}
                       <ul>
-                      {Data.map((item) => (
-  <li key={item.key}   className="block p-4 text-sm font-semibold text-gray-400 hover:bg-blue-50 hover:text-blue-600 rounded">
-      {item.name}
-    
-  </li>
-))}
+                        {Data.map((item) => (
+                          <li key={item.key} className="block p-4 text-sm font-semibold text-gray-400 hover:bg-blue-50 hover:text-blue-600 rounded">
+                            {item.name}
+
+                          </li>
+                        ))}
                       </ul>
                     </nav>
                   </div>
                 )}
               </>
-              );
+            );
 
           default:
             return null;
         }
       })()}</>
-   
-   
-  
+
+
+
 
   );
 };

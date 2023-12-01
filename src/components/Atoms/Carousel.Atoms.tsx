@@ -4,14 +4,16 @@ import ImageGallery, { ReactImageGalleryItem } from "react-image-gallery";
 import Icons from "../../components/Icons";
 
 type TestProps = {
-  images: {
+  image: {
     original: string;
     thumbnail: string;
   }[];
 };
 
-const Carousel: React.FC<TestProps> = ({ images }) => {
+const Carousel: React.FC<TestProps> = ({ image }) => {
   const imageGalleryRef = useRef<ImageGallery>(null);
+
+  console.log("image :",image);
 
   const handleSlide = (index: number) => {
     console.log("Slide to index:", index);
@@ -43,7 +45,7 @@ const Carousel: React.FC<TestProps> = ({ images }) => {
         <div className="wrapper">
           <ImageGallery
             ref={imageGalleryRef}
-            items={images}
+            items={image}
             showPlayButton={false}
             showFullscreenButton={false}
             showNav={false}

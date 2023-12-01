@@ -33,15 +33,15 @@ const Banner = () => {
 
                 
             </div>
-            <div className="flex flex-col justify-center items-center py-10">
-                    <div className="container flex flex-grow items-center justify-between gap-4 px-10">
+            <div className="flex flex-col  py-2">
+                    <div className="flex flex-grow items-center justify-between gap-4 ">
                         {/* Left side: Path location, Filters, and Sort By */}
                         <div className="flex flex-col gap-4">
                             <BreadcrumbPlainFlatTextIconPreview breadcrumbs={breadcrumbsData} />
                         </div>
 
                         {/* Right side: eCommerce content */}
-                        <div className="container flex items-center justify-center gap-4">
+                        <div className=" flex items-center justify-center gap-4">
                             {/* Filters and Sort By buttons */}
                             <div className="flex gap-4">
                                 <button className="text-black border border-black px-6 py-3 font-Robot font-normal text-base leading-5">

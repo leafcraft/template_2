@@ -18,6 +18,9 @@ import toast from 'react-hot-toast';
 
 
 interface Product {
+  type: any;
+  price: any;
+  description: any;
   _id: string;
   name: string;
   slug: string;
@@ -34,7 +37,10 @@ const CartPage = ( ) => {
     name: '',
     slug: '',
     unit: 0,
-    creation_date: ''
+    creation_date: '',
+    type: '',
+    price: '',
+    description: ''
   } });
 
   const ProductsData = useSelector((data:any)=>data.setProducts.products);
@@ -141,18 +147,19 @@ const CartPage = ( ) => {
   
   return (
     <section className=" overflow-hidden">
-      <div className=" px-5  pt-8 md:py-24 ">
+      <div className=" px-5  pt-6 md:py-18 ">
         <div className=" grid grid-cols-1 md:grid-cols-2   place-content-center gap-24">
           <div >
           <div className="flex flex-col gap-1">
-          <p>Product ID: {id}{data.product.name}</p>
                             <BreadcrumbPlainFlatTextIconPreview breadcrumbs={breadcrumbsData} />
                         </div>
           
-            <div className='p-14'>
+            <div className='px-14 pb-24'>
             {items.map((product) => (
-      <CustomCarousel key={product.id} images={product.images} />
+      <CustomCarousel key={product.id} image={product.images} />
     ))}
+
+
 
             </div>
           </div>
@@ -160,12 +167,12 @@ const CartPage = ( ) => {
           {data.product ? (
 
     <div key={data.product._id}>
-      <h2 className="text-sm font-normal font-Robot pb-8 tracking-widest">{data.product.name}</h2>
-      <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{data.product.slug}</h1>
+      <h2 className="text-sm font-normal font-Robot pb-8 tracking-widest">{data.product.slug}</h2>
+      <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{data.product.type}</h1>
 
       <div className="flex items-center gap-3 mb-4">
         <span className="font-normal font-Robot text-xl">Rent :</span>
-        <span className="font-normal font-Robot text-xl">{data.product.slug}</span>
+        <span className="font-normal font-Robot text-xl">{data.product.price}</span>
       </div>
 
       <div className='flex gap-4 mb-4'>
@@ -209,7 +216,7 @@ const CartPage = ( ) => {
 
       <div className="mt-4">
         <h2 className="text-xl font-medium mb-2">Description</h2>
-        <p className="leading-relaxed">{data.product.name}</p>
+        <p className="leading-relaxed">{data.product.description}</p>
       </div>
 
       <div className="mt-4">
@@ -241,9 +248,9 @@ const CartPage = ( ) => {
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
           <div className="flex flex-wrap -m-4">
-            {ProductsData.map((product:any, index:any) => (
-              <ProductCard key={index} {...product} />
-            ))}
+          {ProductsData.slice(0, 3).map((product, index) => (
+  <ProductCard key={index} {...product} />
+))}
           </div>
         </div>
       </section>
