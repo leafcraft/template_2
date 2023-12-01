@@ -28,7 +28,7 @@ const ThiredCommonComponent = ({
                 {buttonText}
               </a>
             </div>
-            <div className="grid grid-cols-3 gap-4 px-10 pb-14">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-10 pb-14">
               {images.map((image: any, index: any) => (
                 <div key={index} className="w-full h-full">
                   <div className="w-full h-full p-6">

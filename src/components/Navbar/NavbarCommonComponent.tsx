@@ -9,6 +9,7 @@ import { logout } from '../graphql/query';
 import { useLazyQuery } from '@apollo/client';
 import { store } from '../../Store';
 import { resetLoginData } from '../../Store/Reducers/LoginData';
+import LogoutResponse, { setlogout } from '../../Store/Reducers/LogoutResponse';
 
 const Data = [
   { name: "Profile", section: "product", key: "product" },
@@ -104,6 +105,7 @@ const NavbarCommonComponent  = (props) => {
     }).then((res)=>{
    
     const getData = res.data.logout.isOk;
+  store.dispatch(setlogout(getData));
     setData(getData);
    
     })
@@ -119,7 +121,8 @@ const NavbarCommonComponent  = (props) => {
         switch (variant) {
           case 'Navbar':
             return (
-              <div className={`flex justify-between  items-center lg:px-20 px-6 z-30 absolute w-full max-lg:h-20 text-white`}>
+              <div className={`relative z-40 ${showMenu ? '':''}`}>
+                <div className={`flex justify-between  items-center lg:px-20 px-6 z-30 absolute w-full max-lg:h-20 text-white  ${showMenu ? 'bg-black ':''}`}>
               <header className="text-gray-600 body-font contents">
           <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-start justify-center">
           <nav className="hidden md:flex xl:flex-wrap items-center text-base justify-between">
@@ -229,15 +232,16 @@ const NavbarCommonComponent  = (props) => {
                       classtext=" !text-3xl"
                     />
                   ))}
-                  <Button
+                  {/* <Button
                     vairant="navbar-secondary"
                     name="Try Now"
                     section="trynow"
                     onClick={() => window.open("https://chat.subtl.ai", "_blank")}
-                  />
+                  /> */}
                 </div>
               </div>
-            </div>
+            </div></div>
+              
             );
 
           case 'ProtectedNavbar':

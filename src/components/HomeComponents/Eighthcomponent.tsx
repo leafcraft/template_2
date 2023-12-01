@@ -45,7 +45,7 @@ const EighthComponent = (props:{variant:any}) => {
             </div>
       
             {/* New Section with Basic Button */}
-            <div className="bg-gray-100 py-10">
+            {/* <div className="bg-gray-100 py-10">
               <div className="container flex items-center justify-center gap-4">
                 <button className="text-black px-6 py-3 font-Robot font-normal text-3xl leading-6">
                 Instagram
@@ -54,7 +54,7 @@ const EighthComponent = (props:{variant:any}) => {
                 Follow us
                 </button>
               </div>
-            </div>
+            </div> */}
           </section>
           );
 

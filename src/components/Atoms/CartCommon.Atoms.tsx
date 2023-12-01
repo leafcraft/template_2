@@ -115,8 +115,6 @@ const CartPage = ( ) => {
 
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
-
   const handleAddToCart = (product) => {
     // dispatch(addToCart(product));
     // You can navigate to the cart page or show a confirmation message
@@ -198,7 +196,7 @@ const CartPage = ( ) => {
         {/* Dropdown and Date inputs can be added here */}
       </div>
 
-      <button onClick={() => handleAddToCart(data.product._id)} className='bg-black text-white font-normal font-Robot p-4'>Add to cart</button>
+      <button onClick={handleAddToCart} className='bg-black text-white font-normal font-Robot p-4'>Add to cart</button>
 
       <div className="mt-4">
         <a href="#" className="text-gray-500">

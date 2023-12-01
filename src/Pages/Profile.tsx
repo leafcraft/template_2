@@ -22,16 +22,16 @@ const Sidebar: React.FC<SidebarProps> = () => {
   };
 
   return (
-    <div className='flex gap-6 p-7 h-screen'>
-      <div className=" text-white h-screen w-1/5 p-4">
-        <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+    <div className='flex flex-col md:flex-row gap-2 md:gap-6 p-4 md:p-7 h-full'>
+      <div className=" text-white h-full md:w-1/5 md:p-4">
+        <div className=" w-full md:max-w-sm rounded overflow-hidden shadow-lg bg-white">
           <nav>
-            <ul className=''>
-              <li className={`text-black p-7 hover:text-gray-300 ${selectedMenuItem === 'orders' ? 'font-bold hover:bg-slate-200 ' : ''}`} onClick={() => handleMenuItemClick('orders')}>
+            <ul className='flex justify-around items-center md:flex-col '>
+              <li className={`text-black  hover:text-gray-300 ${selectedMenuItem === 'orders' ? 'font-bold ' : ''}`} onClick={() => handleMenuItemClick('orders')}>
                 Orders
                 <ul className='my-3'>FAQ</ul>
               </li>
-              <li className={`text-black p-7 hover:text-gray-300 ${selectedMenuItem === 'profile' ? 'font-bold hover:bg-slate-200' : ''}`} onClick={() => handleMenuItemClick('profile')}>
+              <li className={`text-black  hover:text-gray-300 ${selectedMenuItem === 'profile' ? 'font-bold' : ''}`} onClick={() => handleMenuItemClick('profile')}>
                 Profile
                 <ul className='my-3'>Favorite</ul>
               </li>
@@ -40,7 +40,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
         </div>
       </div>
 
-      <div className='flex flex-col w-full h-full rounded-lg overflow-hidden shadow-lg bg-white '>
+      <div className='flex flex-col w-full h-full px-2 py-8 md:p-7 rounded-lg overflow-auto md:overflow-hidden shadow-lg bg-white '>
         {selectedMenuItem === 'orders' && (
           <div className='flex gap-4'>
             <h3 className='flex flex-col w-full h-full rounded overflow-hidden p-3'>My Orders</h3>
@@ -73,14 +73,14 @@ const Sidebar: React.FC<SidebarProps> = () => {
               onSubmit={handleFormSubmit}
             >
               {({values,handleChange}) => (
-                <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-                  <div className="flex flex-col space-y-2 text-center">
+                <Form className="flex flex-1 flex-col h-full justify-center space-y-5 w-full items-center">
+                  <div className="flex flex-col space-y-2 text-center h-full">
                     <h2 className="text-3xl md:text-4xl font-bold">User Information</h2>
                     <p className="text-md md:text-xl">
                       Please provide your information.
                     </p>
                   </div>
-                  <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
+                  <div className="flex flex-col w-full space-y-5 px-4 md:px-12 lg:px-24">
                     <Field
                       type="text"
                       name="name"

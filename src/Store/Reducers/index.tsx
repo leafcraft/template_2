@@ -10,11 +10,13 @@ import setRegistrationData  from "./Registerdetails";
 import setLoginData from "./LoginData";
 import resetLoginData from "./LoginData";
 import setAcessToken from "./AccessToken";
+import  setlogout from "./LogoutResponse";
+import toggleSidebarReducer  from "./CartCard";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["userReducer", "AuthReducer",'Cartreducer','setSignUpData','setRegistrationData','setLoginData','setAcessToken','resetLoginData','setProducts'],
+  whitelist: ["userReducer", "AuthReducer",'Cartreducer','setSignUpData','setRegistrationData','setLoginData','setAcessToken','resetLoginData','setProducts','setlogout'],
 };
 
 const reducers = combineReducers({
@@ -27,6 +29,8 @@ const reducers = combineReducers({
   setAcessToken,
   resetLoginData,
   setProducts,
+  setlogout,
+  toggleSidebarReducer,
 });
 
 const rootReducer = (state: any, action: any) => {

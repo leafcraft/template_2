@@ -38,7 +38,7 @@ export default function Fifthcomponent() {
     <div id="contact" className="bg-pink-500 bg-cover bg-center p-6 items-center flex flex-col" style={{ backgroundImage: `url(${image})` }}>
       <div className="container p-6 md:p-12 lg:p-24 xl:p-32 flex flex-col justify-center items-center gap-6">
         <div>
-          <p className="text-white font-Robot font-normal leading-none text-6xl  ">
+          <p className="text-white font-Robot font-normal leading-none text-6xl text-center ">
           The Stylease Blog
           </p>
         </div>

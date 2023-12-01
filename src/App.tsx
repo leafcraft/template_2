@@ -16,11 +16,15 @@ import FAQs from "./Pages/FAQs";
 import ContactUs from "./Pages/CotactUs";
 import CartCard from "./components/Cart.Card";
 import TermsConditions from "./Pages/Terms&condtions";
+import { useSelector } from "react-redux";
 
 function App() {
+  const isUserLoggedIn = useSelector((data:any)=> data.setLoginData?.loginData?.userDetails?.isOk);
+  const isLogout = useSelector((data:any)=> data.logout);
+  console.log("logout:",isLogout);
   return (
     <>
-    <CartCard />
+   {isUserLoggedIn || isLogout ? <CartCard /> : null } 
       <BrowserRouter>
         <Routes>
         <Route element={<ProtectedLayout />}>

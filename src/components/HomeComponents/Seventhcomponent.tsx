@@ -3,7 +3,7 @@ import image2 from '../../assets/bg-component7-2.png';
 const Seventhcomponent
  = () => {
   return (
-    <div className="flex">
+    <div className="flex flex-col md:flex-row">
       <div className=" ">
         {/* Left Image */}
         <img
