@@ -93,6 +93,7 @@ const LoginComponent = () => {
 
   //handle for full detail submit
   const handleFullDetailsSubmit = (values) => {
+    console.log(values,"firrrrrrrrrrrrrrrrrrrrrrrrr")
   
     Register({
       variables: {
@@ -116,14 +117,14 @@ const LoginComponent = () => {
     })
 
       .then((response: any) => {
-       
+       console.log(response,"responseeeeeeeeee")
         store.dispatch(setRegistrationData(response));
         setOtpbox(true);
         setFulldetails(false);
       })
       .catch((err:any) => {
 
-       console.log(err.message);
+       console.log(err.message,"erorrrrrrrrrrrrrrrrrr");
       })
   }
 

@@ -47,6 +47,16 @@ query{
   type
   bio
   dob
+  contacts{
+    _id
+    type
+    number
+    }
+    addresses{
+    _id
+    name
+    type
+    }
   total_order
   total_order_amount
   creation_date

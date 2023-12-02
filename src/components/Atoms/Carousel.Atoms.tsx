@@ -10,10 +10,17 @@ type TestProps = {
   }[];
 };
 
-const Carousel: React.FC<TestProps> = ({ image }) => {
+const Carousel: React.FC<any> = ({ image }) => {
   const imageGalleryRef = useRef<ImageGallery>(null);
 
-  console.log("image :",image);
+  console.log(image, "imageadlkgjdkfywkjghfhjwrtguiwj");
+  const car = image.url;
+  // Assuming image is an array of objects
+  const images = image.map(img => ({
+    original: img.url,
+    thumbnail: img.url
+  }));
+
 
   const handleSlide = (index: number) => {
     console.log("Slide to index:", index);
@@ -45,7 +52,7 @@ const Carousel: React.FC<TestProps> = ({ image }) => {
         <div className="wrapper">
           <ImageGallery
             ref={imageGalleryRef}
-            items={image}
+            items={images}
             showPlayButton={false}
             showFullscreenButton={false}
             showNav={false}

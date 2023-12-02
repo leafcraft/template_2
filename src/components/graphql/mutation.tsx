@@ -45,6 +45,12 @@ export const ForgotPasswordOtp = gql`
   }
 `;
 
+export const changePassword = gql`
+  mutation changePassword($ChangePasswordInput: ChangePasswordInput!) {
+    changePassword(ChangePasswordInput: $ChangePasswordInput)
+  }
+`;
+
 export const addOrders = `
 mutation{
   addOrders(orderInput:OrderInput!){

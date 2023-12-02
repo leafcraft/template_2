@@ -5,27 +5,16 @@ import img13 from '../assets/products/img13.png';
 import img14 from '../assets/products/img14.png';
 import { store } from '../Store';
 import { useDispatch, useSelector } from 'react-redux';
+import { removeFromCart } from '../Store/Reducers/AddCart';
 
 const CartCard = () => {
   // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 const isSidebarOpen = useSelector((data:any)=>data.toggleSidebarReducer.isSidebarOpen)
 console.log("isSiderOpen :", isSidebarOpen);
-  const [products, setProducts] = useState( [
-    {
-      id: 1,
-      name: 'Throwback Hip Bag',
-      price: '$90.00',
-      color: 'Salmon',
-      imageUrl: img13,
-    },
-    {
-      id: 2,
-      name: 'Medium Stuff Satchel',
-      price: '$32.00',
-      color: 'Blue',
-      imageUrl: img14,
-    },
-  ]);
+
+
+  const ItemsInCart = useSelector((data:any)=>data.addToCart?.cartItems);
+  console.log("Items Added in Cart:",ItemsInCart);
 
   const dispatch = useDispatch();
 
@@ -34,16 +23,34 @@ console.log("isSiderOpen :", isSidebarOpen);
     dispatch({ type: 'TOGGLE_SIDEBAR' });
   };
 
-  const handleRemoveItem = (productId) => {
+  const handleRemoveItem = (id, size) => {
     // Update the cart state to remove the item with the given productId
-    const updatedProducts = products.filter((product) => product.id !== productId);
-    setProducts(updatedProducts);
+    // const updatedProducts = products.filter((product) => product.id !== productId);
+    // setProducts(updatedProducts);
+    store.dispatch(removeFromCart({id, size}));
   };
 
+
+
   const calculateSubtotal = () => {
-    const subtotal = products.reduce((acc, product) => acc + Number(product.price.replace(/[^\d.-]/g, '')), 0);
-    return subtotal;
+    const subtotal = ItemsInCart.reduce((acc, product) => {
+      let numericPrice = 0;
+  
+      if (typeof product.price === 'string') {
+        const extractedNumber = Number(product.price.replace(/[^\d.-]/g, ''));
+        numericPrice = !isNaN(extractedNumber) ? extractedNumber : 0;
+      } else if (typeof product.price === 'number') {
+        numericPrice = product.price;
+      }
+  
+      return acc + numericPrice;
+    }, 0);
+  
+    return subtotal.toFixed(2); // toFixed(2) ensures that the result has two decimal places
   };
+  
+  
+  
 
   return (
     <div className="relative z-50 ">
@@ -110,7 +117,7 @@ console.log("isSiderOpen :", isSidebarOpen);
                       <div className="mt-8">
                         <div className="flow-root">
                           <ul role="list" className="-my-6 divide-y divide-gray-200">
-                            {products.map((product) => (
+                            {ItemsInCart.map((product) => (
                               <li key={product.id} className="flex py-6">
                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                   <img
@@ -127,17 +134,19 @@ console.log("isSiderOpen :", isSidebarOpen);
                                         <a href="#">{product.name}</a>
                                       </h3>
                                       <p className="ml-4">{product.price}</p>
+                                      
                                     </div>
                                     <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                                    <p className="ml-4">{product.size}</p>
                                   </div>
                                   <div className="flex flex-1 items-end justify-between text-sm">
-                                    <p className="text-gray-500">Qty 1</p>
+                                    <p className="text-gray-500">Qty {product.quantity}</p>
 
-                                    <div className="flex">
+                                    <div className="flex" key={`${product.id}-${product.size}`}>
                                       <button
                                         type="button"
                                         className="font-medium text-indigo-600 hover:text-indigo-500"
-                                        onClick={() => handleRemoveItem(product.id)}
+                                        onClick={() => handleRemoveItem(product.id,product.size)}
                                       >
                                         Remove
                                       </button>
