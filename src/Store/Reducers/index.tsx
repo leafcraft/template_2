@@ -14,11 +14,12 @@ import  setlogout from "./LogoutResponse";
 import toggleSidebarReducer  from "./CartCard";
 import addToCart from "./AddCart";
 import removeFromCart from "./AddCart";
+import  setCartData  from "./CartCardITems";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["userReducer", "AuthReducer",'Cartreducer','setSignUpData','setRegistrationData','setLoginData','setAcessToken','resetLoginData','setProducts','setlogout','addToCart','removeFromCart'],
+  whitelist: ["userReducer", "AuthReducer",'Cartreducer','setSignUpData','setRegistrationData','setLoginData','setAcessToken','resetLoginData','setProducts','setlogout','addToCart','removeFromCart','setCartData'],
 };
 
 const reducers = combineReducers({
@@ -35,6 +36,7 @@ const reducers = combineReducers({
   toggleSidebarReducer,
   addToCart,
   removeFromCart,
+  setCartData,
 });
 
 const rootReducer = (state: any, action: any) => {

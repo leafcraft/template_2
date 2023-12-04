@@ -12,6 +12,8 @@ export const loginUser = gql`
   }
 `;
 
+
+
 export const logout = gql`
 query logout {
   logout
@@ -159,15 +161,17 @@ size
 `;
 
 export const getRazorpayOrder = gql`
-  query getRazorpayOrder($organisationID:String!,$amount:Float!) {
-    getRazorpayOrder(organisationID:$organisationID,amount:$amounts)
+  query getRazorpayOrder($amount:Float!,$organisationID:String!) {
+    getRazorpayOrder(amount:$amount,organisationID:$organisationID){
+      orderID
+    }
   }
 `;
 
 
 export const  deliveryChargeArrays= gql`
-  query deliveryChargeArrays($productID:String!,$Quantity:Float!) {
-    deliveryChargeArrays(productID:$productID,Quantity:$Quantity)
+  query deliveryChargeArrays($products:deliveryChargeArgs!) {
+    deliveryChargeArrays(products:$products)
   }
 `;
 

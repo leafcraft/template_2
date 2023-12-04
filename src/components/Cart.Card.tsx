@@ -6,15 +6,23 @@ import img14 from '../assets/products/img14.png';
 import { store } from '../Store';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeFromCart } from '../Store/Reducers/AddCart';
+import { setCartData } from '../Store/Reducers/CartCardITems';
+import { useNavigate } from 'react-router';
+import { SHOPPINGCART } from './ConstantLinks';
 
 const CartCard = () => {
   // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 const isSidebarOpen = useSelector((data:any)=>data.toggleSidebarReducer.isSidebarOpen)
-console.log("isSiderOpen :", isSidebarOpen);
+
 
 
   const ItemsInCart = useSelector((data:any)=>data.addToCart?.cartItems);
-  console.log("Items Added in Cart:",ItemsInCart);
+
+  const checkoutData  = useSelector((data:any)=>data.setCartData?.cartData)
+  console.log("checkoutData:",checkoutData);
+
+
+
 
   const dispatch = useDispatch();
 
@@ -25,11 +33,23 @@ console.log("isSiderOpen :", isSidebarOpen);
 
   const handleRemoveItem = (id, size) => {
     // Update the cart state to remove the item with the given productId
-    // const updatedProducts = products.filter((product) => product.id !== productId);
-    // setProducts(updatedProducts);
     store.dispatch(removeFromCart({id, size}));
   };
 
+
+
+  const handleCheckout = () => {
+    const cartData = {
+      cartItems: ItemsInCart,
+      subtotal: calculateSubtotal(),
+    };
+
+    dispatch(setCartData(cartData));
+    dispatch({ type: 'TOGGLE_SIDEBAR' });
+
+
+  };
+ 
 
 
   const calculateSubtotal = () => {
@@ -104,7 +124,7 @@ console.log("isSiderOpen :", isSidebarOpen);
                               className="h-6 w-6"
                               fill="none"
                               viewBox="0 0 24 24"
-                              stroke-width="1.5"
+                              strokeWidth="1.5"
                               stroke="currentColor"
                               aria-hidden="true"
                             >
@@ -166,8 +186,9 @@ console.log("isSiderOpen :", isSidebarOpen);
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                       <div className="mt-6">
-                        <a
-                          href="/shoppingcart"
+                        <a 
+                         href='/shoppingCart'
+                          onClick={handleCheckout}
                           className="flex items-center justify-center rounded-md border border-transparent bg-black px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                         >
                           Checkout

@@ -73,18 +73,6 @@ const CartPage = () => {
     // Add more options as needed
   ];
 
-  const items = [
-    {
-      id: 1,
-      images: [
-        { original: img7, thumbnail: img7 },
-        { original: img8, thumbnail: img8 },
-        { original: img7, thumbnail: img7 },
-      ],
-    },
-  ];
-
-
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to manage dropdown visibility
 
@@ -103,16 +91,23 @@ const CartPage = () => {
 
   const navigate = useNavigate();
 
+  const isSidebarOpen = useSelector((data:any)=>data.toggleSidebarReducer.isSidebarOpen)
+console.log("isSiderOpen in product :", isSidebarOpen);
+
+const dispatch = useDispatch();
+
   const handleAddToCart = () => {
     // dispatch(addToCart(product));
     // You can navigate to the cart page or show a confirmation message
-    console.log('Added to cart:', data.product.price);
+    console.log('Added to cart:', data.price);
     store.dispatch(addToCart({
-      id: data.product._id,
-      name: data.product.name,
-      price: data.product.price,
+      id: data._id,
+      name: data.name,
+      price: data.price,
       size: selectedSize,
     }))
+
+    dispatch({ type: 'TOGGLE_SIDEBAR' });
   };
   const breadcrumbsData = [
     {

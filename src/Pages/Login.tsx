@@ -93,7 +93,7 @@ const LoginComponent = () => {
 
   //handle for full detail submit
   const handleFullDetailsSubmit = (values) => {
-    console.log(values,"firrrrrrrrrrrrrrrrrrrrrrrrr")
+    console.log(values,signUpValues,"firrrrrrrrrrrrrrrrrrrrrrrrr")
   
     Register({
       variables: {
@@ -102,7 +102,7 @@ const LoginComponent = () => {
           password: signUpValues?.password,
           email: signUpValues?.username,
           dob: values?.DOB,
-          organisationID: process.env.orgID,
+          organisationID: "650439122f67cb537c73d076",
           addressInput: {
             name: values?.AddressName || '',
             address: values?.Address || '',
@@ -577,8 +577,8 @@ console.log("ForgotPassword error:",err.message);
                   <p className="text-sm md:text-md">
                     get back to login
                     <a href="#" onClick={handleFuldetailstoLogin} className="underline font-medium text-slate-950 opacity-50 pl-2">
-                      login
-                    </a>
+   login
+</a>
                   </p>
                 </div>
               </div>

@@ -2,7 +2,8 @@ import { gql } from "@apollo/client";
 
 export const signUp = gql`
   mutation signUp($userInput: AdduserInput!) {
-    signUp(userInput: $userInput) {
+    signUp(userInput: $userInput)
+    {
       _id
       name
       image
@@ -12,30 +13,30 @@ export const signUp = gql`
       bio
       dob
       creation_date
-      organisation {
+      organisation{
         _id
       }
       deleted
       rank
-      contact {
-        _id
-        type
-        number
-        customer {
-          _id
-        }
+      contact{
+      _id
+      type
+      number
+      customer{
+      _id
       }
-      address {
-        _id
-        name
-        type
-        address
-        pincode
-        customer {
-          _id
-        }
       }
-    }
+      address{
+      _id
+      name
+      type
+      address
+      pincode
+      customer{
+      _id
+      }
+      }
+      }
   }
 `;
 

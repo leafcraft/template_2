@@ -17,6 +17,7 @@ import ContactUs from "./Pages/CotactUs";
 import CartCard from "./components/Cart.Card";
 import TermsConditions from "./Pages/Terms&condtions";
 import { useSelector } from "react-redux";
+import { SHOPPINGCART } from "./components/ConstantLinks";
 
 function App() {
   const isUserLoggedIn = useSelector((data:any)=> data.setLoginData?.loginData?.userDetails?.isOk);
@@ -30,7 +31,7 @@ function App() {
         <Route element={<ProtectedLayout />}>
 
         <Route path="/products/:slug/:id" element={<Product />} />
-          <Route path='/shoppingcart' element={<ShoppingCart />} />
+          <Route path={SHOPPINGCART} element={<ShoppingCart />} />
           <Route path='/profile' element={<Profile />} />
           <Route  path='/aboutus' element={<AboutUs />} />
           <Route path='/faqs' element={<FAQs />} />

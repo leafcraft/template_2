@@ -1,5 +1,11 @@
-import { useState } from "react";
+import { useLazyQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { deliveryChargeArrays, getRazorpayOrder } from "../graphql/query";
+import toast from "react-hot-toast";
+import { useCallback } from "react";
+import useRazorpay, { RazorpayOptions } from "react-razorpay";
 
 
 interface CartItem {
@@ -16,9 +22,35 @@ interface CartsProps {
     variant: string;
   }
 
+  const createOrder = async () => {
+    // Example order details, replace this with your actual implementation
+    return {
+      id: "id123",
+      amount: 3000,
+      currency: "INR",
+      name: "Acme Corp",
+      description: "Test Transaction",
+      image: "https://example.com/your_logo",
+      prefill: {
+        name: "Piyush Garg",
+        email: "youremail@example.com",
+        contact: "9999999999",
+      },
+      notes: {
+        address: "Razorpay Corporate Office",
+      },
+    };
+  };
+
 const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
+
+  const [Razorpay, isLoaded] = useRazorpay();
   const { cartItems: initialCartItems } = props;
   const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems); 
+  
+  const checkoutData  = useSelector((data:any)=>data.setCartData?.cartData)
+  console.log("checkoutData shoppingCart:",checkoutData);
+
 
   const navigate = useNavigate();
 
@@ -55,6 +87,99 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
   const deliveryCharge = 4.99; // Define your delivery charge here
   const totalAmount = calculateSubtotal() + deliveryCharge;
 
+  const [DeliveryChrages] = useLazyQuery(deliveryChargeArrays);
+  const AccessToken = useSelector((data:any)=>data?.setAcessToken?.accessToken?.login?.AccessToken);
+
+  const [data,setData] = useState('');
+
+  useEffect(() => {
+    DeliveryChrages({
+      variables: {
+        products: {
+          productArray: [
+            {
+              productID: "6509dfc8a26e1448d82bb69e",
+              Quantity: 1,
+            },
+          ],
+        },
+      },
+      context: {
+        headers: {
+          Authorization: AccessToken,
+        },
+      },
+    })
+      .then((res) => {
+        console.log("res of delivery charges", res?.data?.deliveryChargeArrays);
+        const response =  res?.data?.deliveryChargeArrays;
+        setData(response);
+      })
+      .catch((err) => {
+        toast.error(err);
+      });
+  }, [AccessToken]);
+
+  const [RazorpayOrder] = useLazyQuery(getRazorpayOrder);
+
+  // const handleCheckoutPayment = () =>{
+  //   RazorpayOrder({
+  //     variables:{
+  //       amount:1000,
+  //       organisationID:'650439122f67cb537c73d076'
+  //     }
+  //   })
+  //   .then((res)=>{
+  //     console.log("response of razorpay:",res)
+  //   })
+  //   .catch((err)=>{
+  //     console.log("error in razorpay:",err)
+  //   })
+  // }
+  
+  const handleCheckoutPayment = useCallback(async () => {
+    try {
+      const order = await createOrder();
+
+      const options: RazorpayOptions = {
+        key: "rzp_test_xK8VllsVenWWgE",
+        amount: order.amount.toString(),
+        currency: order.currency,
+        name: order.name,
+        description: order.description,
+        image: order.image,
+        order_id: order.id,
+        handler: (res) => {
+          console.log(res);
+          // Handle the payment success or failure here
+        },
+        prefill: {
+          name: order.prefill.name,
+          email: order.prefill.email,
+          contact: order.prefill.contact,
+        },
+        notes: {
+          address: order.notes.address,
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzpay = new Razorpay(options);
+      rzpay.open();
+    } catch (error) {
+      console.error("Error creating order:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      handleCheckoutPayment();
+    }
+  }, [isLoaded]);
+  // Empty dependency array triggers the effect only on initial render
+
   return (
     // cart-1
     <>
@@ -75,14 +200,14 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                       <div className=" flex gap-5 px-4 py-6 sm:px-8 sm:py-10 w-full">
                         <div className="flow-root">
                           <ul className="grid grid-cols-1 gap-4 w-full items-center">
-                            {cartItems.map((item) => (
+                            {checkoutData?.cartItems.map((item:any) => (
                               <li
                                 key={item.id}
                                 className="grid grid-col-1 md:grid-cols-4 gap-5 content-center w-full space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0"
                               >
                                 {/* Content for each cart item */}
                                 <div className=" w-24 md:w-1/2 justify-self-center h-32 sm:h-24 bg-white rounded-lg">
-                                  <img src={item.img} alt="item" className="w-full h-full object-contain" />
+                                  <img src='' alt="item" className="w-full h-full object-contain" />
                                 </div>
         
                                 {/* Rest of the item details (name, size, price, etc.) */}
@@ -90,7 +215,7 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                                   <p className="text-base font-semibold text-gray-900">{item.name}</p>
                                   <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">{item.size}</p>
                                   <p className="text-base font-semibold text-gray-900 text-left">
-                                    Rs/-{item.price.toFixed(2)}
+                                    Rs/-{item.price}
                                   </p>
                                   {/* Add other item details as needed */}
                                 </div>
@@ -99,7 +224,7 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                                   <div className=" bg-slate-900 rounded-md flex h-8 items-stretch text-gray-600">
                                     <button
                                       className="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black text-white"
-                                      onClick={() => decreaseCount(item.id)}
+                                      onClick={() => console.log("decre")}
                                     >
                                       -
                                     </button>
@@ -108,7 +233,7 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                                     </div>
                                     <button
                                       className="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black text-white"
-                                      onClick={() => increaseCount(item.id)}
+                                      onClick={() => console.log("incre")}
                                     >
                                       +
                                     </button>
@@ -117,7 +242,7 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                                   <button
                                     type="button"
                                     className="flex rounded p-2 text-center  text-gray-500 bg-white transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900"
-                                    onClick={() => removeItem(item.id)}
+                                    onClick={() => console.log("remove")}
                                   >
                                     {/* SVG icon */}
                                     <svg
@@ -134,32 +259,28 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                               </li>
                             ))}
                           </ul>
-                        </div>
-        
-                        {/* Rest of the component remains unchanged */}
-        
-                        <div className="mt-6 text-center w-full">
+
                           <div className=" p-4  mt-4">
                           <div className="flex justify-between">
                               {/* display the  items add price  */}
-                              {cartItems.map((item) => (
-                                <div key={item.id}>{item.price.toFixed(2)}</div>))}
+                             
                             </div>
                             <div className="flex justify-between">
                               <p className="text-gray-700">Subtotal</p>
-                              <p className="text-gray-700">{calculateSubtotal()} ₹</p>
+                              <p className="text-gray-700">{checkoutData?.subtotal} ₹</p>
                             </div>
                             <div className="flex justify-between">
                               <p className="text-gray-700">Delivery Charges</p>
-                              <p className="text-gray-700">{deliveryCharge} ₹</p>
+                              <p className="text-gray-700">{data} ₹</p>
                             </div>
                             <hr className="my-4" />
                             <div className="flex justify-between">
                               <p className="text-lg font-bold">Total</p>
-                              <p className="text-lg font-bold">{totalAmount} ₹</p>
+                              <p className="text-lg font-bold">1000 ₹</p>
                             </div>
-                            <button onClick={() => navigate("/")} className="bg-black shadow-md w-full mt-5 rounded-md text-white font-normal font-Robot p-4">
-                      Checkout
+                          <button  onClick={handleCheckoutPayment} className="bg-black shadow-md felx items-center justify-center w-full mt-5 rounded-md text-white font-normal font-Robot p-4">
+                         
+                            Checkout
                     </button>
                           </div>
                         </div>
