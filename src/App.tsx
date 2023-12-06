@@ -17,7 +17,8 @@ import ContactUs from "./Pages/CotactUs";
 import CartCard from "./components/Cart.Card";
 import TermsConditions from "./Pages/Terms&condtions";
 import { useSelector } from "react-redux";
-import { SHOPPINGCART } from "./components/ConstantLinks";
+import { ABOUTUS, CONTACTUS, FAQS, HOME, LOGIN, PRODUCTID, PRODUCTS, PROFILE, SHOPPINGCART, TAC } from "./components/ConstantLinks";
+import NotFound from "./Pages/PageNotFpund";
 
 function App() {
   const isUserLoggedIn = useSelector((data:any)=> data.setLoginData?.loginData?.userDetails?.isOk);
@@ -29,34 +30,22 @@ function App() {
       <BrowserRouter>
         <Routes>
         <Route element={<ProtectedLayout />}>
-
-        <Route path="/products/:slug/:id" element={<Product />} />
+        <Route path={PRODUCTID} element={<Product />} />
           <Route path={SHOPPINGCART} element={<ShoppingCart />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route  path='/aboutus' element={<AboutUs />} />
-          <Route path='/faqs' element={<FAQs />} />
-          <Route path='/contactus' element={<ContactUs />} />
-          <Route path='/terms&conditons' element={<TermsConditions />} />
-         
-          
-          <Route path="/testing" element={<Test />} />
-           
-          
-            {/* <Route path="/test" element={<Test />} /> */}
+          <Route path={PROFILE} element={<Profile />} />
+          <Route  path={ABOUTUS} element={<AboutUs />} />
+          <Route path={FAQS} element={<FAQs />} />
+          <Route path={CONTACTUS} element={<ContactUs />} />
+          <Route path={TAC} element={<TermsConditions />} />
           </Route>
         <Route element={<BaseLayout />}>
-           
-           
-        <Route path='/login' element={<Login />} />
-           
-             
-            {/* <Route path="/test" element={<Test />} /> */}
+        <Route path={LOGIN} element={<Login />} />
           </Route>
           <Route element={<NavBar />}>
-          <Route path="/" element={<Home />} />
-            <Route path="/products" element={<ProductList />} />
-            <Route path='/login' element={<Login />} />
+          <Route path={HOME} element={<Home />} />
+            <Route path={PRODUCTS} element={<ProductList />} />
           </Route>
+          
         </Routes>
       </BrowserRouter>
     </>

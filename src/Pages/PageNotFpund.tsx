@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Test = () => {
+const NotFound = () => {
   return (
     <div>
     <div className="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
@@ -18,4 +18,4 @@ const Test = () => {
   )
 }
 
-export default Test
+export default NotFound

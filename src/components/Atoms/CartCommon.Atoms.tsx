@@ -99,12 +99,13 @@ const dispatch = useDispatch();
   const handleAddToCart = () => {
     // dispatch(addToCart(product));
     // You can navigate to the cart page or show a confirmation message
-    console.log('Added to cart:', data.price);
+    console.log('Added to cart:', data.image);
     store.dispatch(addToCart({
       id: data._id,
       name: data.name,
       price: data.price,
       size: selectedSize,
+      image:data.image,
     }))
 
     dispatch({ type: 'TOGGLE_SIDEBAR' });

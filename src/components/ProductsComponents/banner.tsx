@@ -3,7 +3,7 @@ import BreadcrumbPlainFlatTextIconPreview from '../../components/Atoms/Breadcrum
 import BGIMAGE from '../../assets/Products-banner.png';
 
 const Banner = () => {
-    const breadcrumbsData = [
+    const breadcrumbsData = [   
         {
           path: "Home",
           to: "/", 
@@ -20,7 +20,7 @@ const Banner = () => {
                 <img
                     src={BGIMAGE}
                     alt="Banner Image"
-                    className="w-full h-auto object-cover "
+                    className="w-full h-[80vh] object-cover "
                 />
                 <div className="absolute inset-0  lg:bottom-0 md:bottom[-63px] bottom-0 flex flex-col justify-center items-center text-white bg-opacity-0 bg-black">
 

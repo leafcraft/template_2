@@ -1,4 +1,4 @@
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -6,6 +6,9 @@ import { deliveryChargeArrays, getRazorpayOrder } from "../graphql/query";
 import toast from "react-hot-toast";
 import { useCallback } from "react";
 import useRazorpay, { RazorpayOptions } from "react-razorpay";
+import { ADD_ORDER } from "../graphql/mutation";
+import { store } from "../../Store";
+import { removeFromCart } from "../../Store/Reducers/AddCart";
 
 
 interface CartItem {
@@ -49,7 +52,8 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems); 
   
   const checkoutData  = useSelector((data:any)=>data.setCartData?.cartData)
-  console.log("checkoutData shoppingCart:",checkoutData);
+  const [AddOrders] = useMutation(ADD_ORDER);
+
 
 
   const navigate = useNavigate();
@@ -91,6 +95,7 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
   const AccessToken = useSelector((data:any)=>data?.setAcessToken?.accessToken?.login?.AccessToken);
 
   const [data,setData] = useState('');
+  const totalPrice = data + checkoutData?.subtotal;
 
   useEffect(() => {
     DeliveryChrages({
@@ -121,34 +126,34 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
   }, [AccessToken]);
 
   const [RazorpayOrder] = useLazyQuery(getRazorpayOrder);
+  const [getOderID,setOderId] = useState();
 
-  // const handleCheckoutPayment = () =>{
-  //   RazorpayOrder({
-  //     variables:{
-  //       amount:1000,
-  //       organisationID:'650439122f67cb537c73d076'
-  //     }
-  //   })
-  //   .then((res)=>{
-  //     console.log("response of razorpay:",res)
-  //   })
-  //   .catch((err)=>{
-  //     console.log("error in razorpay:",err)
-  //   })
-  // }
-  
   const handleCheckoutPayment = useCallback(async () => {
     try {
+      // First GraphQL call to get the Razorpay order ID
+      const razorpayOrderResponse = await RazorpayOrder({
+        variables: {
+          amount: 1000,
+          organisationID: '650439122f67cb537c73d076',
+        },
+      });
+
+      console.log('response of razorpay:', razorpayOrderResponse?.data?.getRazorpayOrder?.orderID);
+      
+      const orderID = razorpayOrderResponse?.data?.getRazorpayOrder?.orderID;
+      setOderId(orderID);
+
+      // Second GraphQL call to create the order for Razorpay
       const order = await createOrder();
 
-      const options: RazorpayOptions = {
-        key: "rzp_test_xK8VllsVenWWgE",
+      const options = {
+        key: 'rzp_live_DOPUDECqkWcCyU',
         amount: order.amount.toString(),
         currency: order.currency,
         name: order.name,
         description: order.description,
         image: order.image,
-        order_id: order.id,
+        order_id: orderID, // Use the order ID obtained from the first call
         handler: (res) => {
           console.log(res);
           // Handle the payment success or failure here
@@ -162,23 +167,60 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
           address: order.notes.address,
         },
         theme: {
-          color: "#3399cc",
+          color: '#3399cc',
         },
       };
 
       const rzpay = new Razorpay(options);
       rzpay.open();
     } catch (error) {
-      console.error("Error creating order:", error);
+      console.error('Error during checkout:', error);
     }
-  }, []);
+  }, [setOderId, createOrder, RazorpayOrder]);
 
-  useEffect(() => {
-    if (isLoaded) {
-      handleCheckoutPayment();
-    }
-  }, [isLoaded]);
+  const handleRemoveItem = (id, size) => {
+    // Update the cart state to remove the item with the given productId
+    store.dispatch(removeFromCart({id, size}));
+
+  };
+  
+  // const handleCheckoutPayment = () => {
+  //   AddOrders({
+  //     variables: {
+  //       orderInput: {
+    // key: "rzp_live_DOPUDECqkWcCyU",
+  //         amount: 100,
+  //         subtotal: 120,
+  //         status: "Ordered",
+  //         payment_method: "COD",
+  //         referenceID: "asasasasa",
+  //         transactionID: "asasasa",
+  //         razorpayID: "asasasa",
+  //         delivery_fee: 10,
+  //         organisationID: "650439122f67cb537c73d076",
+  //         orderedProducts: {
+  //           productID: "6509dfc8a26e1448d82bb69e",
+  //           quantity: 1,
+  //           size: "S",
+  //         },
+  //       },
+  //     },
+  //     context: {
+  //       headers: {
+  //         Authorization: AccessToken,
+  //       }
+  //     }    })
+  //   .then((res)=>{
+  //     console.log(res,"res in addOrders")
+  //   })
+  //   .catch((err)=>{
+  //     console.log(err,"error in add Orders")
+  //   })
+  // };
+
+ 
   // Empty dependency array triggers the effect only on initial render
+
 
   return (
     // cart-1
@@ -192,12 +234,12 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                 <section className="flex justify-center bg-white shadow-2xl ">
                 <div className="w-full px-4 sm:px-6 lg:px-8">
                   <div className="flex items-center justify-center">
-                    <h1 className="text-2xl font-semibold text-gray-900 bg-red">Your Cart</h1>
+                    <h1 className="text-2xl font-semibold text-gray-900">Your Cart</h1>
                   </div>
         
                   <div className="mt-8 w-full md:my-12 ">
                     <div className="bg-white shadow-xl rounded-2xl  w-full">
-                      <div className=" flex gap-5 px-4 py-6 sm:px-8 sm:py-10 w-full">
+                      <div className=" flex items-center justify-center gap-5 px-4 py-6 sm:px-8 sm:py-10 w-full">
                         <div className="flow-root">
                           <ul className="grid grid-cols-1 gap-4 w-full items-center">
                             {checkoutData?.cartItems.map((item:any) => (
@@ -207,7 +249,7 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                               >
                                 {/* Content for each cart item */}
                                 <div className=" w-24 md:w-1/2 justify-self-center h-32 sm:h-24 bg-white rounded-lg">
-                                  <img src='' alt="item" className="w-full h-full object-contain" />
+                                  <img src={item.image} alt="item" className="w-full h-full object-contain" />
                                 </div>
         
                                 {/* Rest of the item details (name, size, price, etc.) */}
@@ -229,7 +271,7 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                                       -
                                     </button>
                                     <div className="flex w-full text-white items-center justify-center bg-gray-100 px-4 text-xs uppercase transition">
-                                      {item.count}
+                                      {item.quantity}
                                     </div>
                                     <button
                                       className="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black text-white"
@@ -242,7 +284,7 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                                   <button
                                     type="button"
                                     className="flex rounded p-2 text-center  text-gray-500 bg-white transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900"
-                                    onClick={() => console.log("remove")}
+                                    onClick={() => handleRemoveItem(item.id,item.size)}
                                   >
                                     {/* SVG icon */}
                                     <svg
@@ -276,7 +318,7 @@ const Carts = (props:{variant:any,cartItems: CartItem[] }) => {
                             <hr className="my-4" />
                             <div className="flex justify-between">
                               <p className="text-lg font-bold">Total</p>
-                              <p className="text-lg font-bold">1000 ₹</p>
+                              <p className="text-lg font-bold">{totalPrice} ₹</p>
                             </div>
                           <button  onClick={handleCheckoutPayment} className="bg-black shadow-md felx items-center justify-center w-full mt-5 rounded-md text-white font-normal font-Robot p-4">
                          

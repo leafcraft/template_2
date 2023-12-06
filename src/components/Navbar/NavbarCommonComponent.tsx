@@ -114,6 +114,7 @@ const NavbarCommonComponent = (props) => {
       .catch((err) => {
         console.log(err, "err,Logout");
       })
+      navigate('/');
     store.dispatch(resetLoginData());
     window.location.reload();
   }
@@ -249,6 +250,13 @@ const NavbarCommonComponent = (props) => {
                         <Link to="/aboutus" >
                           <Typography variant="Navbar1">ABOUT US</Typography>
                         </Link>
+                        {isUserLoggedIn || data ?  (
+                           <Link to='' onClick={handleLogout}>
+                           <Typography variant="Navbar1" >
+                            LOGOUT
+                           </Typography>
+                         </Link>
+                        ) : null }
                       </>
                     )}
                   </nav>

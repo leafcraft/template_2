@@ -52,29 +52,28 @@ export const changePassword = gql`
   }
 `;
 
-export const addOrders = `
-mutation{
-  addOrders(orderInput:OrderInput!){
-  _id
-  customer{
-    _id
-    name
-  },
-  amount  
-  date
-  subtotal
-  discount
-  creation_date
-  payment_method
-  address
-  contact_number
-  pincode
-  delivery_fee
-  organisation
-  {
-    _id
-  },
-  razorpayID
+export const ADD_ORDER = gql`
+  mutation AddOrder($orderInput: OrderInput!) {
+    addOrders(orderInput: $orderInput) {
+      _id
+      customer {
+        _id
+        name
+      }
+      amount
+      date
+      subtotal
+      discount
+      creation_date
+      payment_method
+      address
+      contact_number
+      pincode
+      delivery_fee
+      organisation {
+        _id
+      }
+      razorpayID
+    }
   }
-  }
-  `;
+`;

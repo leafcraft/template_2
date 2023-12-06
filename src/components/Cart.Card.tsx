@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router';
 import { SHOPPINGCART } from './ConstantLinks';
 
 const CartCard = () => {
-  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   const [isSidebarOpencard, setIsSidebarOpencard] = useState(false);
 const isSidebarOpen = useSelector((data:any)=>data.toggleSidebarReducer.isSidebarOpen)
 
 
@@ -19,7 +19,7 @@ const isSidebarOpen = useSelector((data:any)=>data.toggleSidebarReducer.isSideba
   const ItemsInCart = useSelector((data:any)=>data.addToCart?.cartItems);
 
   const checkoutData  = useSelector((data:any)=>data.setCartData?.cartData)
-  console.log("checkoutData:",checkoutData);
+  console.log("checkoutData:",checkoutData,"ItemsCAt",ItemsInCart);
 
 
 
@@ -29,6 +29,7 @@ const isSidebarOpen = useSelector((data:any)=>data.toggleSidebarReducer.isSideba
   const toggleSidebarbuttonbutton = () => {
     
     dispatch({ type: 'TOGGLE_SIDEBAR' });
+    setIsSidebarOpencard(!isSidebarOpencard); 
   };
 
   const handleRemoveItem = (id, size) => {
@@ -101,15 +102,15 @@ const isSidebarOpen = useSelector((data:any)=>data.toggleSidebarReducer.isSideba
 
       {isSidebarOpen && (
         <>
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={toggleSidebarbuttonbutton}></div>
-          <div className="fixed inset-0 overflow-hidden">
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-                <div className="pointer-events-auto w-screen max-w-md">
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
-                    <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
-                      <div className="flex items-start justify-between">
-                        <h2 className="text-lg font-medium text-gray-900" id="slide-over-title">
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity " onClick={toggleSidebarbuttonbutton}></div>
+          <div className={`fixed inset-0 overflow-hidden  ${isSidebarOpencard ? 'animate-fade-up animate-once animate-duration-700 animate-delay-100':'animate-fade-down animate-once animate-duration-700 animate-delay-100' }`}>
+            <div className={`absolute inset-0 overflow-hidden`}>
+              <div className={`pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 `} >
+                <div className="pointer-events-auto w-screen max-w-md p-10 py-16" onBlur={toggleSidebarbuttonbutton}>
+                  <div className="flex h-full flex-col w-full overflow-y-scroll rounded-lg  bg-white shadow-xl">
+                    <div className="flex-1 overflow-y-auto w-full px-4 pb-6 sm:px-6">
+                      <div className="flex items-start justify-between  fixed w-76 overflow-y-scroll bg-white p-4 ">
+                        <h2 className="text-lg w-full font-medium text-gray-900" id="slide-over-title">
                           Shopping cart
                         </h2>
                         <div className="ml-3 flex h-7 items-center">
@@ -141,7 +142,7 @@ const isSidebarOpen = useSelector((data:any)=>data.toggleSidebarReducer.isSideba
                               <li key={product.id} className="flex py-6">
                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                   <img
-                                    src={product.imageUrl}
+                                    src={product.image}
                                     alt={`Product: ${product.name}`}
                                     className="h-full w-full object-cover object-center"
                                   />
@@ -194,7 +195,7 @@ const isSidebarOpen = useSelector((data:any)=>data.toggleSidebarReducer.isSideba
                           Checkout
                         </a>
                       </div>
-                      <div className="mt-6 flex flex-col  justify-center text-center text-sm text-gray-500">
+                      {/* <div className="mt-6 flex flex-col  justify-center text-center text-sm text-gray-500">
                         <p>
                           or
                           </p>
@@ -207,7 +208,7 @@ const isSidebarOpen = useSelector((data:any)=>data.toggleSidebarReducer.isSideba
                             <span aria-hidden="true"> &rarr;</span>
                           </button>
                         
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
