@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import BGIMAGE from '../../assets/bg-component1.svg';
+import BGIMAGE from '../../assets/bg-signup.png';
 import forHim from '../../assets/forHim.svg';
 import forHer from '../../assets/forHer.svg';
 import Skeleton from 'react-loading-skeleton';
+import Typography from '../Atoms/Typography';
 
 const Banner = () => {
   const [isload,setIsload] = useState(true);
+  const images = [forHer, forHim, forHer, forHim,forHer, forHim];
   return (
     <div>
       {" "}
@@ -42,33 +44,25 @@ const Banner = () => {
               </div>
             </div>
           </div>
-          <div className="hidden md:flex flex-col text-left gap-1 md:gap-5 absolute bottom-0 left-0 p-4 lg:p-20 md:w-2/3 ">
-            <h2 className="text-md md:text-2xl lg:text-4xl xl:text-5xl font-normal font-Robot leading-tigh">
-              THE FUTURE OF YOUR WARDROBE
-            </h2>
-            <div className="flex flex-row justify-around w-full xl:w-6/12">
-              <p className="text-bg-footer bg-white rounded-3xl p-0.5 md:p-1.5  col-end-6 col-span-3 font-Robot font-normal  text-[0.50rem] md:text-sm leading-6">
-                Rent Womens Wear
-              </p>
-              <p className="text-bg-footer bg-white rounded-3xl p-0.5 md:p-1.5 col-end-6 col-span-3 font-Robot font-normal  text-[0.50rem] md:text-sm leading-6">
-                Rent Womens Wear
-              </p>
-            </div>
-          </div>
+          
         </div>
       </div>
-      <div className="flex flex-col lg:flex-row">
-        <img
-          src={forHer}
-          alt="Banner Image"
-          className="w-full h-auto object-cover p-4"
-        /> 
+      <div className="flex flex-col lg:flex-row bg-[#312518] px-5 ">
+     <div className='flex  items-center justify-center text-center '>
+      <Typography variant='featuresHeader' >Choose Your Type</Typography></div>
+     <div className=' flex overflow-x-scroll scrollable-div pt-3'>  {images.map((imageSrc, index) => (
+        <div
+          key={index} // You should use a unique key for each mapped element
+          className="h-56 w-56 flex-shrink-0   p-4"
+        >
+          <img
+            src={imageSrc}
+            alt={`Image ${index + 1}`}
+            className="h-full w-full object-cover object-center rounded-lg shadow-md shadow-out "
+          />
+        </div>
+      ))}</div>
       
-        <img
-          src={forHim}
-          alt="Banner Image"
-          className="w-full h-auto object-cover p-4"
-        />
       </div>
       
     </div>

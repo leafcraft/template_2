@@ -332,7 +332,7 @@ const NavbarCommonComponent = (props) => {
           case 'Navbar3':
             return (
               <>
-                <nav className="bg-bg-footer w-full flex justify-between items-center h-full px-6">
+                <nav className="bg-[#171615]  w-full flex justify-between items-center h-full px-6">
                   <div className="px-4 py-4 flex justify-between w-full items-center text-white relative z-10">
                     {/* Your logo */}
                     <div className="flex items-center justify-start space-x-3">
@@ -346,24 +346,42 @@ const NavbarCommonComponent = (props) => {
                       </button>
                     </div>
                     <div className="hidden md:flex">
-                      <button className="navbar-burger flex items-center text-white p-3" onClick={handleMenuToggle}>
-                        {/* Your menu items */}
-                        Women Wear
-                      </button>
-                      <button className="navbar-burger flex items-center text-white p-3" onClick={handleMenuToggle}>
-                        Men Wear
-                      </button>
-                      <button className="navbar-burger flex items-center text-white p-3" onClick={handleMenuToggle}>
-                        Offers
-                      </button>
+                    <Link to="/" onClick={() => scrollToComponent('women_wear')}>
+                          <Typography variant="Navbar1"  >HOME</Typography>
+                        </Link>
+                    <Link to="/aboutus" >
+                            <Typography variant="Navbar1">ABOUT US</Typography>
+                          </Link>
+                          <Link to="/products" onClick={() => scrollToComponent('products')}>
+                            <Typography variant="Navbar1">PRODUCTS</Typography>
+                          </Link>
+                          <Link to="/terms&conditons" onClick={() => scrollToComponent('women_wear')}>
+                            <Typography variant="Navbar1"  >TERMS </Typography>
+                          </Link>
+                     
                     </div>
                     <div>
-                      <a href="#" className="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-50 hover:bg-gray-100 text-sm text-white font-bold rounded-xl transition duration-200">
-                        Sign In
-                      </a>
-                      <a href="#" className="hidden lg:inline-block py-2 px-6 bg-blue-500 hover:bg-blue-600 text-sm text-white font-bold rounded-xl transition duration-200">
-                        Sign Up
-                      </a>
+                    {isUserLoggedIn || data ? ( // Show Profile button if user is logged in
+                            <><div className='flex'> <Link to="/profile">
+                                <Typography variant="Navbar1" className="bg-black p-3 rounded-md">
+                                  Profile
+                                </Typography>
+                              </Link>
+                              <Link to="" onClick={handleLogout}>
+                                <Typography variant="Navbar1" className="bg-black p-3 rounded-md">
+                                  logout
+                                </Typography>
+                              </Link></div>
+                             
+                            </>
+
+                          ) : ( // Show Sign Up button if user is not logged in
+                            <Link to="/login">
+                              <Typography variant="Navbar1" className="bg-black p-3 rounded-md">
+                                Sign Up
+                              </Typography>
+                            </Link>
+                          )}
                     </div>
                   </div>
                 </nav>

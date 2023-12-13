@@ -30,13 +30,7 @@ function App() {
       <BrowserRouter>
         <Routes>
         <Route element={<ProtectedLayout />}>
-        <Route path={PRODUCTID} element={<Product />} />
-          <Route path={SHOPPINGCART} element={<ShoppingCart />} />
-          <Route path={PROFILE} element={<Profile />} />
-          <Route  path={ABOUTUS} element={<AboutUs />} />
-          <Route path={FAQS} element={<FAQs />} />
-          <Route path={CONTACTUS} element={<ContactUs />} />
-          <Route path={TAC} element={<TermsConditions />} />
+        
           </Route>
         <Route element={<BaseLayout />}>
         <Route path={LOGIN} element={<Login />} />
@@ -44,6 +38,13 @@ function App() {
           <Route element={<NavBar />}>
           <Route path={HOME} element={<Home />} />
             <Route path={PRODUCTS} element={<ProductList />} />
+            <Route path={PRODUCTID} element={<Product />} />
+          <Route path={SHOPPINGCART} element={<ShoppingCart />} />
+          <Route path={PROFILE} element={<Profile />} />
+          <Route  path={ABOUTUS} element={<AboutUs />} />
+          <Route path={FAQS} element={<FAQs />} />
+          <Route path={CONTACTUS} element={<ContactUs />} />
+          <Route path={TAC} element={<TermsConditions />} />
           </Route>
           
         </Routes>

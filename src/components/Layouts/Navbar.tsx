@@ -15,7 +15,7 @@ const NavBar = () => {
   return (
     <>
      <div className="flex flex-col min-h-screen justify-between">
-<NavbarCommonComponent variant="Navbar" />
+<NavbarCommonComponent variant="Navbar3" />
 <div className=" flex-grow max-w-screen overflow-hidden ">
   {outlet}
 </div>

@@ -31,9 +31,26 @@ const Content: ContentGroup[] = [
 
 const Footer: React.FC = () => {
   return (
-    <footer className="text-white body-font bg-bg-footer md:p-5 flex flex-col justify-center items-center">
-      <div className="container px-5 gap-8 py-16  flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
-        <div className="w-64 flex flex-col gap-4 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left md:mt-0 mt-10 cursor-pointer">
+    <footer className="text-white body-font bg-black md:p-5 flex flex-col justify-center items-center">
+      <div className="container px-5  py-16  flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
+        
+        <div className="flex-grow flex flex-wrap justify-end -mb-10 md:text-left text-center ">
+          {Content.map((props: ContentGroup, index) => (
+            <div className="lg:w-1/4 md:w-2/6 w-full p-4" key={index}>
+              <nav className="list-none mb-10 flex flex-col gap-2">
+                {props.contents.map((map: ContentItem, subIndex) => (
+                  <li key={subIndex}>
+                    <a href={map.link} className="text-white hover:text-brown cursor-pointer">
+                      {map.name}
+                    </a>
+                  </li>
+                ))}
+              </nav>
+            </div>
+          ))}
+        </div>
+
+        <div className="w-64 flex flex-col gap-4 bg-[#191816] rounded-xl p-5 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left md:mt-0 mt-10 cursor-pointer order-first">
           <a>Logo</a>
           <p className="mt-2 text-sm text-gray-500">
             Air plant banjo lyft occupy retro adaptogen indego
@@ -98,21 +115,6 @@ const Footer: React.FC = () => {
           </a>
         </span>
         
-        </div>
-        <div className="flex-grow flex flex-wrap -mb-10 md:text-left text-center order-first">
-          {Content.map((props: ContentGroup, index) => (
-            <div className="lg:w-1/4 md:w-2/6 w-full " key={index}>
-              <nav className="list-none mb-10 flex flex-col gap-2">
-                {props.contents.map((map: ContentItem, subIndex) => (
-                  <li key={subIndex}>
-                    <a href={map.link} className="text-white hover:text-brown cursor-pointer">
-                      {map.name}
-                    </a>
-                  </li>
-                ))}
-              </nav>
-            </div>
-          ))}
         </div>
       </div>
 

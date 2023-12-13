@@ -14,12 +14,15 @@ const Home = () => {
      <div>
      <Banner />
      <Secondcomponent />
-     <ThiredComponent />
      <FouthComponent />
+     <ThiredComponent />
+     <EighthComponent variant='cart-2' />
+    
      <Fifthcomponent />
-     <Sixthcomponent />
      <Seventhcomponent />
-     <EighthComponent variant='cart-1' />
+     <Sixthcomponent />
+    
+    
      </div>
     </>
   );
