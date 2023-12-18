@@ -8,6 +8,7 @@ import { store } from '../../Store';
 import { setProducts } from '../../Store/Reducers/ProductsData';
 
 interface Product {
+  slug: any;
   _id: string;
   name: string;
   category: string;
@@ -113,6 +114,27 @@ const ProductsCommonComponent  = (props:{variant:any }) => {
                   </div>
                 </div>
               </div>
+            );
+            case 'products-4':
+            return (
+              <div className=" bg-yellow-100 flex flex-col justify-center p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {data.map((product) => (
+                  <div
+                    key={product._id}
+                    className="bg-white p-4 rounded-md shadow-md transition duration-300 transform hover:scale-105"
+                  >
+                     <div className="overflow-x-hidden rounded-md relative">
+                     <Link to={`/products/${product.slug}/${product._id}`} >
+                                <img className="h-40 rounded-md w-full object-cover text-white" src={product.image} alt={`Product ${product._id + 1}`} />
+                                </Link>
+                              </div>
+                    <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+                    <p className="text-gray-600">{product.price}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
             );
 
           default:

@@ -7,6 +7,8 @@ import Fifthcomponent from "../components/HomeComponents/Fifthcomponent";
 import Sixthcomponent from "../components/HomeComponents/Sixthcomponent";
 import Seventhcomponent from "../components/HomeComponents/Seventhcomponent";
 import EighthComponent from "../components/HomeComponents/Eighthcomponent";
+import CouponList from "../components/Atoms/Coupons";
+import FAQComponent from "../components/Atoms/Accodation";
 
 const Home = () => {
   return (
@@ -16,11 +18,14 @@ const Home = () => {
      <Secondcomponent />
      <FouthComponent />
      <ThiredComponent />
-     <EighthComponent variant='cart-2' />
+     <EighthComponent variant='cart-3' />
     
      <Fifthcomponent />
+     <CouponList />
      <Seventhcomponent />
+     <FAQComponent />
      <Sixthcomponent />
+    
     
     
      </div>

@@ -1,796 +1,282 @@
-import  { useState } from 'react';
-import img4 from '../assets/bg-signup.png'
-import * as Yup from 'yup';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { useNavigate } from 'react-router';
-import { useLazyQuery, useMutation} from '@apollo/client';
-import { ForgotPasswordOtp, signUp } from '../components/graphql/mutation';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import imageFun from '../assets/bgCar3.jpg'
+import imageFun2 from '../assets/bgCar2.jpg'
+import imageFun3 from '../assets/bgCar1.jpg'
+import BreadcrumbPlainFlatTextIconPreview from '../components/Atoms/BreadcrumbPreview';
+import ImageZoom from "react-image-zooom";
+import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
-import { setSignUpData } from '../Store/Reducers/SignUpReducer';
-import { store } from '../Store';
-import { useSelector } from 'react-redux';
-import { setRegistrationData } from '../Store/Reducers/Registerdetails';
-import { UserDetails, confirmUser, forgotPasswordLogin, loginUser, reconfirmUser } from '../components/graphql/query';
-import { setLoginData } from '../Store/Reducers/LoginData';
-import { setAcessToken } from '../Store/Reducers/AccessToken';
+import { useLazyQuery } from '@apollo/client';
+import { ProductDataID } from '../components/graphql/query';
+import ProductCard from '../components/Atoms/Productcard.Atoms';
 
-const LoginComponent = () => {
-  const [showSignupBox, setShowSignupBox] = useState(true);
-  const [OTPBox, setOtpbox] = useState(false);
-  const [showCreateAccount, setShowCreateAccount] = useState(false);
-  const [fulldetails, setFulldetails] = useState(false);
-  const [Login, setLogin] = useState(false);
-  const [forgotPassword, setForgotPassword] = useState(false);
-  const [forgotPasswordOTP, setForgotPasswordOTP] = useState(false);
-  const [Register] = useMutation(signUp);
-  const [verifyOTP] = useLazyQuery(confirmUser);
-  const [LoginUser] = useLazyQuery(loginUser);
-  const [ReverifyOTP] = useLazyQuery(reconfirmUser);
-  const [ForgotPassword] = useLazyQuery(forgotPasswordLogin);
-  const [ForgotPassCode] = useMutation(ForgotPasswordOtp);
-  const [userDetails] = useLazyQuery(UserDetails);
+const ProductList = () => {
+  const imageData = [
+    { id: 1, src:`${imageFun}`},
+    { id: 2, src: `${imageFun2}` },
+    { id: 3, src: `${imageFun3}` },
+  ];
 
+  const [displayImage, setDisplayImage] = useState(imageData[0].src);
+  const [activeImage, setActiveImage] = useState(imageData[0].src);
 
-
-  const showSignup = () => {
-    setShowSignupBox(true);
-    setShowCreateAccount(false);
-    setLogin(false);
-    setForgotPassword(false);
+  const handleImageClick = (newImage) => {
+    setDisplayImage(newImage);
+    setActiveImage(newImage);
   };
+  const breadcrumbsData = [
+    {
+      path: "Home",
+      to: "/",
+    },
+    {
+      path: " All products",
+      to: "/products",
+    },
+    {
+      path: " Blue Velvet Fully Embroidered Lehenga Set",
+      to: "/products",
+    },
 
+  ];
 
-  const showFullDetails = () => {
-    setShowSignupBox(false);
-    setShowCreateAccount(false);
-    setLogin(false);
-    setForgotPassword(false);
-    setOtpbox(false);
-    setFulldetails(true);
-  };
-
-
-  const showOTPBox = () => {
-    setShowSignupBox(false);
-    setShowCreateAccount(false);
-    setLogin(false);
-    setForgotPassword(false);
-    setOtpbox(true);
-  };
-
-  const showForgotPassword = () => {
-    setForgotPassword(true);
-    setLogin(false);
-  };
-
-  const login = () => {
-    setShowSignupBox(false);
-    setShowCreateAccount(false);
-    setLogin(true); setForgotPassword(false);
-  };
-
-
-
-  // yup validation 
-  const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Email is required'),
-    username: Yup.string().required('Username is required'),
-    // Add more fields and validation as necessary
-  });
-
-
-  const handleSignupSubmit = (SignUPvalues) => {
-  
-    store.dispatch(setSignUpData(SignUPvalues))
-    if (SignUPvalues) {
-      setFulldetails(true);
-      setShowSignupBox(false);
+  const { slug, id } = useParams();
+  const [ProductData] = useLazyQuery(ProductDataID);
+  const [data, setData]: any = useState();
+  const [selectedPerson, setSelectedPerson] = useState(null);
+  const InceQuntity = useSelector((data:any)=>data.addToCart.cartItems);
+  const [quantity, setQuantity] = useState(0);
+  const selectPerson = (person) => {
+    if (selectedPerson === person) {
+      // If the person is already selected, deselect it
+      setSelectedPerson(null);
+    } else {
+      // If the person is not selected, select it
+      setSelectedPerson(person);
     }
-  }
-  //values from store for signup
-  const signUpValues = useSelector((data: any) => data.setSignUpData);
+  };
 
+  const ProductsData = useSelector((data: any) => data.setProducts.products);
 
-  //handle for full detail submit
-  const handleFullDetailsSubmit = (values) => {
-    console.log(values,signUpValues,"firrrrrrrrrrrrrrrrrrrrrrrrr")
-  
-    Register({
+  console.log(ProductsData, "productsData:")
+
+  useEffect(() => {
+
+    ProductData({
       variables: {
-        userInput: {
-          name: values?.name || '',
-          password: signUpValues?.password,
-          email: signUpValues?.username,
-          dob: values?.DOB,
-          organisationID: "650439122f67cb537c73d076",
-          addressInput: {
-            name: values?.AddressName || '',
-            address: values?.Address || '',
-            pincode: String(values?.pincode),
-          },
-          contactInput: {
-            number: String(values?.contact),
-          }
-
-        }
-      }
-    })
-
-      .then((response: any) => {
-       console.log(response,"responseeeeeeeeee")
-        store.dispatch(setRegistrationData(response));
-        setOtpbox(true);
-        setFulldetails(false);
-      })
-      .catch((err:any) => {
-
-       console.log(err.message,"erorrrrrrrrrrrrrrrrrr");
-      })
-  }
-
-  const location = useNavigate();
-
-  //get data from store register data 
-  const RegisterData = useSelector((data: any) => data.setRegistrationData.data?.signUp?.email);
-  // handle submit for Login
-  const handleLoginSubmit = (values) => {
-    // Handle form submission logic here
-   
-    LoginUser({
-      variables: {
-        LoginInput: {
-          email: values.username,
-          password: values.password
-        }
+        slug: slug,
+        productID: id,
+        organisationID: "650439122f67cb537c73d076",
       }
     })
       .then((res) => {
-       
-         store.dispatch(setAcessToken(res.data))
-        const accessToken = res?.data?.login?.AccessToken;
-      
-        if (accessToken) {
-          userDetails({
-            variables: {},
-        context: {
-          headers: {
-            Authorization: accessToken,
-          }
-        }
-          })
-            .then((res) => {
-              store.dispatch(setLoginData(res.data));
-           
-              if(res.data.userDetails.email){
-                location('/')
-              }
-            })
-            .catch((err) => {
-              toast.error(err);
-            })
-        } 
-
+        const getdata = res?.data?.product || {};
+        setData(getdata);
       })
       .catch((err) => {
         toast.error(err);
       })
+    // Now, you can use the id for any other logic you need
+  }, [id, slug, ProductData]);
 
-  }
 
-  const handleOTPSubmit = (values: any) => {
+  // dropdown
+  const handleDropdownSelect = (selectedValue) => {
+    // Do something with the selected value, e.g., update state or perform an action
+    console.log(`Selected value: ${selectedValue}`);
+  };
 
-    verifyOTP({
-      variables: {
-        ConfirmInput: {
-          email: RegisterData,
-          code: values?.OTP.toString()
-        }
+  const dropdownOptions = [
+    { label: 'item 1', value: 'Value 1' },
+    { label: 'item 2', value: 'Value 2' },
+    { label: 'item 3', value: 'Value 3' },
+    // Add more options as needed
+  ];
 
-      }
-    })
-      .then((response: any) => {
-       if(response){
-        setOtpbox(false);
-        setLogin(true);
-       }
-       
-      })
-      .catch((err) => {
-        toast.error(err.message);
-        setOtpbox(false);
-      })
-  }
 
-  const resendOtp = () => {
-   
-    ReverifyOTP({
-      variables: {
-        resendConfirmationCodeInput: {
-          email: RegisterData,
-        }
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to manage dropdown visibility
 
-      }
-    })
-      .then((response: any) => {
-        console.log(response, "resend Otp conformmmmmmmmmmmmmmmmmmmmmmm");
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      })
-  }
+  // Size select radio
+  const [selectedSize, setSelectedSize] = useState('');
 
-  const handleForgotPassword = (values) => {
-  
-    ForgotPassword({
-      variables: {
-        ForgotInput: {
-          email: values.username
-        }
-      }
-    })
-      .then((response) => {
-        if (response?.data?.forgot_password === true)
-         
-        setForgotPasswordOTP(true);
-        setForgotPassword(false)
-      })
-      .catch((err: any) => {
-console.log("ForgotPassword error:",err.message);
-      })
-  }
 
-  const handleForgotPasswordOTP = (values) => {
-   
-    ForgotPassCode({
-      variables: {
-        ForgotPassowrdInput: {
-          email: values.username,
-          code: values.OTP,
-          password: values.password,
 
-        }
-      }
-    })
-      .then((response) => {
-        console.log(response?.data?.forgot_password, "forgotpasworddddddddddddddddddOTPPPP")
-        // if(response?.data?.forgot_password === true){
-        //   setForgotPasswordOTP(false);
-        // }
 
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      })
-  }
+  const navigate = useNavigate();
 
-  const handleFuldetailstoLogin = () => {
-    setFulldetails(false);
-    setLogin(true);
-  }
+  const isSidebarOpen = useSelector((data:any)=>data.toggleSidebarReducer.isSidebarOpen)
+console.log("isSiderOpen in product :", isSidebarOpen);
 
-  const forgotPassCode = () => {
-    setLogin(true);
-    setForgotPasswordOTP(false);
-  }
+const dispatch = useDispatch();
 
-  const isOrgIDDisabled: any = true;
-
+console.log(data,"heloo")
   return (
-    <div className="flex min-h-screen bg-black">
-      
+    <section className="py-12 sm:py-16"> 
+  <div className="container mx-auto px-4">
+    <nav className="flex">
+      <ol role="list" className="flex items-center">
+      <BreadcrumbPlainFlatTextIconPreview breadcrumbs={breadcrumbsData} />
+      </ol>
+    </nav>
 
-      
-
-      {/* Sidebar */}
-      <div className='lg:flex flex-col justify-between w-full items-center bg-cover' style={{ backgroundImage: `url(${img4})` }}>
-        <div className='hidden text-white font-Robot w-full bg-black bg-opacity-70 h-full lg:flex flex-col justify-between  lg:p-8 xl:p-12 lg:max-w-sm xl:max-w-lg'>
-
-          <div className="flex items-center justify-start space-x-3">
-            <span className="bg-black rounded-full w-8 h-8"></span>
-            <a href="#" className="font-medium text-xl">Brand</a>
+    <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-5 lg:gap-16">
+      <div className="lg:col-span-3 lg:row-end-1">
+        <div className="lg:flex lg:items-start">
+          {/* display image */}
+          <div className="lg:order-2 lg:ml-5">
+            <div className="max-w-xl overflow-hidden rounded-lg">
+              {/* <img className="h-full w-full max-w-full object-cover" src={displayImage} alt="" /> */}
+              <ImageZoom className="h-full w-full max-w-full object-cover" src={displayImage} alt="A image to apply the ImageZoom plugin" zoom="200"/>
+            </div>
           </div>
-          {/* Login */}
-      <div className="flex flex-1 flex-col items-center justify-center px-10 py-5 md:py-8 lg:py-10 relative ">
-
-<div className="flex lg:hidden justify-between items-center w-full py-4">
-  <div className="flex items-center justify-start space-x-3">
-    <span className="bg-black rounded-full w-6 h-6"></span>
-    <a href="#" className="font-medium text-lg">Brand</a>
-  </div>
-  <div className="flex items-center space-x-2">
-    <span>Not a member? </span>
-    <a href="#" className="underline font-medium text-[#070eff]">
-      Sign up now
-    </a>
-  </div>
-</div>
-{/* forgot password */}
-{forgotPassword && (
-  <Formik
-    initialValues={{
-      username: '',
-
-    }}
-    validationSchema={Yup.object().shape({
-      username: Yup.string().email('Invalid email').required('Username is required'),
-
-    })}
-    onSubmit={handleForgotPassword}
-  >
-    <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-      <div className="flex flex-col space-y-2 text-center">
-        <h2 className="text-3xl md:text-4xl  font-Robot font-bold">Forgot Password?</h2>
-        <p className="text-md  font-Robot md:text-xl">
-          Enter your email address to reset your password.
-        </p>
-      </div>
-      <div className="flex flex-col  w-full space-y-5 px-12 lg:px-24">
-        <Field
-          type="email" // Change the input type to "email" for email validation
-          name="username"
-          placeholder="Email"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="username" component="div" className="text-red-500" />
-        <button type="submit" className="flex font-Robot items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
-          Reset Password
-        </button>
-        <div className='flex justify-center'>
-          <p className=" font-Robot text-sm md:text-md">
-            Remembered your password?{" "}
-            <a href="#" onClick={login} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
-              Login
-            </a>
-          </p>
-        </div>
-      </div>
-    </Form>
-  </Formik>
-
-)}
-{/* forgotpassword otp screen */}
-{forgotPasswordOTP && (
-  <Formik
-    initialValues={{
-      username: '',
-      password: '',
-      OTP: '',
-    }}
-    validationSchema={Yup.object().shape({
-      username: Yup.string().email('Invalid email').required('Username is required'),
-      password: Yup.string()
-        .required('Password is required')
-        .matches(
-          /^(?=.*[A-Z])(?=.*[0-9a-zA-Z]).{8,}$/,
-          'Password must be alphanumeric and contain at least one capital letter'
-        ),
-      OTP: Yup.string().required('OTP is required'),
-    })}
-    onSubmit={handleForgotPasswordOTP}
-  >
-    <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-      <div className="flex flex-col space-y-2 text-center">
-        <h2 className="text-3xl md:text-4xl  font-Robot font-bold">Set Password</h2>
-        <p className="text-md  font-Robot md:text-xl">
-          Enter your email,password and OTP address to reset your password.
-        </p>
-      </div>
-      <div className="flex flex-col  w-full space-y-5 px-12 lg:px-24">
-        <Field
-          type="email" // Change the input type to "email" for email validation
-          name="username"
-          placeholder="Email"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="username" component="div" className="text-red-500" />
-        <Field
-          type="password" // Change the input type to "email" for email validation
-          name="password"
-          placeholder="password"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="password" component="div" className="text-red-500" />
-        <Field
-          type="OTP" // Change the input type to "email" for email validation
-          name="OTP"
-          placeholder="OTP"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="OTP" component="div" className="text-red-500" />
-        <button type="submit" className="flex font-Robot items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
-          confirm
-        </button>
-        <div className='flex justify-center'>
-          <p className=" font-Robot text-sm md:text-md">
-            Remembered your password?{" "}
-            <a href="#" onClick={forgotPassCode} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
-              Login
-            </a>
-          </p>
-        </div>
-      </div>
-    </Form>
-  </Formik>
-
-)}
-
-{/* Signup box */}
-{showSignupBox && (
-
-
-  <Formik
-    initialValues={{
-      username: '',
-      password: '', // Adding a password field
-    }}
-    validationSchema={Yup.object().shape({
-      username: Yup.string().email('Invalid email').required('Username is required'),
-      password: Yup.string().required('Password is required'),
-    })}
-    onSubmit={handleSignupSubmit}
-  >
-    <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center shadow-white shadow-2xl border-white border-4 rounded-lg ">
-      <div className="flex flex-col space-y-2 text-center ">
-        <h2 className="text-3xl md:text-4xl font-bold">Sign in to account</h2>
-        <p className="text-md md:text-xl">
-          Sign up or log in to place the order, no password required!
-        </p>
-      </div>
-      <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
-        <Field
-          type="email" // Change the input type to "email" for email validation
-          name="username"
-          placeholder="Email"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="username" component="div" className="text-red-500" />
-        {/* Adding a password field */}
-        <Field
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="password" component="div" className="text-red-500" />
-
+          {/* option images */}
+          <div className="mt-2 w-full lg:order-1 lg:w-32 lg:flex-shrink-0">
+          <div className="flex flex-row items-start lg:flex-col">
+      {imageData.map((image) => (
         <button
-          type="submit"
-          className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
+          key={image.id}
+          type="button"
+          className={`flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 ${
+            activeImage === image.src ? 'border-black shadow-lg' : 'border-transparent'
+          } text-center`}
+          onClick={() => handleImageClick(image.src)}
         >
-          Register
+          <img className="h-full w-full object-cover" src={image.src} alt="" />
         </button>
-        <div className='flex justify-center'>
-          <p className=" font-Robot text-sm md:text-md">
-            Remembered your password?{" "}
-            <a href="#" onClick={login} className="underline  font-Robot font-medium text-slate-950 opacity-50 pl-2">
-              Login
+      ))}
+    </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="lg:col-span-2 lg:row-span-2 lg:row-end-2">
+        <h1 className="sm: text-2xl font-bold text-gray-900 sm:text-3xl">Afro-Brazillian Coffee</h1>
+
+        <div className="mt-5 flex items-center">
+          <div className="flex items-center">
+            <svg className="block h-4 w-4 align-middle text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" className=""></path>
+            </svg>
+            <svg className="block h-4 w-4 align-middle text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" className=""></path>
+            </svg>
+            <svg className="block h-4 w-4 align-middle text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" className=""></path>
+            </svg>
+            <svg className="block h-4 w-4 align-middle text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" className=""></path>
+            </svg>
+            <svg className="block h-4 w-4 align-middle text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" className=""></path>
+            </svg>
+          </div>
+          <p className="ml-2 text-sm font-medium text-gray-500">1,209 Reviews</p>
+        </div>
+
+        <h2 className="mt-8 text-base text-gray-900">color </h2>
+        <div className="mt-3 flex select-none flex-wrap items-center gap-1">
+          <label className="">
+            <input type="radio" name="type" value="Powder" className="peer sr-only" checked />
+            <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">Powder</p>
+          </label>
+          <label className="">
+            <input type="radio" name="type" value="Whole Bean" className="peer sr-only" />
+            <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">Whole Bean</p>
+          </label>
+          <label className="">
+            <input type="radio" name="type" value="Groud" className="peer sr-only" />
+            <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">Groud</p>
+          </label>
+        </div>
+
+        <h2 className="mt-8 text-base text-gray-900">qantity</h2>
+        <div className="mt-3 flex select-none flex-wrap items-center gap-1">
+          <label className="">
+            <input type="radio" name="subscription" value="4 Months" className="peer sr-only" />
+            <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">4 Months</p>
+            <span className="mt-1 block text-center text-xs">Rs80/mo</span>
+          </label>
+          <label className="">
+            <input type="radio" name="subscription" value="8 Months" className="peer sr-only" checked />
+            <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">8 Months</p>
+            <span className="mt-1 block text-center text-xs">$60/mo</span>
+          </label>
+          <label className="">
+            <input type="radio" name="subscription" value="12 Months" className="peer sr-only" />
+            <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">12 Months</p>
+            <span className="mt-1 block text-center text-xs">$40/mo</span>
+          </label>
+        </div>
+
+        <div className="mt-10 flex flex-col items-center justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
+          <div className="flex items-end">
+            <h1 className="text-3xl font-bold">$60.50</h1>
+            <span className="text-base">/month</span>
+          </div>
+
+          <button type="button" className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
+            <svg xmlns="http://www.w3.org/2000/svg" className="shrink-0 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            Add to cart
+          </button>
+        </div>
+
+        <ul className="mt-8 space-y-2">
+          <li className="flex items-center text-left text-sm font-medium text-gray-600">
+            <svg className="mr-2 block h-5 w-5 align-middle text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" className=""></path>
+            </svg>
+            Free shipping worldwide
+          </li>
+
+          <li className="flex items-center text-left text-sm font-medium text-gray-600">
+            <svg className="mr-2 block h-5 w-5 align-middle text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" className=""></path>
+            </svg>
+            Cancel Anytime
+          </li>
+        </ul>
+      </div>
+
+      <div className="lg:col-span-3">
+        <div className="border-b border-gray-300">
+          <nav className="flex gap-4">
+            <a href="#" title="" className="border-b-2 border-gray-900 py-4 text-sm font-medium text-gray-900 hover:border-gray-400 hover:text-gray-800"> Description </a>
+
+            <a href="#" title="" className="inline-flex items-center border-b-2 border-transparent py-4 text-sm font-medium text-gray-600">
+              Reviews
+              <span className="ml-2 block rounded-full bg-gray-500 px-2 py-px text-xs font-bold text-gray-100"> 1,209 </span>
             </a>
-          </p>
-        </div>
-      </div>
-    </Form>
-  </Formik>
-
-)}
-{/* full details */}
-{fulldetails && (
-  <Formik
-    initialValues={{
-      name: '',
-      DOB: '',
-      OrgID: '',
-      AddressName: '',
-      pincode: '',
-      Address: '',
-      contact: '',
-    }}
-    // validationSchema={Yup.object().shape({
-    //             OTP: Yup.string().required('OTP is required'), // Remove email validation
-    //   password: Yup.string().required('Password is required'),
-    // })}
-    onSubmit={handleFullDetailsSubmit}
-  >
-    <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-      <div className="flex flex-col space-y-2 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold">Fill the Details</h2>
-      </div>
-      <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
-        {/* <Field
-          type="number" // Change the input type to "number" for OTP
-          name="OTP"
-          placeholder="OTP"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="OTP" component="div" className="text-red-500" />
-       */}
-        <Field
-          type="text"
-          name="name"
-          placeholder="Name"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="name" component="div" className="text-red-500" />
-        <Field
-          type="date"
-          name="DOB"
-          placeholder="Date of birth"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="DOB" component="div" className="text-red-500" />
-        {/* <Field
-          type="text"
-          name="OrgID"
-          value="org9876543"
-          placeholder="Organization ID"
-          className={`flex px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium placeholder:font-normal ${isOrgIDDisabled ? 'bg-gray-300 text-gray' : 'text-black'}`}
-          disabled={isOrgIDDisabled}
-        />
-        <ErrorMessage name="OrgID" component="div" className="text-red-500" /> */}
-        <div className='flex gap-2'>
-          <Field
-            type="text"
-            name="AddressName"
-            placeholder="Address Name"
-            className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-          />
-          <ErrorMessage name="AddressName" component="div" className="text-red-500" />
-          <Field
-            type="text"
-            name="pincode"
-            placeholder="Pincode"
-            className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-          />
-          <ErrorMessage name="pincode" component="div" className="text-red-500" />
-        </div>
-        <Field
-          type="text"
-          name="Address"
-          placeholder="Address"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="Address" component="div" className="text-red-500" />
-        <Field
-          type="text"
-          name="contact"
-          placeholder="Contact Number"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="contact" component="div" className="text-red-500" />
-
-        <button
-          type='submit'
-
-          className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
-        >
-          Register
-        </button>
-        <div className="flex justify-center">
-          <p className="text-sm md:text-md">
-            get back to login
-            <a href="#" onClick={handleFuldetailstoLogin} className="underline font-medium text-slate-950 opacity-50 pl-2">
-login
-</a>
-          </p>
-        </div>
-      </div>
-    </Form>
-  </Formik>
-
-)}
-{/* verify screen */}
-{OTPBox && (
-  <Formik
-    initialValues={{
-      OTP: '',
-
-    }}
-    validationSchema={Yup.object().shape({
-      OTP: Yup.string().required('OTP is required'), // Remove email validation
-
-    })}
-    onSubmit={handleOTPSubmit}
-  >
-    <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-      <div className="flex flex-col space-y-2 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold">Verify the OTP</h2>
-        <p className="text-md md:text-xl">
-          confirm  OTP required!
-        </p>
-      </div>
-      <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
-        <Field
-          type="number" // Change the input type to "number" for OTP
-          name="OTP"
-          placeholder="OTP"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="OTP" component="div" className="text-red-500" />
-        {/* Adding a password field */}
-        <button
-          type="submit"
-          className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
-        >
-          Verify
-        </button>
-        <div className="flex justify-center">
-          <p className="text-sm md:text-md">
-            Resend the OTP
-            <a href="#" onClick={resendOtp} className="underline font-medium text-slate-950 opacity-50 pl-2">
-              Resend OTP
-            </a>
-          </p>
-        </div>
-      </div>
-    </Form>
-  </Formik>
-
-)}
-{/* create user box */}
-{showCreateAccount && (
-  <Formik
-    initialValues={{
-      username: '',
-      email: '',
-      phone: '',
-      password: '',
-      confirmPassword: '',
-    }}
-    validationSchema={Yup.object().shape({
-      username: Yup.string().required('Username is required'),
-      email: Yup.string().email('Invalid email').required('Email is required'),
-      phone: Yup.string().required('Phone is required'),
-      password: Yup.string().required('Password is required'),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password')], 'Passwords must match')
-        .required('Confirm Password is required'),
-    })}
-    onSubmit={(values, { setSubmitting }) => {
-      // Handle form submission logic here
-      console.log('Form submitted:', values);
-      setSubmitting(false);
-    }}
-  >
-    <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-      <div className="flex flex-col space-y-2 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold">Create an account</h2>
-        <p className="text-md md:text-xl">Please fill out the form</p>
-      </div>
-      <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
-        <Field
-          type="text"
-          name="username"
-          placeholder="Username"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="username" component="div" className="text-red-500" />
-
-        <Field
-          type="text"
-          name="email"
-          placeholder="Email"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="email" component="div" className="text-red-500" />
-
-        <Field
-          type="text"
-          name="phone"
-          placeholder="Phone No."
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="phone" component="div" className="text-red-500" />
-
-        <Field
-          type="text"
-          name="password"
-          placeholder="Password"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="password" component="div" className="text-red-500" />
-
-        <Field
-          type="text"
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="confirmPassword" component="div" className="text-red-500" />
-
-        <button
-          type="submit"
-          className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
-        >
-          Submit
-        </button>
-
-        <div className="flex justify-center">
-          <p className="text-sm md:text-md">
-            Already have an account?
-            <a href="#" onClick={login} className="underline font-medium text-slate-950 opacity-50 pl-2">
-              Login
-            </a>
-          </p>
-        </div>
-      </div>
-    </Form>
-  </Formik>
-)}
-
-{/* Login  */}
-{Login && (
-  <Formik
-    initialValues={{
-      username: '',
-      password: '',
-    }}
-    validationSchema={Yup.object().shape({
-      username: Yup.string().required('Username is required'),
-      password: Yup.string()
-        .required('Password is required')
-        .matches(
-          /^(?=.*[A-Z])(?=.*[0-9a-zA-Z]).{8,}$/,
-          'Password must be alphanumeric and contain at least one capital letter'
-        ),
-    })}
-    onSubmit={handleLoginSubmit}
-  >
-    <Form className="flex flex-1 flex-col justify-center space-y-5 w-full items-center">
-      <div className="flex flex-col space-y-2 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold">Login</h2>
-      </div>
-      <div className="flex flex-col w-full space-y-5 px-12 lg:px-24">
-        <Field
-          type="text"
-          name="username"
-          placeholder="Username"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="username" component="div" className="text-red-500" />
-
-        <Field
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal"
-        />
-        <ErrorMessage name="password" component="div" className="text-red-500" />
-
-        <button
-          type="submit"
-          className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
-        >
-          Submit
-        </button>
-
-        <div className='flex justify-center'>
-          <p className="text-sm md:text-md">
-            Don't have an account? Create one here
-            <a href='/login' onClick={showSignup} className="underline font-medium text-slate-950 opacity-50 pl-2">
-              Sign Up
-            </a>
-          </p>
+          </nav>
         </div>
 
-        <div className='flex justify-center'>
-          <p className="text-sm md:text-md">
-            <a href="#" onClick={showForgotPassword} className="underline font-medium text-slate-950 opacity-50 pl-2">
-              Forgot your password?
-            </a>
-          </p>
+        <div className="mt-8 flow-root sm:mt-12">
+          <h1 className="text-3xl font-bold">Delivered To Your Door</h1>
+          <p className="mt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia accusantium nesciunt fuga.</p>
+          <h1 className="mt-8 text-3xl font-bold">From the Fine Farms of Brazil</h1>
+          <p className="mt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio numquam enim facere.</p>
+          <p className="mt-4">Amet consectetur adipisicing elit. Optio numquam enim facere. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore rerum nostrum eius facere, ad neque.</p>
         </div>
-      </div>
-    </Form>
-  </Formik>
-)}
-</div>
-
-          <p className="font-medium">© 2022 Company <a className='text-green-500' target='_blank' href='https://leafcraft.co/'>LeafCraft.co</a></p>
-        </div>
-
       </div>
     </div>
+  </div>
+  <section className="text-gray-600 body-font">
+      <div className="  py-24">
+        <div className="flex justify-center items-center">
+          {ProductsData.slice(0, 3).map((product, index) => (
+            <ProductCard key={index} {...product} />
+          ))}
+        </div>
+      </div>
+    </section>
+    <section className='flex justify-center items-center pb-10'>
+      <button onClick={() => navigate('/products')} className='bg-black text-white font-normal font-Robot p-4'> view all products</button>
+    </section>
+</section>
+
   );
 };
 
-export default LoginComponent;
-
+export default ProductList;

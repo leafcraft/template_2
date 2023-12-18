@@ -17,7 +17,7 @@ import ContactUs from "./Pages/CotactUs";
 import CartCard from "./components/Cart.Card";
 import TermsConditions from "./Pages/Terms&condtions";
 import { useSelector } from "react-redux";
-import { ABOUTUS, CONTACTUS, FAQS, HOME, LOGIN, PRODUCTID, PRODUCTS, PROFILE, SHOPPINGCART, TAC } from "./components/ConstantLinks";
+import { ABOUTUS, CONTACTUS, FAQS, HOME, LOGIN, PRODUCTID, PRODUCTS, PROFILE, SHOPPINGCART, TAC, TESTING } from "./components/ConstantLinks";
 import NotFound from "./Pages/PageNotFpund";
 
 function App() {
@@ -45,6 +45,7 @@ function App() {
           <Route path={FAQS} element={<FAQs />} />
           <Route path={CONTACTUS} element={<ContactUs />} />
           <Route path={TAC} element={<TermsConditions />} />
+          <Route path={TESTING} element={<Test />} />
           </Route>
           
         </Routes>

@@ -136,7 +136,7 @@ const Products = () => {
   return (
     <section className="text-gray-600 body-font">
       <Banner />
-      <ProductsCommonComponent variant={'products-1'}  />
+      <ProductsCommonComponent variant={'products-4'}  />
     </section>
   );
 }

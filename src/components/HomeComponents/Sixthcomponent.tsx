@@ -1,10 +1,10 @@
 import React from 'react';
 import image from '../../assets/bg-component6.png'
 import ThiredCommonComponent from '../Atoms/ThiredCommonComponent';
-import poster from "../../assets/poster-component6.png";
-import product1 from "../../assets/product2-component3.png";
-import product2 from "../../assets/product2-component6.png";
-import Product3 from "../../assets/product3-component6.png";
+import poster from "../../assets/bg-signup.png";
+import product1 from "../../assets/bgCAr1.jpg";
+import product2 from "../../assets/bgCar2.jpg";
+import Product3 from "../../assets/bgCar3.jpg";
 
 const Sixthcomponent = () => {
 
@@ -36,7 +36,7 @@ const Sixthcomponent = () => {
 
   return (
     <>
-    <div id="contact" className="bg-pink-500 bg-cover bg-center p-6 items-center flex flex-col" style={{ backgroundImage: `url(${image})` }}>
+    {/* <div id="contact" className="bg-pink-500 bg-cover bg-center p-6 items-center flex flex-col" style={{ backgroundImage: `url(${image})` }}>
       <div className="container p-6 md:p-12 lg:p-24 xl:p-32 flex flex-col justify-center items-center gap-6">
         <div>
           <p className="text-white font-Robot font-normal leading-none text-6xl text-center ">
@@ -53,7 +53,7 @@ const Sixthcomponent = () => {
         READ NOW
         </div>
       </div>
-    </div>
+    </div> */}
     <div id='mens_wear'> <ThiredCommonComponent
         smallHeader='Mens Wear'
         title='Why Should Girls Have All The Fun?'

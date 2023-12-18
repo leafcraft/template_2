@@ -1,8 +1,8 @@
 import img1 from '../../assets/bgCAr1.jpg'
 import img2 from '../../assets/bgCar2.jpg'
-import img3 from '../../assets/bgCar3.jpg'
-import img4 from '../../assets/bgCAr1.jpg'
-import img5 from '../../assets//bgCar3.jpg'
+import img3 from '../../assets/sofa.jpg'
+import img4 from '../../assets/table.jpg'
+import img5 from '../../assets/hall.jpg'
 
 const imageSources = [
   { image: img1, text: "The Cocktail Collection" },

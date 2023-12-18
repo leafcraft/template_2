@@ -9,3 +9,4 @@ export const TAC = '/terms&conditons';
 export const LOGIN = '/login';
 export const HOME = '/';
 export const PRODUCTS = '/products';
+export const TESTING = '/testing';

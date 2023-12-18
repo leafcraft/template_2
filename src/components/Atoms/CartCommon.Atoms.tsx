@@ -1,40 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import CustomCarousel from './Carousel.Atoms';
-import ProductCard from './Productcard.Atoms';
-import { useNavigate, useParams } from 'react-router';
-import DropdownComponent from '../../components/Atoms/Dropdown';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import imageFun from '../../assets/bgCar3.jpg'
+import imageFun2 from '../../assets/bgCar2.jpg'
+import imageFun3 from '../../assets/bgCar1.jpg'
+import BreadcrumbPlainFlatTextIconPreview from '../../components/Atoms/BreadcrumbPreview';
+import ImageZoom from "react-image-zooom";
 import { useDispatch, useSelector } from 'react-redux';
-import BreadcrumbPlainFlatTextIconPreview from './BreadcrumbPreview';
-import CartCard from '../Cart.Card';
-import { store } from '../../Store';
-import img6 from '../../assets/products/img6.png';
-import img7 from '../../assets/products/img7.png';
-import img8 from '../../assets/products/img8.png';
-import img9 from '../../assets/products/img9.png';
-import { useLazyQuery } from '@apollo/client';
-import { ProductDataID } from '../graphql/query';
 import toast from 'react-hot-toast';
-import { Form, Formik } from 'formik';
-import { addToCart } from '../../Store/Reducers/AddCart';
+import { useLazyQuery } from '@apollo/client';
+import { ProductDataID } from '../../components/graphql/query';
+import ProductCard from '../../components/Atoms/Productcard.Atoms';
 
+const ProductList = () => {
+  const imageData = [
+    { id: 1, src:`${imageFun}`},
+    { id: 2, src: `${imageFun2}` },
+    { id: 3, src: `${imageFun3}` },
+  ];
 
+  const [displayImage, setDisplayImage] = useState(imageData[0].src);
+  const [activeImage, setActiveImage] = useState(imageData[0].src);
 
-interface Product {
-  type: any;
-  price: any;
-  description: any;
-  _id: string;
-  name: string;
-  slug: string;
-  unit: number;
-  creation_date: string;
-  // Add other properties as needed
-}
+  const handleImageClick = (newImage) => {
+    console.log(newImage,"hielll")
+    setDisplayImage(newImage);
+    setActiveImage(newImage);
+  };
+  const breadcrumbsData = [
+    {
+      path: "Home",
+      to: "/",
+    },
+    {
+      path: " All products",
+      to: "/products",
+    },
+    {
+      path: " Blue Velvet Fully Embroidered Lehenga Set",
+      to: "/products",
+    },
 
-const CartPage = () => {
+  ];
+
   const { slug, id } = useParams();
   const [ProductData] = useLazyQuery(ProductDataID);
   const [data, setData]: any = useState();
+  const [selectedPerson, setSelectedPerson] = useState(null);
+  const InceQuntity = useSelector((data:any)=>data.addToCart.cartItems);
+  const [quantity, setQuantity] = useState(0);
+  const selectPerson = (person) => {
+    if (selectedPerson === person) {
+      // If the person is already selected, deselect it
+      setSelectedPerson(null);
+    } else {
+      // If the person is not selected, select it
+      setSelectedPerson(person);
+    }
+  };
 
   const ProductsData = useSelector((data: any) => data.setProducts.products);
 
@@ -79,15 +101,8 @@ const CartPage = () => {
   // Size select radio
   const [selectedSize, setSelectedSize] = useState('');
 
-  const handleSizeChange = (value) => {
-    setSelectedSize(value);
 
-  };
 
-  const labelClass = 'inline-block cursor-pointer rounded-lg border border-[#e7e7e7] py-1 px-3 select-label';
-  const selectedLabelClass = 'inline-block cursor-pointer rounded-lg bg-black text-white border border-[#e7e7e7] py-1 px-3 select-label';
-
-  const sizes = ['S', 'M', 'L', 'XL'];
 
   const navigate = useNavigate();
 
@@ -96,150 +111,174 @@ console.log("isSiderOpen in product :", isSidebarOpen);
 
 const dispatch = useDispatch();
 
-  const handleAddToCart = () => {
-    // dispatch(addToCart(product));
-    // You can navigate to the cart page or show a confirmation message
-    console.log('Added to cart:', data.image);
-    store.dispatch(addToCart({
-      id: data._id,
-      name: data.name,
-      price: data.price,
-      size: selectedSize,
-      image:data.image,
-    }))
-
-    dispatch({ type: 'TOGGLE_SIDEBAR' });
-  };
-  const breadcrumbsData = [
-    {
-      path: "Home",
-      to: "/",
-    },
-    {
-      path: " All products",
-      to: "/products",
-    },
-    {
-      path: " Blue Velvet Fully Embroidered Lehenga Set",
-      to: "/products",
-    },
-
-  ];
-
-  console.log(data, "jhsdhsadgajsgdgasdgasghdghasgdj");
-
+console.log(data,"heloo")
   return (
-    <section className=" overflow-hidden">
-      {/* Your existing JSX code here */}
-      <div className=" px-5  pt-6 md:py-18 ">
-        <div className=" grid grid-cols-1 md:grid-cols-2   place-content-center gap-24">
-          <div >
-            <div className="flex flex-col gap-1">
-              <BreadcrumbPlainFlatTextIconPreview breadcrumbs={breadcrumbsData} />
+    <section className="py-12 sm:py-16"> 
+  <div className="container mx-auto px-4">
+    <nav className="flex">
+      <ol role="list" className="flex items-center">
+      <BreadcrumbPlainFlatTextIconPreview breadcrumbs={breadcrumbsData} />
+      </ol>
+    </nav>
+
+    <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-5 lg:gap-16">
+      <div className="lg:col-span-3 lg:row-end-1">
+        <div className="lg:flex lg:items-start">
+          {/* display image */}
+          <div className="lg:order-2 lg:ml-5">
+            <div className="max-w-xl overflow-hidden rounded-lg">
+              {/* <img className="h-full w-full max-w-full object-cover" src={displayImage} alt="" /> */}
+              <ImageZoom className="h-full w-full max-w-full object-cover" src={displayImage} alt="A image to apply the ImageZoom plugin" zoom="200"/>
             </div>
-            {data?._id ? (<div className='px-14 pb-24'>
-              {/* {data.map((product: any) => ( */}
-                <CustomCarousel key={data._id} image={data.gallery} />
-              {/* ))} */}
-            </div>) : <div>Loding.. </div>}
-
           </div>
-          <div className="flex flex-col gap-4 pr-10">
-            {data ? (
-
-              <div key={data._id}>
-                <h2 className="text-sm font-normal font-Robot pb-8 tracking-widest">{data.slug}</h2>
-                <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{data.type}</h1>
-
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="font-normal font-Robot text-xl">Rent :</span>
-                  <span className="font-normal font-Robot text-xl">{data.price}</span>
-                </div>
-
-                <div className='flex gap-4 mb-4'>
-                  <div>
-                    <h4 className="text-lg font-semibold mb-4">Select Size</h4>
-                    <div className="flex space-x-4">
-                      {sizes.map((size) => (
-                        <div className="relative" key={size}>
-                          <input
-                            type="radio"
-                            id={`size${size}`}
-                            name="size"
-                            value={size}
-                            className="hidden"
-                            checked={selectedSize === size}
-                            onChange={() => handleSizeChange(size)}
-                          />
-                          <label
-                            htmlFor={`size${size}`}
-                            className={selectedSize === size ? selectedLabelClass : labelClass}
-                          >
-                            {size}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {/* Dropdown and Date inputs can be added here */}
-                </div>
-
-                <button onClick={handleAddToCart} className='bg-black text-white font-normal font-Robot p-4'>Add to cart</button>
-
-                <div className="mt-4">
-                  <a href="#" className="text-gray-500">
-                    <i className="fab fa-facebook mr-4"></i>
-                  </a>
-                  <a href="#" className="text-gray-500">
-                    <i className="fab fa-twitter"></i>
-                  </a>
-                </div>
-
-                <div className="mt-4">
-                  <h2 className="text-xl font-medium mb-2">Description</h2>
-                  <p className="leading-relaxed">{data.description}</p>
-                </div>
-
-                <div className="mt-4">
-                  <h2 className="text-xl font-medium mb-2">Stylist's Notes</h2>
-                  <p className="leading-relaxed">{data.name}</p>
-                </div>
-
-                <div className="mt-4">
-                  <h2 className="text-xl font-medium mb-2">Material and Care</h2>
-                  <p className="leading-relaxed">{data.name}</p>
-                </div>
-
-                <div className="mt-4">
-                  <h2 className="text-xl font-medium mb-2">About Product</h2>
-                  <p className="leading-relaxed">{data.name}</p>
-                </div>
-
-              </div>
-            ) : (
-              <div>loding ... </div>
-            )}
-
+          {/* option images */}
+          <div className="mt-2 w-full lg:order-1 lg:w-32 lg:flex-shrink-0">
+          <div className="flex flex-row items-start lg:flex-col">
+      {data?.gallery.map((image) => (
+        <button
+          key={image.url}
+          type="button"
+          className={`flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 ${
+            activeImage === image.url ? 'border-black shadow-lg' : 'border-transparent'
+          } text-center`}
+          onClick={() => handleImageClick(image.url)}
+        >
+          <img className="h-full w-full object-cover" src={image.url} alt="" />
+        </button>
+      ))}
+    </div>
           </div>
-
-
-
         </div>
       </div>
 
-      <section className="text-gray-600 body-font">
-        <div className="container px-5 py-24 mx-auto">
-          <div className="flex flex-wrap -m-4">
-            {ProductsData.slice(0, 3).map((product, index) => (
-              <ProductCard key={index} {...product} />
-            ))}
+
+      <div className="lg:col-span-2 lg:row-span-2 lg:row-end-2">
+        <h1 className="sm: text-2xl font-bold text-gray-900 sm:text-3xl">Afro-Brazillian Coffee</h1>
+
+        <div className="mt-5 flex items-center">
+          <div className="flex items-center">
+            <svg className="block h-4 w-4 align-middle text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" className=""></path>
+            </svg>
+            <svg className="block h-4 w-4 align-middle text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" className=""></path>
+            </svg>
+            <svg className="block h-4 w-4 align-middle text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" className=""></path>
+            </svg>
+            <svg className="block h-4 w-4 align-middle text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" className=""></path>
+            </svg>
+            <svg className="block h-4 w-4 align-middle text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" className=""></path>
+            </svg>
           </div>
+          <p className="ml-2 text-sm font-medium text-gray-500">1,209 Reviews</p>
         </div>
-      </section>
-      <section className='flex justify-center items-center pb-10'>
-        <button onClick={() => navigate('/products')} className='bg-black text-white font-normal font-Robot p-4'> view all products</button>
-      </section>
-    </section >
+
+        <h2 className="mt-8 text-base text-gray-900">color </h2>
+        <div className="mt-3 flex select-none flex-wrap items-center gap-1">
+          <label className="">
+            <input type="radio" name="type" value="Powder" className="peer sr-only" checked />
+            <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">Powder</p>
+          </label>
+          <label className="">
+            <input type="radio" name="type" value="Whole Bean" className="peer sr-only" />
+            <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">Whole Bean</p>
+          </label>
+          <label className="">
+            <input type="radio" name="type" value="Groud" className="peer sr-only" />
+            <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">Groud</p>
+          </label>
+        </div>
+
+        <h2 className="mt-8 text-base text-gray-900">qantity</h2>
+        <div className="mt-3 flex select-none flex-wrap items-center gap-1">
+          <label className="">
+            <input type="radio" name="subscription" value="4 Months" className="peer sr-only" />
+            <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">4 Months</p>
+            <span className="mt-1 block text-center text-xs">Rs80/mo</span>
+          </label>
+          <label className="">
+            <input type="radio" name="subscription" value="8 Months" className="peer sr-only" checked />
+            <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">8 Months</p>
+            <span className="mt-1 block text-center text-xs">$60/mo</span>
+          </label>
+          <label className="">
+            <input type="radio" name="subscription" value="12 Months" className="peer sr-only" />
+            <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">12 Months</p>
+            <span className="mt-1 block text-center text-xs">$40/mo</span>
+          </label>
+        </div>
+
+        <div className="mt-10 flex flex-col items-center justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
+          <div className="flex items-end">
+            <h1 className="text-3xl font-bold">$60.50</h1>
+            <span className="text-base">/month</span>
+          </div>
+
+          <button type="button" className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
+            <svg xmlns="http://www.w3.org/2000/svg" className="shrink-0 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            Add to cart
+          </button>
+        </div>
+
+        <ul className="mt-8 space-y-2">
+          <li className="flex items-center text-left text-sm font-medium text-gray-600">
+            <svg className="mr-2 block h-5 w-5 align-middle text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" className=""></path>
+            </svg>
+            Free shipping worldwide
+          </li>
+
+          <li className="flex items-center text-left text-sm font-medium text-gray-600">
+            <svg className="mr-2 block h-5 w-5 align-middle text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" className=""></path>
+            </svg>
+            Cancel Anytime
+          </li>
+        </ul>
+      </div>
+
+      <div className="lg:col-span-3">
+        <div className="border-b border-gray-300">
+          <nav className="flex gap-4">
+            <a href="#" title="" className="border-b-2 border-gray-900 py-4 text-sm font-medium text-gray-900 hover:border-gray-400 hover:text-gray-800"> Description </a>
+
+            <a href="#" title="" className="inline-flex items-center border-b-2 border-transparent py-4 text-sm font-medium text-gray-600">
+              Reviews
+              <span className="ml-2 block rounded-full bg-gray-500 px-2 py-px text-xs font-bold text-gray-100"> 1,209 </span>
+            </a>
+          </nav>
+        </div>
+
+        <div className="mt-8 flow-root sm:mt-12">
+          <h1 className="text-3xl font-bold">Delivered To Your Door</h1>
+          <p className="mt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia accusantium nesciunt fuga.</p>
+          <h1 className="mt-8 text-3xl font-bold">From the Fine Farms of Brazil</h1>
+          <p className="mt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio numquam enim facere.</p>
+          <p className="mt-4">Amet consectetur adipisicing elit. Optio numquam enim facere. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore rerum nostrum eius facere, ad neque.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section className="text-gray-600 body-font">
+      <div className="  py-24">
+        <div className="flex justify-center items-center">
+          {ProductsData.slice(0, 3).map((product, index) => (
+            <ProductCard key={index} {...product} />
+          ))}
+        </div>
+      </div>
+    </section>
+    <section className='flex justify-center items-center pb-10'>
+      <button onClick={() => navigate('/products')} className='bg-black text-white font-normal font-Robot p-4'> view all products</button>
+    </section>
+</section>
+
   );
 };
-export default CartPage;
+
+export default ProductList;

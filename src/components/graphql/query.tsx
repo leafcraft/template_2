@@ -175,3 +175,12 @@ export const  deliveryChargeArrays= gql`
   }
 `;
 
+
+export const SEARCH_PRODUCT = gql`
+  query SearchProduct($organisationID: String!, $name: String!) {
+    searchProduct(organisationID: $organisationID, name: $name) {
+      _id
+      name
+    }
+  }
+`;

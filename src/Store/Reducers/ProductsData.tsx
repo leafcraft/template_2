@@ -13,6 +13,10 @@ const productSlice = createSlice({
   name: 'product',
   initialState: { products: [] } as ProductState,
   reducers: {
+    sreachProducts(state: ProductState, action: PayloadAction<Array<any>>) {
+      // Assuming action.payload is an array of product objects
+      state.products = action.payload;
+    },
     setProducts(state: ProductState, action: PayloadAction<Array<any>>) {
       // Assuming action.payload is an array of product objects
       state.products = action.payload;
@@ -30,5 +34,5 @@ const productSlice = createSlice({
 });
 
 // Export ProductReducer and actions
-export const { setProducts, addProduct, resetProducts } = productSlice.actions;
+export const { setProducts, addProduct, resetProducts,sreachProducts } = productSlice.actions;
 export default productSlice.reducer;

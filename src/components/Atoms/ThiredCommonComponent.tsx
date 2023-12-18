@@ -14,7 +14,6 @@ const ThiredCommonComponent = ({
 
         <div className="grid items-center md:grid-cols-2 grid-cols-1 p-7">
           <div>
-
             <div className="text-black mb-4 text-center p-7">
               <h2 className="text-black-text mb-3 font-normal font-Robot text-sm md:text-lg leading-5 tracking-wide">{smallHeader}</h2>
               <h1 className="text-black-text mb-3 font-normal font-Robot text-xl md:text-5xl leading-tight">{title}</h1>
@@ -30,14 +29,14 @@ const ThiredCommonComponent = ({
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-10 pb-14">
               {images.map((image: any, index: any) => (
-                <div key={index} className="w-full h-full">
+                <div key={index} className="w-full h-full card w-190 h-254 rounded-full bg-gray-300 shadow-md">
                   <div className="w-full h-full p-6">
                     <img
                       key={image.id}
                       src={image.src}
                       alt={image.alt}
                       onClick={() => onImageClick(image.id)} // Pass image ID on click
-                      className="w-full h-full object-cover cursor-pointer"
+                      className="w-full h-full object-contain cursor-pointer"
                     />
                   </div>
                   <p className="mt-2 text-base text-black-text font-Robot font-normal leading-6 ">{image.description}</p>

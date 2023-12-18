@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 import AuthReducer from "./Auth";
 import ProductsReducer from "./ProductsData";
 import setProducts from "./ProductsData";
+import sreachProducts from "./ProductsData";
 import Cartreducer from "./CartModal";
 import setSignUpData  from "./SignUpReducer";
 import setRegistrationData  from "./Registerdetails";
@@ -15,11 +16,13 @@ import toggleSidebarReducer  from "./CartCard";
 import addToCart from "./AddCart";
 import removeFromCart from "./AddCart";
 import  setCartData  from "./CartCardITems";
+import  increment  from "./Quntity";
+import  decrement  from "./Quntity";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["userReducer", "AuthReducer",'Cartreducer','setSignUpData','setRegistrationData','setLoginData','setAcessToken','resetLoginData','setProducts','setlogout','addToCart','removeFromCart','setCartData'],
+  whitelist: ["userReducer", "AuthReducer",'Cartreducer','setSignUpData','setRegistrationData','setLoginData','setAcessToken','resetLoginData','setProducts','setlogout','addToCart','removeFromCart','setCartData','sreachProducts','decrement','increment'],
 };
 
 const reducers = combineReducers({
@@ -37,6 +40,10 @@ const reducers = combineReducers({
   addToCart,
   removeFromCart,
   setCartData,
+  sreachProducts,
+  increment,
+  decrement,
+
 });
 
 const rootReducer = (state: any, action: any) => {

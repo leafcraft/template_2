@@ -1,10 +1,11 @@
 import ThiredCommonComponent from "../Atoms/ThiredCommonComponent";
-import poster from "../../assets/poster-component5.png";
-import product2 from "../../assets/product2-component3.png";
+import poster from "../../assets/hall.jpg";
+import product2 from "../../assets/table.jpg";
 
-import product1 from "../../assets/product1-component5.png";
+import product1 from "../../assets/sofa.jpg";
+import product3 from "../../assets/dinning.jpg";
 
-import image from '../../assets/bg-component6.png'
+import image from '../../assets/dinning.jpg'
 
 export default function Fifthcomponent() {
   const handleImageClick = (image: any) => {
@@ -26,7 +27,7 @@ export default function Fifthcomponent() {
     },
     {
       id: '3',
-      src: product2,
+      src: product3,
       alt: 'Image 1',
       description: 'Product title Rs. 99.00',
     },

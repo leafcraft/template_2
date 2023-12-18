@@ -1,5 +1,5 @@
-import image1 from '../../assets/bg-component7-1.png';
-import image2 from '../../assets/bg-component7-2.png';
+import image1 from '../../assets/bgCAr1.jpg';
+import image2 from '../../assets/bg-signup.png';
 const Seventhcomponent
  = () => {
   return (
@@ -26,7 +26,7 @@ const Seventhcomponent
           <h1 className='font-Robot font-normal text-lg md:text-3xl leading-9'>Quality Is A Habit</h1>
           <div className='font-Robot font-normal leading-6 text-xs md:text-base '>Every outfit we onboard goes through a rigorous screening process to make sure that you get nothing but the best craftsmanship from the most innovative and sought after designers.</div>
           <button className="bg-bg-footer font-Robot font-normal hover:bg-blue-700 text-white leading-5 text-xs md:text-base py-2 px-4 border border-white">
-          View All Designers
+          View All Designs
           </button>
         </div>
       </div>
